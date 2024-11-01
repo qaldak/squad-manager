@@ -1,0 +1,31 @@
+{
+  "name": "squad-manager-server",
+  "version": "0.0.1",
+  "description": "Determine team selection for the next match",
+  "main": "./src/app.ts",
+  "scripts": {
+    "start": "ts-node ./src/app.ts",
+    "dev": "ts-node ./src/app.ts",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/express": "^4.17.21",
+    "@types/uuid": "^10.0.0",
+    "express": "^4.21.0",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.13",
+    "@types/node": "^22.7.4",
+    "@types/supertest": "^6.0.2",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.7",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2"
+  }
+}

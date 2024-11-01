@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./build",
+    "types": ["node", "jest"],
+    // "rootDir": "./src"
+    "rootDirs": ["./src", "tests/__mock__"]
+  },
+  "include": ["src/**/*", "tests/__mock__/*"],
+  "exclude": ["node_modules"]
+}
