@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { getScheduleById, getSchedules } from '@/services/schedule.service'
+import { addSchedule, getScheduleById, getSchedules } from '@/services/schedule.service'
 import type { Schedule } from '@/types/schedule.type'
 
 export const useScheduleStore = defineStore('schedule', {
@@ -24,19 +24,28 @@ export const useScheduleStore = defineStore('schedule', {
     async getScheduleById(scheduleId: string) {
       this.loading = true
       try {
-        console.log("scheduleId: ", scheduleId);
-        
+        console.log('scheduleId: ', scheduleId)
+
         const fetchedSchedule = await getScheduleById(scheduleId)
-        console.log(`fetchedSchedule: ${fetchedSchedule}`);
-        
+        console.log(`fetchedSchedule: ${fetchedSchedule}`)
+
         return fetchedSchedule
 
       } catch (error) {
-        console.error(error);
-        
+        console.error(error)
+
       } finally {
         this.loading = false
       }
+    },
+    async addSchedule(schedule: Schedule) {
+      console.log('schedule added 1: ', schedule)
+      const newSchedule = await addSchedule(schedule)
+      console.log('schedule added 2: ', newSchedule)
+    },
+    async updateSchedule(schedule: Schedule) {
+      const updatedSchedule = await this.updateSchedule(schedule)
+      console.log('schedule updated: ', updatedSchedule)
     }
   }
 })

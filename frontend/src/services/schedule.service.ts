@@ -9,7 +9,9 @@ export const getSchedules = async (): Promise<Schedule[]> => {
 }
 
 export const addSchedule = async (schedule: Schedule): Promise<Schedule> => {
+  console.log('schedule added service: ', schedule)
   const response = await axios.post(API_URL, schedule)
+  console.log('schedule added response: ', response.data)
   return response.data
 }
 

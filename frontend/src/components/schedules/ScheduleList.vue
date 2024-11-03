@@ -2,12 +2,18 @@
 <template>
   <header>Termine</header>
   <v-btn @click="openScheduleDialog(true)">Neuer Termin</v-btn>
-  <v-data-table :headers="headers" :items="schedules" :loading="loading" :server-items-length="totalSchedules"
-    :items-per-page="10" :items-per-page-options="[
+  <v-data-table
+    :headers="headers"
+    :items="schedules"
+    :loading="loading"
+    :server-items-length="totalSchedules"
+    :items-per-page="10"
+    :items-per-page-options="[
       { value: 10, title: '10' },
       { value: 25, title: '25' },
       { value: 50, title: '50' }
-    ]">
+    ]"
+  >
     <template v-slot:item="{ item }">
       <tr @dblclick="openScheduleDialog(false, item)">
         <td>{{ item.date }}</td>
@@ -17,83 +23,88 @@
     </template>
   </v-data-table>
 
-  <ScheduleDetail v-model:scheduleDialog="scheduleDialog" :schedule="actualSchedule" :isNew="isNew"
-    @update:dialog="updateDialog" @dialogClosed="reloadSchedules" />
+  <ScheduleDetail
+    v-model:scheduleDialog="scheduleDialog"
+    :schedule="actualSchedule"
+    :isNew="isNew"
+    @update:dialog="updateDialog"
+    @dialogClosed="reloadSchedules"
+  />
 </template>
 
 <script lang="ts">
-import { onMounted, ref } from 'vue';
-import { useScheduleStore } from '@/stores/schedule.store';
-import { ScheduleType, type Schedule } from '@/types/schedule.type';
-import ScheduleDetail from '@/components/schedules/ScheduleDetail.vue';
+import { onMounted, ref } from 'vue'
+import { useScheduleStore } from '@/stores/schedule.store'
+import { ScheduleType, type Schedule } from '@/types/schedule.type'
+import ScheduleDetail from '@/components/schedules/ScheduleDetail.vue'
 
 export default {
   components: {
     ScheduleDetail
   },
   setup() {
-    const isNew = ref(true);
-    const schedules = ref<Schedule[]>([]);
-    const scheduleDialog = ref(false);
-    const scheduleStore = useScheduleStore();
+    const isNew = ref(true)
+    const schedules = ref<Schedule[]>([])
+    const scheduleDialog = ref(false)
+    const scheduleStore = useScheduleStore()
     const actualSchedule = ref<Schedule>({
       scheduleId: '',
       date: new Date(),
       type: ScheduleType.TRAINING,
       matchType: undefined
-    });
+    })
 
     const formatSchedules = () => {
       return scheduleStore.schedules
         .sort((a, b) => {
-          const dateA = new Date(a.date).getTime();
-          const dateB = new Date(b.date).getTime();
-          return dateA - dateB;
+          const dateA = new Date(a.date).getTime()
+          const dateB = new Date(b.date).getTime()
+          return dateA - dateB
         })
         .map((schedule) => ({
           scheduleId: schedule.scheduleId,
           date: schedule.date,
           type: schedule.type,
           matchType: schedule.matchType
-        }));
-    };
+        }))
+    }
 
     const openScheduleDialog = (createNew: boolean, schedule?: Schedule) => {
-      console.log('FOOBAR:', schedule );
+      console.log('FOOBAR:', schedule)
       console.log('Barfoo: ', createNew, isNew.value)
 
-      isNew.value = createNew;
-      if (createNew) {        
+      isNew.value = createNew
+      if (createNew) {
         actualSchedule.value = {
           scheduleId: '',
           date: new Date(),
           type: ScheduleType.TRAINING,
           matchType: undefined
-        };
-        scheduleDialog.value = true;
+        }
+        scheduleDialog.value = true
       } else if (schedule) {
-        actualSchedule.value = { ...schedule };
+        actualSchedule.value = { ...schedule }
       }
-      scheduleDialog.value = true;
-    };
+      scheduleDialog.value = true
+    }
 
     const reloadSchedules = async () => {
-      await scheduleStore.loadSchedules();
-      schedules.value = formatSchedules();
-    };
+      await scheduleStore.loadSchedules()
+      schedules.value = formatSchedules()
+    }
 
     const updateDialog = (value: boolean) => {
-      scheduleDialog.value = value;
-    };
+      scheduleDialog.value = value
+    }
 
     onMounted(() => {
-      scheduleStore.loadSchedules();
+      scheduleStore.loadSchedules()
       scheduleStore.$subscribe((mutation, state) => {
         if (!state.loading) {
-          schedules.value = formatSchedules();
+          schedules.value = formatSchedules()
         }
-      });
-    });
+      })
+    })
 
     return {
       headers: [
@@ -110,7 +121,7 @@ export default {
       openScheduleDialog,
       reloadSchedules,
       updateDialog
-    };
+    }
   }
 }
 </script>
