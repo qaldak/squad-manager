@@ -14,7 +14,7 @@
       { value: 50, title: '50' }
     ]"
   >
-    <template #item="{ item }">
+    <template v-slot:item="{ item }">
       <tr @dblclick="openDialog(false, item)">
         <td>{{ item.firstname }}</td>
         <td>{{ item.name }}</td>

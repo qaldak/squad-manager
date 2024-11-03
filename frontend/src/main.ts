@@ -21,11 +21,18 @@ library.add(faPencil)
 
 import App from './App.vue'
 import router from './router'
+import { VDateInput } from 'vuetify/labs/components'
+import { de, en } from 'vuetify/locale'
 
 const app = createApp(App)
 app.component('font-awesome-icon', FontAwesomeIcon)
 const vuetify = createVuetify({
-  components: components, // imports vuetify components for app
+  components: { ...components, VDateInput }, // imports vuetify components for app
+  locale: {
+    locale: 'de',
+    fallback: 'en',
+    messages: { de, en }
+  },
   theme: {
     defaultTheme: 'dark' // set dark theme as default
   }

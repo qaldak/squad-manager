@@ -1,7 +1,8 @@
+<!-- ScheduleListView.vue -->
 <template>
-  <main>
+  <v-container>
     <ScheduleList />
-  </main>
+  </v-container>
 </template>
 
 <script setup lang="ts">
