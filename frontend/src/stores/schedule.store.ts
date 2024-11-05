@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { addSchedule, getScheduleById, getSchedules } from '@/services/schedule.service'
+import { addSchedule, getScheduleById, getSchedules, updateSchedule } from '@/services/schedule.service'
 import type { Schedule } from '@/types/schedule.type'
 
 export const useScheduleStore = defineStore('schedule', {
@@ -39,12 +39,11 @@ export const useScheduleStore = defineStore('schedule', {
       }
     },
     async addSchedule(schedule: Schedule) {
-      console.log('schedule added 1: ', schedule)
       const newSchedule = await addSchedule(schedule)
       console.log('schedule added 2: ', newSchedule)
     },
     async updateSchedule(schedule: Schedule) {
-      const updatedSchedule = await this.updateSchedule(schedule)
+      const updatedSchedule = await updateSchedule(schedule)
       console.log('schedule updated: ', updatedSchedule)
     }
   }

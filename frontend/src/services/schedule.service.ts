@@ -9,13 +9,16 @@ export const getSchedules = async (): Promise<Schedule[]> => {
 }
 
 export const addSchedule = async (schedule: Schedule): Promise<Schedule> => {
-  console.log('schedule added service: ', schedule)
   const response = await axios.post(API_URL, schedule)
-  console.log('schedule added response: ', response.data)
   return response.data
 }
 
 export const getScheduleById = async (scheduleId: string): Promise<Schedule> => {
   const response = await axios.get(`${API_URL}/id/${scheduleId}`)
+  return response.data
+}
+
+export const updateSchedule = async (schedule: Schedule): Promise<Schedule> => {
+  const response = await axios.put(`${API_URL}/${schedule.scheduleId}`, schedule)
   return response.data
 }
