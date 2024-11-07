@@ -2,7 +2,7 @@ export interface Schedule {
   scheduleId: string
   date: Date
   type: ScheduleType
-  matchType?: MatchType
+  matchType?: MatchType | null
 }
 
 export enum ScheduleType {

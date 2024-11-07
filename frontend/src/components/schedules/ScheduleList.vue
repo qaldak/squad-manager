@@ -16,7 +16,7 @@
   >
     <template v-slot:item="{ item }">
       <tr @dblclick="openScheduleDialog(false, item)">
-        <td>{{ item.date }}</td>
+        <td>{{ formatDate(item.date, 'dd.MM.yyyy') }}</td>
         <td>{{ item.type }}</td>
         <td>{{ item.matchType }}</td>
       </tr>
@@ -37,8 +37,10 @@ import { onMounted, ref } from 'vue'
 import { useScheduleStore } from '@/stores/schedule.store'
 import { ScheduleType, type Schedule } from '@/types/schedule.type'
 import ScheduleDetail from '@/components/schedules/ScheduleDetail.vue'
+import { formatDate } from 'date-fns'
 
 export default {
+  methods: { formatDate },
   components: {
     ScheduleDetail
   },

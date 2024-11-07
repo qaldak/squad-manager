@@ -18,6 +18,9 @@ const readScheduleByDate = async (req, res): Promise<void> => {
 }
 
 const addSchedule = async (req, res): Promise<void> => {
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  console.log(`Die aktuelle Zeitzone ist: ${timeZone}`)
+  console.log(`scheduleController: ${req}`)
   const newSchedule = await ScheduleService.addSchedule(req.body)
   res.status(201).json(newSchedule)
 }
@@ -26,6 +29,7 @@ const updateSchedule = async (req, res): Promise<void> => {
   const scheduleId = req.params.id
   const schedule = schedulesData.readSchedule(scheduleId)
 
+  console.log(`req: ${JSON.stringify(req.body)}, schedule: ${JSON.stringify(schedule)}`)
   try {
     const updatedSchedule = { ...schedule, ...req.body }
     const result = await ScheduleService.updateSchedule(updatedSchedule)

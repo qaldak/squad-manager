@@ -43,6 +43,7 @@ export const useScheduleStore = defineStore('schedule', {
       console.log('schedule added 2: ', newSchedule)
     },
     async updateSchedule(schedule: Schedule) {
+      console.log(`schedule ready to update: ${schedule.matchType}`)
       const updatedSchedule = await updateSchedule(schedule)
       console.log('schedule updated: ', updatedSchedule)
     }

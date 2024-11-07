@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="scheduleDetailDialog" persistent max-width="290">
+  <v-dialog v-model="scheduleDetailDialog" persistent max-width="400">
     <v-locale-provider>
       <v-card>
         <v-card-title class="headline">{{
@@ -10,6 +10,7 @@
           <v-form ref="form" v-model="isValid">
             <v-date-input
               v-model="scheduledDate"
+              hide-actions
               :first-day-of-week="1"
               label="Datum"
               :rules="[rules.required]"
@@ -26,14 +27,16 @@
             <v-select
               v-model="detailSchedule.matchType"
               :items="matchTypes"
+              :disabled="detailSchedule.type === ScheduleType.TRAINING"
+              :rules="getMatchTypeRules"
               label="Matchtyp"
             ></v-select>
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" flat @click="closeDialog()">Disagree</v-btn>
-          <v-btn color="primary" flat @click="saveSchedule(true)">Agree</v-btn>
+          <v-btn color="primary" :disabled="!isValid" flat @click="saveSchedule(true)">Speichern und schliessen</v-btn>
+          <v-btn color="secondary" @click="closeDialog()">Schliessen</v-btn>
         </v-card-actions>
       </v-card>
     </v-locale-provider>
@@ -41,11 +44,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue'
+import { computed, defineComponent, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useScheduleStore } from '@/stores/schedule.store'
 import { MatchType, ScheduleType, type Schedule } from '@/types/schedule.type'
 
 export default defineComponent({
+  computed: {
+    ScheduleType() {
+      return ScheduleType
+    }
+  },
   props: {
     scheduleDialog: {
       type: Boolean,
@@ -74,6 +82,23 @@ export default defineComponent({
     const scheduleTypes = Object.values(ScheduleType)
     const matchTypes = Object.values(MatchType)
 
+    const handleEsc = (event: KeyboardEvent) => {
+      // check dropdown menu is open, if yes, just close dropdown
+      const isMenuOpen = document.getElementsByClassName('v-menu').length !== 0
+
+      if (event.key === 'Escape' && scheduleDetailDialog.value && !isMenuOpen) {
+        closeDialog()
+      }
+    }
+
+    onMounted(() => {
+      document.addEventListener('keydown', handleEsc)
+    })
+
+    onUnmounted(() => {
+      document.removeEventListener('keydown', handleEsc)
+    })
+
     watch(
       () => props.scheduleDialog,
       (newVal) => {
@@ -85,6 +110,7 @@ export default defineComponent({
           scheduledDate.value = detailSchedule.value.scheduleId ? new Date(detailSchedule.value.date) : undefined
           console.log('Dialog geöffnet - initialisierte Daten:', detailSchedule.value)
           console.log('Dialog geöffnet - initialisierte Daten 2 :', detailSchedule.value.date)
+          // console.log('Dialog geöffnet - initialisierte Daten 2.1 :', detailSchedule.value.date.toISOString())
         }
       }
     )
@@ -104,11 +130,20 @@ export default defineComponent({
       () => props.schedule,
       (schedule) => {
         detailSchedule.value = { ...schedule }
-        // scheduledDate.value = new Date(schedule.date)
         console.log('Neuer Termin', scheduledDate.value)
         console.log('Neuer Termin', detailSchedule.value)
       }
     )
+
+    watch(() => detailSchedule.value.type, (newType) => {
+      if (newType === ScheduleType.TRAINING) {
+        detailSchedule.value.matchType = null
+      }
+    })
+
+    const getMatchTypeRules = computed(() => {
+      return detailSchedule.value.type === ScheduleType.MATCH_DAY ? [rules.required] : []
+    })
 
     const closeDialog = () => {
       console.log('what', detailSchedule.value?.date)
@@ -119,8 +154,7 @@ export default defineComponent({
 
     const saveSchedule = async (closeAfterSave: boolean) => {
       if (props.isNew) {
-        console.log('Foo')
-        console.log(detailSchedule.value)
+        console.log(`Foo What's the time: ${detailSchedule.value.date.toISOString()}`)
         await scheduleStore.addSchedule(detailSchedule.value)
       } else {
         console.log('Bar')
@@ -141,7 +175,8 @@ export default defineComponent({
       saveSchedule,
       scheduleDetailDialog: scheduleDetailDialog,
       detailSchedule: detailSchedule,
-      scheduledDate
+      scheduledDate,
+      getMatchTypeRules
     }
   }
 })

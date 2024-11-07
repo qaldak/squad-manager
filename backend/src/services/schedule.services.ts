@@ -16,6 +16,8 @@ interface ScheduleData {
 class ScheduleService {
   async addSchedule(schedule: ScheduleData): Promise<Schedule> {
     console.log('gespeicherte Daten 1', schedule)
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    console.log(`Die aktuelle Zeitzone ist: ${timeZone}`)
     const dateUtc = dayjs.utc(schedule.date) // Todo: remove?
     console.log('dateUtc: ', dateUtc)
     const scheduleId = uuidv4()
@@ -32,6 +34,8 @@ class ScheduleService {
 
   async updateSchedule(scheduleDataIn: ScheduleData): Promise<Schedule | undefined> {
     const schedule = schedulesData.readSchedule(scheduleDataIn.scheduleId)
+
+    console.log(`schedule dataIn matchtype: ${scheduleDataIn.matchType}`)
 
     if (schedule) {
       schedule.date = scheduleDataIn.date
