@@ -7,7 +7,7 @@
       <v-card-text>
         <v-form ref="form" v-model="valid">
           <v-text-field v-model="detailPlayer.firstname" label="Vorname" :rules="[rules.required]"
-            required></v-text-field>
+                        required></v-text-field>
           <v-text-field v-model="detailPlayer.name" label="Name" :rules="[rules.required]" required></v-text-field>
           <v-text-field v-model="detailPlayer.birthYear" label="Geburtsjahr"></v-text-field>
           <v-select v-model="detailPlayer.position" :items="positions" label="Position"></v-select>
@@ -22,84 +22,65 @@
   </v-dialog>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, watch } from 'vue';
-import { Position, type Player } from '@/types/player.type';
-import { usePlayerStore } from '@/stores/player.store';
+<script setup lang="ts">
+import { ref, watch } from 'vue'
+import { Position, type Player } from '@/types/player.type'
+import { usePlayerStore } from '@/stores/player.store'
 
-export default defineComponent({
-  props: {
-    dialog: {
-      type: Boolean,
-      required: true
-    },
-    player: {
-      type: Object as () => Player,
-      required: true
-    },
-    isNew: {
-      type: Boolean,
-      default: true
-    }
-  },
-  emits: ['update:dialog', 'dialogClosed'],
-  setup(props, { emit }) {
-    const playerStore = usePlayerStore();
-    const detailDialog = ref(props.dialog);
-    const detailPlayer = ref({ ...props.player });
-    const valid = ref(false);
-    const rules = {
-      required: (value: string) => !!value || 'This field is required'
-    };
+const props = withDefaults(defineProps<{
+  dialog: boolean,
+  player: Player,
+  isNew?: boolean
+}>(), {
+  isNew: true
+})
 
-    const positions = Object.values(Position);
+const emit = defineEmits(['update:dialog', 'dialogClosed'])
 
-    watch(
-      () => props.dialog,
-      (newVal) => {
-        detailDialog.value = newVal;
-      }
-    );
+const playerStore = usePlayerStore()
+const detailDialog = ref(props.dialog)
+const detailPlayer = ref({ ...props.player })
+const valid = ref(false)
+const rules = {
+  required: (value: string) => !!value || 'This field is required'
+}
 
-    watch(detailDialog, (newVal) => {
-      emit('update:dialog', newVal);
-    });
+const positions = Object.values(Position)
 
-    watch(
-      () => props.player,
-      (newPlayer) => {
-        console.log('Foo: ', props.player);
-        detailPlayer.value = { ...newPlayer };
-        console.log('Foo: ', detailPlayer.value);
-      }
-    );
-
-    const closeDialog = () => {
-      emit('update:dialog', false);
-      emit('dialogClosed', true);
-      detailDialog.value = false;
-    };
-
-    const savePlayer = async (closeAfterSave: boolean) => {
-      if (props.isNew) {
-        await playerStore.addPlayer(detailPlayer.value);
-      } else {
-        await playerStore.updatePlayer(detailPlayer.value);
-      }
-      if (closeAfterSave) {
-        closeDialog();
-      }
-    };
-
-    return {
-      closeDialog,
-      savePlayer,
-      positions,
-      valid,
-      rules,
-      detailDialog: detailDialog,
-      detailPlayer: detailPlayer
-    };
+watch(
+  () => props.dialog,
+  (newVal) => {
+    detailDialog.value = newVal
   }
-});
+)
+
+watch(detailDialog, (newVal) => {
+  emit('update:dialog', newVal)
+})
+
+watch(
+  () => props.player,
+  (newPlayer) => {
+    console.log('Foo: ', props.player)
+    detailPlayer.value = { ...newPlayer }
+    console.log('Foo: ', detailPlayer.value)
+  }
+)
+
+const closeDialog = () => {
+  emit('update:dialog', false)
+  emit('dialogClosed', true)
+  detailDialog.value = false
+}
+
+const savePlayer = async (closeAfterSave: boolean) => {
+  if (props.isNew) {
+    await playerStore.addPlayer(detailPlayer.value)
+  } else {
+    await playerStore.updatePlayer(detailPlayer.value)
+  }
+  if (closeAfterSave) {
+    closeDialog()
+  }
+}
 </script>

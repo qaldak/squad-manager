@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ScheduleListView from '../views/ScheduleListView.vue'
+import PlayerEngagementList from '@/components/playerEngagements/PlayerEngagementList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,6 +36,11 @@ const router = createRouter({
       name: 'Trainings- und Spielplan',
       component: ScheduleListView
     },
+    {
+      path: '/playerEngagements',
+      name: 'Spielkader und Trainingsteilnahme',
+      component: PlayerEngagementList
+    }
   ]
 })
 

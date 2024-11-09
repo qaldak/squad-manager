@@ -1,12 +1,12 @@
-<!-- PlayerList.vue -->
+<!-- ScheduleList.vue -->
 <template>
   <header>Termine</header>
-  <v-btn @click="openScheduleDialog(true)">Neuer Termin</v-btn>
+  <v-btn class="text-none" @click="openScheduleDialog(true)">Neuer Termin</v-btn>
   <v-data-table
     :headers="headers"
     :items="schedules"
-    :loading="loading"
-    :server-items-length="totalSchedules"
+    :loading="scheduleStore.loading"
+    :server-items-length="scheduleStore.totalSchedules"
     :items-per-page="10"
     :items-per-page-options="[
       { value: 10, title: '10' },
@@ -32,98 +32,79 @@
   />
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useScheduleStore } from '@/stores/schedule.store'
 import { ScheduleType, type Schedule } from '@/types/schedule.type'
 import ScheduleDetail from '@/components/schedules/ScheduleDetail.vue'
 import { formatDate } from 'date-fns'
 
-export default {
-  methods: { formatDate },
-  components: {
-    ScheduleDetail
-  },
-  setup() {
-    const isNew = ref(true)
-    const schedules = ref<Schedule[]>([])
-    const scheduleDialog = ref(false)
-    const scheduleStore = useScheduleStore()
-    const actualSchedule = ref<Schedule>({
+const isNew = ref(true)
+const schedules = ref<Schedule[]>([])
+const scheduleDialog = ref(false)
+const scheduleStore = useScheduleStore()
+const actualSchedule = ref<Schedule>({
+  scheduleId: '',
+  date: new Date(),
+  type: ScheduleType.TRAINING,
+  matchType: undefined
+})
+
+const formatSchedules = () => {
+  return scheduleStore.schedules
+    .sort((a, b) => {
+      const dateA = new Date(a.date).getTime()
+      const dateB = new Date(b.date).getTime()
+      return dateA - dateB
+    })
+    .map((schedule) => ({
+      scheduleId: schedule.scheduleId,
+      date: schedule.date,
+      type: schedule.type,
+      matchType: schedule.matchType
+    }))
+}
+
+const openScheduleDialog = (createNew: boolean, schedule?: Schedule) => {
+  console.log('FOOBAR:', schedule)
+  console.log('Barfoo: ', createNew, isNew.value)
+
+  isNew.value = createNew
+  if (createNew) {
+    actualSchedule.value = {
       scheduleId: '',
       date: new Date(),
-      type: ScheduleType.TRAINING,
+      type: ScheduleType.MATCH_DAY,
       matchType: undefined
-    })
-
-    const formatSchedules = () => {
-      return scheduleStore.schedules
-        .sort((a, b) => {
-          const dateA = new Date(a.date).getTime()
-          const dateB = new Date(b.date).getTime()
-          return dateA - dateB
-        })
-        .map((schedule) => ({
-          scheduleId: schedule.scheduleId,
-          date: schedule.date,
-          type: schedule.type,
-          matchType: schedule.matchType
-        }))
     }
+    scheduleDialog.value = true
+  } else if (schedule) {
+    actualSchedule.value = { ...schedule }
+  }
+  scheduleDialog.value = true
+}
 
-    const openScheduleDialog = (createNew: boolean, schedule?: Schedule) => {
-      console.log('FOOBAR:', schedule)
-      console.log('Barfoo: ', createNew, isNew.value)
+const reloadSchedules = async () => {
+  await scheduleStore.loadSchedules()
+  schedules.value = formatSchedules()
+}
 
-      isNew.value = createNew
-      if (createNew) {
-        actualSchedule.value = {
-          scheduleId: '',
-          date: new Date(),
-          type: ScheduleType.TRAINING,
-          matchType: undefined
-        }
-        scheduleDialog.value = true
-      } else if (schedule) {
-        actualSchedule.value = { ...schedule }
-      }
-      scheduleDialog.value = true
-    }
+const updateDialog = (value: boolean) => {
+  scheduleDialog.value = value
+}
 
-    const reloadSchedules = async () => {
-      await scheduleStore.loadSchedules()
+onMounted(() => {
+  scheduleStore.loadSchedules()
+  scheduleStore.$subscribe((mutation, state) => {
+    if (!state.loading) {
       schedules.value = formatSchedules()
     }
+  })
+})
 
-    const updateDialog = (value: boolean) => {
-      scheduleDialog.value = value
-    }
-
-    onMounted(() => {
-      scheduleStore.loadSchedules()
-      scheduleStore.$subscribe((mutation, state) => {
-        if (!state.loading) {
-          schedules.value = formatSchedules()
-        }
-      })
-    })
-
-    return {
-      headers: [
-        { title: 'Datum', key: 'date', sortable: true },
-        { title: 'Terminart', key: 'type', sortable: true },
-        { title: 'Matchtyp', key: 'matchType' }
-      ],
-      schedules: schedules,
-      loading: scheduleStore.loading,
-      totalSchedules: scheduleStore.totalSchedules,
-      scheduleDialog,
-      isNew,
-      actualSchedule,
-      openScheduleDialog,
-      reloadSchedules,
-      updateDialog
-    }
-  }
-}
+const headers = [
+  { title: 'Datum', key: 'date', sortable: true },
+  { title: 'Terminart', key: 'type', sortable: true },
+  { title: 'Matchtyp', key: 'matchType' }
+]
 </script>

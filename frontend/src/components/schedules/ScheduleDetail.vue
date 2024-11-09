@@ -27,157 +27,130 @@
             <v-select
               v-model="detailSchedule.matchType"
               :items="matchTypes"
-              :disabled="detailSchedule.type === ScheduleType.TRAINING"
-              :rules="getMatchTypeRules"
+              :disabled="detailSchedule.type === computedScheduleType.TRAINING"
+              :rules="detailSchedule.type === computedScheduleType.MATCH_DAY ? [rules.required] : []"
               label="Matchtyp"
             ></v-select>
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" :disabled="!isValid" flat @click="saveSchedule(true)">Speichern und schliessen</v-btn>
-          <v-btn color="secondary" @click="closeDialog()">Schliessen</v-btn>
+          <v-btn variant="outlined" color="primary" :disabled="!isValid" flat @click="saveSchedule(false)"
+          >Save
+          </v-btn>
+          <v-btn variant="text" color="secondary" @click="closeDialog()">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-locale-provider>
   </v-dialog>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, onMounted, onUnmounted, ref, watch } from 'vue'
+<script setup lang="ts">
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useScheduleStore } from '@/stores/schedule.store'
 import { MatchType, ScheduleType, type Schedule } from '@/types/schedule.type'
 
-export default defineComponent({
-  computed: {
-    ScheduleType() {
-      return ScheduleType
-    }
-  },
-  props: {
-    scheduleDialog: {
-      type: Boolean,
-      required: true
-    },
-    schedule: {
-      type: Object as () => Schedule,
-      required: true
-    },
-    isNew: {
-      type: Boolean,
-      default: true
-    }
-  },
-  emits: ['update:dialog', 'dialogClosed'],
-  setup(props, { emit }) {
-    const scheduleStore = useScheduleStore()
-    const scheduleDetailDialog = ref(props.scheduleDialog)
-    const detailSchedule = ref<Schedule>({ ...props.schedule })
-    const scheduledDate = ref<Date>()
-    const isValid = ref(false)
-    const rules = {
-      required: (value: string) => !!value || 'This field is required'
-    }
+const props = withDefaults(defineProps<{
+  scheduleDialog: boolean;
+  schedule: Schedule
+  isNew: boolean;
+}>(), {
+  isNew: true
+})
 
-    const scheduleTypes = Object.values(ScheduleType)
-    const matchTypes = Object.values(MatchType)
+const emit = defineEmits(['update:dialog', 'dialogClosed'])
 
-    const handleEsc = (event: KeyboardEvent) => {
-      // check dropdown menu is open, if yes, just close dropdown
-      const isMenuOpen = document.getElementsByClassName('v-menu').length !== 0
+const computedScheduleType = computed(() => ScheduleType)
 
-      if (event.key === 'Escape' && scheduleDetailDialog.value && !isMenuOpen) {
-        closeDialog()
-      }
-    }
+const scheduleStore = useScheduleStore()
+const scheduleDetailDialog = ref(props.scheduleDialog)
+const detailSchedule = ref<Schedule>({ ...props.schedule })
+const scheduledDate = ref<Date>()
+const isValid = ref(false)
+const rules = {
+  required: (value: string) => !!value || 'This field is required'
+}
 
-    onMounted(() => {
-      document.addEventListener('keydown', handleEsc)
-    })
+const scheduleTypes = Object.values(ScheduleType)
+const matchTypes = Object.values(MatchType)
 
-    onUnmounted(() => {
-      document.removeEventListener('keydown', handleEsc)
-    })
+const handleEsc = (event: KeyboardEvent) => {
+  // check dropdown menu is open, if yes, just close dropdown
+  const isMenuOpen = document.getElementsByClassName('v-menu').length !== 0
 
-    watch(
-      () => props.scheduleDialog,
-      (newVal) => {
-        scheduleDetailDialog.value = newVal
-        if (newVal) {
-          // Initialisiere die Daten erst, wenn der Dialog geöffnet wird
-          detailSchedule.value = { ...props.schedule }
-          console.log('Check', detailSchedule.value)
-          scheduledDate.value = detailSchedule.value.scheduleId ? new Date(detailSchedule.value.date) : undefined
-          console.log('Dialog geöffnet - initialisierte Daten:', detailSchedule.value)
-          console.log('Dialog geöffnet - initialisierte Daten 2 :', detailSchedule.value.date)
-          // console.log('Dialog geöffnet - initialisierte Daten 2.1 :', detailSchedule.value.date.toISOString())
-        }
-      }
-    )
+  if (event.key === 'Escape' && scheduleDetailDialog.value && !isMenuOpen) {
+    closeDialog()
+  }
+}
 
-    watch(scheduledDate, (newDate) => {
-      console.log('Datum geändert:', newDate)
-      if (newDate) {
-        detailSchedule.value.date = newDate
-      }
-    })
+onMounted(() => {
+  document.addEventListener('keydown', handleEsc)
+})
 
-    watch(scheduleDetailDialog, (newVal) => {
-      emit('update:dialog', newVal)
-    })
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleEsc)
+})
 
-    watch(
-      () => props.schedule,
-      (schedule) => {
-        detailSchedule.value = { ...schedule }
-        console.log('Neuer Termin', scheduledDate.value)
-        console.log('Neuer Termin', detailSchedule.value)
-      }
-    )
-
-    watch(() => detailSchedule.value.type, (newType) => {
-      if (newType === ScheduleType.TRAINING) {
-        detailSchedule.value.matchType = null
-      }
-    })
-
-    const getMatchTypeRules = computed(() => {
-      return detailSchedule.value.type === ScheduleType.MATCH_DAY ? [rules.required] : []
-    })
-
-    const closeDialog = () => {
-      console.log('what', detailSchedule.value?.date)
-      emit('update:dialog', false)
-      emit('dialogClosed', true)
-      scheduleDetailDialog.value = false
-    }
-
-    const saveSchedule = async (closeAfterSave: boolean) => {
-      if (props.isNew) {
-        console.log(`Foo What's the time: ${detailSchedule.value.date.toISOString()}`)
-        await scheduleStore.addSchedule(detailSchedule.value)
-      } else {
-        console.log('Bar')
-        console.log(detailSchedule.value)
-        await scheduleStore.updateSchedule(detailSchedule.value)
-      }
-      if (closeAfterSave) {
-        closeDialog()
-      }
-    }
-
-    return {
-      isValid,
-      rules,
-      scheduleTypes,
-      matchTypes,
-      closeDialog,
-      saveSchedule,
-      scheduleDetailDialog: scheduleDetailDialog,
-      detailSchedule: detailSchedule,
-      scheduledDate,
-      getMatchTypeRules
+watch(
+  () => props.scheduleDialog,
+  (newVal) => {
+    scheduleDetailDialog.value = newVal
+    if (newVal) {
+      // Initialisiere die Daten erst, wenn der Dialog geöffnet wird
+      detailSchedule.value = { ...props.schedule }
+      console.log('Check', detailSchedule.value)
+      scheduledDate.value = detailSchedule.value.scheduleId ? new Date(detailSchedule.value.date) : undefined
+      console.log('Dialog geöffnet - initialisierte Daten:', detailSchedule.value)
+      console.log('Dialog geöffnet - initialisierte Daten 2 :', detailSchedule.value.date)
+      // console.log('Dialog geöffnet - initialisierte Daten 2.1 :', detailSchedule.value.date.toISOString())
     }
   }
+)
+
+watch(scheduledDate, (newDate) => {
+  console.log('Datum geändert:', newDate)
+  if (newDate) {
+    detailSchedule.value.date = newDate
+  }
 })
+
+watch(scheduleDetailDialog, (newVal) => {
+  emit('update:dialog', newVal)
+})
+
+watch(
+  () => props.schedule,
+  (schedule) => {
+    detailSchedule.value = { ...schedule }
+    console.log('Neuer Termin', scheduledDate.value)
+    console.log('Neuer Termin', detailSchedule.value)
+  }
+)
+
+watch(() => detailSchedule.value.type, (newType) => {
+  if (newType === ScheduleType.TRAINING) {
+    detailSchedule.value.matchType = null
+  }
+})
+
+const closeDialog = () => {
+  console.log('what', detailSchedule.value?.date)
+  emit('update:dialog', false)
+  emit('dialogClosed', true)
+  scheduleDetailDialog.value = false
+}
+
+const saveSchedule = async (closeAfterSave: boolean) => {
+  if (props.isNew) {
+    console.log(`Foo What's the time: ${detailSchedule.value.date.toISOString()}`)
+    await scheduleStore.addSchedule(detailSchedule.value)
+  } else {
+    console.log('Bar')
+    console.log(detailSchedule.value)
+    await scheduleStore.updateSchedule(detailSchedule.value)
+  }
+  if (closeAfterSave) {
+    closeDialog()
+  }
+}
 </script>

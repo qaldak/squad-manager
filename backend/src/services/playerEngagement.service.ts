@@ -1,5 +1,5 @@
-import { EngagementStatus, PlayerEngagement } from "../models/PlayerEngagement";
-import playerEngagementsData from "../../tests/__mocks__/mock.playerEngagement";
+import { EngagementStatus, PlayerEngagement } from '../models/PlayerEngagement'
+import playerEngagementsData from '../../tests/__mocks__/mock.playerEngagement'
 
 interface PlayerEngagementData {
   playerId: string;
@@ -10,7 +10,7 @@ interface PlayerEngagementData {
 
 class PlayerEngangementService {
   async generateSquadProposal(scheduleId: string): Promise<PlayerEngagement[]> {
-    return [];
+    return []
   }
 
   async addPlayerEngagement(
@@ -21,28 +21,27 @@ class PlayerEngangementService {
       playerEngagementDataIn.scheduleId,
       playerEngagementDataIn.status,
       playerEngagementDataIn.manually
-    );
-    playerEngagementsData.addPlayerEngagement(newPlayerEngagement);
-    return newPlayerEngagement;
+    )
+    playerEngagementsData.addPlayerEngagement(newPlayerEngagement)
+    return newPlayerEngagement
   }
 
   async addPlayerEngagementsBulk(playerEngagementDataIn: PlayerEngagementData[]): Promise<PlayerEngagement[]> {
-    const newPlayerEngagements = playerEngagementDataIn.map(data => 
+    const newPlayerEngagements = playerEngagementDataIn.map(data =>
       new PlayerEngagement(data.playerId, data.scheduleId, data.status, data.manually)
-    );
-    newPlayerEngagements.forEach(engagement => playerEngagementsData.addPlayerEngagement(engagement));
-    return newPlayerEngagements;
+    )
+    newPlayerEngagements.forEach(engagement => playerEngagementsData.addPlayerEngagement(engagement))
+    return newPlayerEngagements
   }
 
   async deletePlayerEngagement(playerId: string, scheduleId: string): Promise<boolean> {
-    const engagement = playerEngagementsData.readPlayerEngagement(playerId, scheduleId);
+    const engagement = playerEngagementsData.readPlayerEngagement(playerId, scheduleId)
     if (engagement) {
-      playerEngagementsData.deletePlayerEngagement(playerId, scheduleId);
-      return true;
+      playerEngagementsData.deletePlayerEngagement(playerId, scheduleId)
+      return true
     }
-    return false;
+    return false
   }
-  
 
   async updatePlayerEngagement(
     playerEngagementDataIn: PlayerEngagementData
@@ -50,14 +49,14 @@ class PlayerEngangementService {
     const playerEngagement = playerEngagementsData.readPlayerEngagement(
       playerEngagementDataIn.playerId,
       playerEngagementDataIn.scheduleId
-    );
+    )
     if (playerEngagement) {
-      playerEngagement.manually = playerEngagementDataIn.manually;
-      playerEngagement.status = playerEngagementDataIn.status;
-      return playerEngagement;
+      playerEngagement.manually = playerEngagementDataIn.manually
+      playerEngagement.status = playerEngagementDataIn.status
+      return playerEngagement
     }
-    return undefined;
+    return undefined
   }
 }
 
-export default new PlayerEngangementService();
+export default new PlayerEngangementService()
