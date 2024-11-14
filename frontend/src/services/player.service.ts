@@ -8,6 +8,11 @@ export const getPlayers = async (): Promise<Player[]> => {
   return response.data
 }
 
+export const readPlayer = async (playerId: string): Promise<Player> => {
+  const response = await axios.get(`${API_URL}/${playerId}`)
+  return response.data
+}
+
 export const addPlayer = async (player: Player): Promise<Player> => {
   const response = await axios.post(API_URL, player)
   return response.data

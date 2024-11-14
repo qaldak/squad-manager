@@ -5,10 +5,6 @@
   </v-container>
 </template>
 
-<script>
+<script setup lang="ts">
 import PlayerList from '@/components/players/PlayerList.vue'
-
-export default {
-  components: { PlayerList }
-}
 </script>

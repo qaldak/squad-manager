@@ -41,6 +41,7 @@
           <v-btn variant="text" color="secondary" @click="closeDialog()">Close</v-btn>
         </v-card-actions>
       </v-card>
+      <PlayerEngagementList :context-id="detailSchedule.scheduleId" :context-type="'schedule'" />
     </v-locale-provider>
   </v-dialog>
 </template>
@@ -49,6 +50,7 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useScheduleStore } from '@/stores/schedule.store'
 import { MatchType, ScheduleType, type Schedule } from '@/types/schedule.type'
+import PlayerEngagementList from '@/components/playerEngagements/PlayerEngagementList.vue'
 
 const props = withDefaults(defineProps<{
   scheduleDialog: boolean;
