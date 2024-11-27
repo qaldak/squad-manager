@@ -33,6 +33,7 @@
             ></v-select>
           </v-form>
         </v-card-text>
+        <PlayerEngagementList :context-id="detailSchedule.scheduleId" :context-type="'schedule'" />
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn variant="outlined" color="primary" :disabled="!isValid" flat @click="saveSchedule(false)"
@@ -41,7 +42,6 @@
           <v-btn variant="text" color="secondary" @click="closeDialog()">Close</v-btn>
         </v-card-actions>
       </v-card>
-      <PlayerEngagementList :context-id="detailSchedule.scheduleId" :context-type="'schedule'" />
     </v-locale-provider>
   </v-dialog>
 </template>

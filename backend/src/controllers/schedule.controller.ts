@@ -7,7 +7,7 @@ const getSchedules = async (req, res): Promise<void> => {
 }
 
 const readSchedule = async (req, res): Promise<void> => {
-  const schedule = schedulesData.readSchedule(req.params.id)
+  const schedule = await ScheduleService.readSchedule(req.params.id)
   res.json(schedule)
 }
 

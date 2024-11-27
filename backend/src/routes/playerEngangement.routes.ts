@@ -41,4 +41,9 @@ router.delete(
   playerEngagementController.deletePlayerEngagement
 )
 
+router.post(
+    "/playerEngagements/proposal/:scheduleId",
+    playerEngagementController.generateSquadProposal
+)
+
 export default router;

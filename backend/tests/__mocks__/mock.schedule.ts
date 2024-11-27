@@ -20,6 +20,12 @@ const schedules = [
     matchType: MatchType.LEAGUE_GAME
   },
   {
+    scheduleId: 'M0827',
+    date: new Date('2024-08-27'),
+    type: ScheduleType.MATCH_DAY,
+    matchType: MatchType.CUP_GAME
+  },
+  {
     scheduleId: 'M0831',
     date: new Date('2024-08-31'),
     type: ScheduleType.MATCH_DAY,
@@ -36,22 +42,22 @@ const schedules = [
     type: ScheduleType.TRAINING
   },
   {
-    scheduleId: 'M0820',
+    scheduleId: 'T0820',
     date: new Date('2024-08-20'),
     type: ScheduleType.TRAINING
   },
   {
-    scheduleId: 'M0822',
+    scheduleId: 'T0822',
     date: new Date('2024-08-22'),
     type: ScheduleType.TRAINING
   },
   {
-    scheduleId: 'M0827',
+    scheduleId: 'T0827',
     date: new Date('2024-08-27'),
     type: ScheduleType.TRAINING
   },
   {
-    scheduleId: 'M0829',
+    scheduleId: 'T0829',
     date: new Date('2024-08-29'),
     type: ScheduleType.TRAINING
   },

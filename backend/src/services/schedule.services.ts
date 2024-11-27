@@ -32,6 +32,14 @@ class ScheduleService {
     return newSchedule
   }
 
+  async getAllSchedules(): Promise<Schedule[]> {
+    return schedulesData.getSchedules()
+  }
+
+  async readSchedule(scheduleId: string): Promise<Schedule> {
+    return schedulesData.readSchedule(scheduleId)
+  }
+
   async updateSchedule(scheduleDataIn: ScheduleData): Promise<Schedule | undefined> {
     const schedule = schedulesData.readSchedule(scheduleDataIn.scheduleId)
 
@@ -45,6 +53,7 @@ class ScheduleService {
     }
     return undefined
   }
+
 }
 
 export default new ScheduleService()

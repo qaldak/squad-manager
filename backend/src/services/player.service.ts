@@ -10,6 +10,10 @@
   }
 
   class PlayerService {
+    async getPlayers(): Promise<Player[]> {
+      return playersData.getPlayers()
+    }
+
     async addPlayer(playerData: PlayerData): Promise<Player> {
       const playerId = uuidv4();
       const newPlayer = new Player(

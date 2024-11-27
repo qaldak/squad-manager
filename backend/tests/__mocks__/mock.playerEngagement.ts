@@ -39,13 +39,13 @@ const playerEngagements = [
   },
   {
     playerId: "7",
-    scheduleId: "M0820",
+    scheduleId: "T0820",
     status: EngagementStatus.DEFINITIVE,
     manually: true,
   },
   {
     playerId: "8",
-    scheduleId: "M0822",
+    scheduleId: "T0822",
     status: EngagementStatus.PROVISIONAL,
     manually: false,
   },
@@ -57,7 +57,7 @@ const playerEngagements = [
   },
   {
     playerId: "10",
-    scheduleId: "M0829",
+    scheduleId: "T0829",
     status: EngagementStatus.DEFINITIVE,
     manually: false,
   },
@@ -75,13 +75,13 @@ const playerEngagements = [
   },
   {
     playerId: "13",
-    scheduleId: "T0817",
+    scheduleId: "M0817",
     status: EngagementStatus.PROVISIONAL,
     manually: false,
   },
   {
     playerId: "14",
-    scheduleId: "M0820",
+    scheduleId: "T0820",
     status: EngagementStatus.DEFINITIVE,
     manually: true,
   },
@@ -102,6 +102,12 @@ const playerEngagements = [
     scheduleId: "M0831",
     status: EngagementStatus.DEFINITIVE,
     manually: false,
+  },
+  {
+    playerId: "14",
+    scheduleId: "M0824",
+    status: EngagementStatus.DEFINITIVE,
+    manually: true,
   },
 ];
 

@@ -1,5 +1,4 @@
 import playerEngagementsData from "../../tests/__mocks__/mock.playerEngagement";
-import playerService from "../services/player.service";
 import playerEngagementService from "../services/playerEngagement.service";
 
 const getPlayerEngagements = async (req, res): Promise<void> => {
@@ -85,6 +84,17 @@ const deletePlayerEngagement = async (req, res): Promise<void> => {
   }
 };
 
+const generateSquadProposal = async (req, res): Promise<void> => {
+  try {
+    const scheduleId = req.params.scheduleId;
+    await playerEngagementService.generateSquadProposal(scheduleId)
+    res.status(200).json({ message: "Proposal successfully generated squad proposal" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
+
 export default {
   getPlayerEngagements,
   readPlayerEngagement,
@@ -94,4 +104,5 @@ export default {
   addPlayerEngagement,
   addPlayerEngagementsBulk,
   deletePlayerEngagement,
+  generateSquadProposal
 };
