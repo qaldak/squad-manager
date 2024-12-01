@@ -16,9 +16,6 @@ class PlayerEngagementService {
 
         const squadSize = noOfPlayers ? noOfPlayers : 9;
 
-        // TODO: remainingPlayers
-        const matchDay = await ScheduleServices.readSchedule(scheduleId);
-
         const playerEngagements = playerEngagementsData.findPlayerEngagementBySchedule(scheduleId);
         if (!playerEngagements) {
             throw new Error(`Schedule with Id ${scheduleId} not found`);
@@ -27,6 +24,7 @@ class PlayerEngagementService {
         const canceledPlayers: Set<string> = new Set();
         const definitivePlayers: Set<string> = new Set();
 
+        // Remove provisional player engagements and set definitive or canceled players for event
         playerEngagements.forEach((engagement) => {
             switch (engagement.status) {
                 case 'provisional':
@@ -46,49 +44,96 @@ class PlayerEngagementService {
             }
         })
 
+        const neededPlayers = squadSize - definitivePlayers.size;
+        if (neededPlayers < 1) {
+            throw new Error(`No further players needed for this match!`);
+        }
+
         const eligiblePlayers = (await PlayerService.getPlayers()).filter(player =>
-            !canceledPlayers.has(player.playerId) && !definitivePlayers.has(player.playerId));
-        console.log('eligible Players', eligiblePlayers)
+            !canceledPlayers.has(player.playerId) && !definitivePlayers.has(player.playerId)).map(player => ({
+            ...player,
+            participation: 0,
+            cancellations: 0
+        }));
+
+        const matchDay = await ScheduleServices.readSchedule(scheduleId);
+
+        for (const player of eligiblePlayers) {
+            player.participation = await this.determineMatchParticipation(player.playerId)
+            player.cancellations = await this.determineCancellations(player.playerId, matchDay.date)
+        }
+
+        eligiblePlayers.sort((a, b) => {
+            if (a.participation === b.participation) {
+                if (b.cancellations === a.cancellations) {
+                    // randomize for sort (50% chance for negative and positive number)
+                    return Math.random() - 0.5
+                }
+                return b.cancellations - a.cancellations;
+            }
+            return a.participation - b.participation;
+        })
+
+        console.log('sorted eligible Players', eligiblePlayers)
+
+        const selectedPlayers: PlayerEngagement[] = eligiblePlayers.slice(0, neededPlayers).map(player => ({
+            playerId: player.playerId,
+            scheduleId: matchDay.scheduleId,
+            status: EngagementStatus.PROVISIONAL,
+            manually: false
+        }))
+
+        try {
+            const newPlayerEngagements = await this.addPlayerEngagementsBulk(selectedPlayers)
+            console.log(`new players added: ${newPlayerEngagements.length}`)
+        } catch (e) {
+            throw new Error(`Error adding player engagements (bulk): ${e}`);
+        }
+
+    }
+
+    async determineMatchParticipation(playerId: string): Promise<number> {
+        let matchCount = 0
 
         const matchSchedules = (await ScheduleServices.getAllSchedules()).filter(schedule => schedule.type === ScheduleType.MATCH_DAY)
         const matchIds: Set<string> = new Set(matchSchedules.map(schedule => schedule.scheduleId))
-        console.log(`number of match days found: ${matchSchedules.length}`);
-        console.log(`matchScheduleIds ${Array.from(matchIds)}`)
 
-        const playerParticipationCounts: { [playerId: string]: { playedMatches: number, cancellations: number } } = {}
-        
-        eligiblePlayers.forEach(player => {
-            playerParticipationCounts[player.playerId] = {playedMatches: 0, cancellations: 0};
-            console.log(`player participation: ${playerParticipationCounts[player.playerId].playedMatches} ${playerParticipationCounts[player.playerId].cancellations}`
-            );
+        const playerSchedules = playerEngagementsData.findPlayerEngagementsByPlayer(playerId)
 
-            const playerSchedules = playerEngagementsData.findPlayerEngagementsByPlayer(player.playerId)
-            console.log(`player schedules: ${playerSchedules.length}`);
+        playerSchedules.forEach(schedule => {
+            if (matchIds.has(schedule.scheduleId) && schedule.status === 'definitive') {
+                matchCount++
+                return
+            }
 
-            // TODO: function for determineParticipation & determineCancellations
-            playerSchedules.forEach(schedule => {
-                if (!matchIds.has(schedule.scheduleId)) {
-                    console.log(`training: ${schedule.scheduleId}`);
-                    return
-                }
-                console.log(`match: ${schedule.scheduleId}`);
+            console.log(`training: ${schedule.scheduleId} or status: ${schedule.status}`);
 
-                switch (schedule.status) {
-                    case 'canceled':
-                        playerParticipationCounts[player.playerId].cancellations += 1;
-                        console.log(`player participation canceled: ${playerParticipationCounts[player.playerId].cancellations}`);
-                        break
-                    case 'definitive':
-                        playerParticipationCounts[player.playerId].playedMatches += 1;
-                        console.log(`player participation matches: ${playerParticipationCounts[player.playerId].playedMatches}`)
-                        break
-                    default:
-                        console.log(`foo ${schedule.scheduleId} doesn't match any schedule`);
-                }
-
-                console.log(`player participation: ${player.playerId} ${JSON.stringify(playerParticipationCounts[player.playerId])}`)
-            })
         })
+
+        // TODO: log?
+        return matchCount
+    }
+
+    async determineCancellations(playerId: string, matchDate: Date): Promise<number> {
+        let cancellations = 0
+
+        const matchSchedules = (await ScheduleServices.getAllSchedules()).filter(schedule => schedule.type === ScheduleType.MATCH_DAY && schedule.date >= matchDate)
+        const matchIds: Set<string> = new Set(matchSchedules.map(schedule => schedule.scheduleId))
+
+        const playerSchedules = playerEngagementsData.findPlayerEngagementsByPlayer(playerId)
+
+        playerSchedules.forEach(schedule => {
+            if (matchIds.has(schedule.scheduleId) && schedule.status === 'canceled') {
+                cancellations++
+                return
+            }
+
+            console.log(`training: ${schedule.scheduleId} or status: ${schedule.status}`);
+
+        })
+
+        // TODO: log?
+        return cancellations
     }
 
     async addPlayerEngagement(
@@ -110,6 +155,23 @@ class PlayerEngagementService {
         )
         newPlayerEngagements.forEach(engagement => playerEngagementsData.addPlayerEngagement(engagement))
         return newPlayerEngagements
+    }
+
+    async confirmParticipation(scheduleIdIn: string): Promise<void> {
+        const playerEngagements = playerEngagementsData.findPlayerEngagementBySchedule(scheduleIdIn)
+
+        for (let engagement of playerEngagements) {
+            console.log(`engagement: ${JSON.stringify(engagement, null, 2)}`)
+            if (engagement.status === 'provisional') {
+                engagement.status = EngagementStatus.DEFINITIVE
+                try {
+                    engagement = await this.updatePlayerEngagement(engagement)
+                    console.log(`engagement definitive: ${JSON.stringify(engagement, null, 2)}`)
+                } catch (e) {
+                    throw new Error(`Error updating engagement: ${e}`)
+                }
+            }
+        }
     }
 
     async deletePlayerEngagement(playerId: string, scheduleId: string): Promise<boolean> {

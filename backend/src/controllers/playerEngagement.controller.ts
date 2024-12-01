@@ -1,5 +1,6 @@
 import playerEngagementsData from "../../tests/__mocks__/mock.playerEngagement";
 import playerEngagementService from "../services/playerEngagement.service";
+import PlayerEngagementService from "../services/playerEngagement.service";
 
 const getPlayerEngagements = async (req, res): Promise<void> => {
   const playerEngagements = playerEngagementsData.getPlayerEngagements();
@@ -45,8 +46,8 @@ const updatePlayerEngagement = async (req, res): Promise<void> => {
     } else {
       res.status(404).json({ message: "Player engagement not found" });
     }
-  } catch (error) {
-    res.status(404).json({ message: error.message });
+  } catch (e) {
+    res.status(404).json({ message: e.message });
   }
 };
 
@@ -55,8 +56,8 @@ const addPlayerEngagement = async (req, res): Promise<void> => {
     const newPlayerEngagement =
       await playerEngagementService.addPlayerEngagement(req.body);
     res.status(201).json(newPlayerEngagement);
-  } catch (error) {
-    res.status(404).json({ message: error.message });
+  } catch (e) {
+    res.status(404).json({ message: e.message });
   }
 };
 
@@ -65,8 +66,8 @@ const addPlayerEngagementsBulk = async (req, res): Promise<void> => {
     const newPlayerEngagements =
       await playerEngagementService.addPlayerEngagementsBulk(req.body);
     res.status(201).json(newPlayerEngagements);
-  } catch (error) {
-    res.status(404).json({ message: error.message });
+  } catch (e) {
+    res.status(404).json({ message: e.message });
   }
 };
 
@@ -89,8 +90,18 @@ const generateSquadProposal = async (req, res): Promise<void> => {
     const scheduleId = req.params.scheduleId;
     await playerEngagementService.generateSquadProposal(scheduleId)
     res.status(200).json({ message: "Proposal successfully generated squad proposal" });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+  } catch (e) {
+    res.status(400).json({ message: e.message });
+  }
+}
+
+const confirmParticipation = async (req, res): Promise<void> => {
+  try {
+    const scheduleId = req.params.scheduleId;
+    await PlayerEngagementService.confirmParticipation(scheduleId)
+    res.status(200).json({ message: "Participation confirmed" });
+  } catch (e) {
+    res.status(400).json({ message: e.message });
   }
 }
 
@@ -104,5 +115,6 @@ export default {
   addPlayerEngagement,
   addPlayerEngagementsBulk,
   deletePlayerEngagement,
-  generateSquadProposal
+  generateSquadProposal,
+  confirmParticipation
 };

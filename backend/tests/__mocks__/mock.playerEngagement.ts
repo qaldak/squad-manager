@@ -109,6 +109,24 @@ const playerEngagements = [
     status: EngagementStatus.DEFINITIVE,
     manually: true,
   },
+  {
+    playerId: "3",
+    scheduleId: "M0817",
+    status: EngagementStatus.DEFINITIVE,
+    manually: true,
+  },
+  {
+    playerId: "3",
+    scheduleId: "M0824",
+    status: EngagementStatus.CANCELED,
+    manually: true,
+  },
+  {
+    playerId: "3",
+    scheduleId: "M0831",
+    status: EngagementStatus.DEFINITIVE,
+    manually: false,
+  },
 ];
 
 const getPlayerEngagements = () => playerEngagements;

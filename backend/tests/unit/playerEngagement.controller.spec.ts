@@ -6,6 +6,7 @@ import {
   PlayerEngagement
 } from '../../src/models/PlayerEngagement'
 import playerEngagementRoutes from '../../src/routes/playerEngangement.routes'
+import PlayerEngagementService from "../../src/services/playerEngagement.service";
 
 const app = express()
 
@@ -156,5 +157,40 @@ describe('PlayerEngagement Controller', () => {
       .delete(`/api/playerEngagement/${playerId}/${scheduleId}`)
       .expect(404)
     expect(resMsg.body.message).toBe('Player engagement not found')
+  })
+
+  it('should count number of match participation', async () => {
+    const playerId = "3"
+
+    const matchCount = await PlayerEngagementService.determineMatchParticipation(playerId)
+    expect(matchCount).toEqual(2)
+
+    const cancellations = await PlayerEngagementService.determineCancellations(playerId, new Date('2024-08-18'))
+    expect(cancellations).toEqual(1)
+  })
+
+  it('should confirm all provisional players', async () => {
+    const scheduleId = "M0810"
+
+    let provisionalPlayers = 0
+    let definitivePlayers = 0
+
+    await PlayerEngagementService.confirmParticipation(scheduleId)
+
+    const res = await request(app).get(`/api/playerEngagements/schedule/${scheduleId}`)
+
+    const playerEngagements = res.body
+    playerEngagements.forEach((engagement) => {
+      switch (engagement.status) {
+        case 'provisional':
+          provisionalPlayers += 1
+          break
+        case 'definitive':
+          definitivePlayers += 1
+          break
+      }
+    })
+    expect(provisionalPlayers).toEqual(0)
+    expect(definitivePlayers).toEqual(3)
   })
 })

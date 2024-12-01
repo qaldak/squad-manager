@@ -46,4 +46,9 @@ router.post(
     playerEngagementController.generateSquadProposal
 )
 
+router.patch(
+    "/playerEngagements/confirmParticipation/:scheduleId",
+    playerEngagementController.confirmParticipation
+)
+
 export default router;
