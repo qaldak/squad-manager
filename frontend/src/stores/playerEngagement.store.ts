@@ -19,7 +19,7 @@ export const usePlayerEngagementStore = defineStore('playerEngagement', {
 
         const fetchedPlayerEngagements = await getPlayerEngagementsByScheduleId(scheduleId)
         if (!Array.isArray(fetchedPlayerEngagements)) {
-          throw new Error('fetchedPlayerEngagements is not an array')
+          throw new TypeError('fetchedPlayerEngagements is not an array')
         }
         
         console.log(`playerEngagement, fetchedPlayerEngagements: ${fetchedPlayerEngagements}`)
@@ -47,6 +47,7 @@ export const usePlayerEngagementStore = defineStore('playerEngagement', {
 
       } catch (e) {
         console.error(e)
+        throw e
       } finally {
         this.loading = false
       }
@@ -69,47 +70,3 @@ export const usePlayerEngagementStore = defineStore('playerEngagement', {
     }
   }
 })
-
-
-/*
-import { defineStore } from 'pinia';
-import { getPlayerEngagementsByScheduleId, getPlayerInfoById } from '@/services/playerEngagement.service';
-import type { PlayerEngagement, PlayerInfo } from '@/types/playerEngagement.type';
-
-export const usePlayerEngagementStore = defineStore('playerEngagement', {
-  state: () => ({
-    playerEngagements: [] as PlayerEngagement[],
-    loading: false,
-    totalPlayerEngagements: 0
-  }),
-  actions: {
-    async loadPlayerEngagementsByScheduleId(scheduleId: string): Promise<PlayerEngagement[]> {
-      this.loading = true;
-      try {
-        console.log(`PlayerEngagement, scheduleId=${scheduleId}`);
-
-        const fetchedPlayerEngagements = await getPlayerEngagementsByScheduleId(scheduleId);
-        const playerEngagementsWithInfo = await Promise.all(
-          fetchedPlayerEngagements.map(async (engagement) => {
-            const playerInfo = await getPlayerInfoById(engagement.playerId);
-            return { ...engagement, playerName: playerInfo.name, playerPosition: playerInfo.position };
-          })
-        );
-
-        console.log(`playerEngagement, fetchedPlayerEngagements: ${playerEngagementsWithInfo}`);
-        this.playerEngagements = playerEngagementsWithInfo;
-        this.totalPlayerEngagements = playerEngagementsWithInfo.length;
-
-        return playerEngagementsWithInfo;
-      } catch (e) {
-        console.error(e);
-        return [];
-      } finally {
-        this.loading = false;
-      }
-    }
-  }
-});
-
-*
-* */

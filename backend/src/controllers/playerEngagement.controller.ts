@@ -95,10 +95,10 @@ const generateSquadProposal = async (req, res): Promise<void> => {
   }
 }
 
-const confirmParticipation = async (req, res): Promise<void> => {
+const confirmProposal = async (req, res): Promise<void> => {
   try {
     const scheduleId = req.params.scheduleId;
-    await PlayerEngagementService.confirmParticipation(scheduleId)
+    await PlayerEngagementService.setEngagementDefinitive(scheduleId)
     res.status(200).json({ message: "Participation confirmed" });
   } catch (e) {
     res.status(400).json({ message: e.message });
@@ -116,5 +116,5 @@ export default {
   addPlayerEngagementsBulk,
   deletePlayerEngagement,
   generateSquadProposal,
-  confirmParticipation
+  confirmProposal
 };

@@ -7,3 +7,13 @@ export const getPlayerEngagementsByScheduleId = async (scheduleId: string): Prom
   const response = await axios.get(`${API_URL}/schedule/${scheduleId}`)
   return response.data
 }
+
+export const confirmParticipation = async (scheduleId: string): Promise<PlayerEngagement[]> => {
+  const response = await axios.get(`${API_URL}/confirmProposal/${scheduleId}`)
+  return response.data
+}
+
+export const generateProposal = async (scheduleId: string): Promise<PlayerEngagement[]> => {
+  const response = await axios.get(`${API_URL}/proposal/${scheduleId}`)
+  return response.data
+}

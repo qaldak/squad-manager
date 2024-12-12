@@ -47,8 +47,8 @@ router.post(
 )
 
 router.patch(
-    "/playerEngagements/confirmParticipation/:scheduleId",
-    playerEngagementController.confirmParticipation
+    "/playerEngagements/confirmProposal/:scheduleId",
+    playerEngagementController.confirmProposal
 )
 
 export default router;

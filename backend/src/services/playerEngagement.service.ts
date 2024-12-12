@@ -157,7 +157,7 @@ class PlayerEngagementService {
         return newPlayerEngagements
     }
 
-    async confirmParticipation(scheduleIdIn: string): Promise<void> {
+    async setEngagementDefinitive(scheduleIdIn: string): Promise<void> {
         const playerEngagements = playerEngagementsData.findPlayerEngagementBySchedule(scheduleIdIn)
 
         for (let engagement of playerEngagements) {

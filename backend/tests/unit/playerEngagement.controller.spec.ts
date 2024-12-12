@@ -175,7 +175,7 @@ describe('PlayerEngagement Controller', () => {
     let provisionalPlayers = 0
     let definitivePlayers = 0
 
-    await PlayerEngagementService.confirmParticipation(scheduleId)
+    await PlayerEngagementService.setEngagementDefinitive(scheduleId)
 
     const res = await request(app).get(`/api/playerEngagements/schedule/${scheduleId}`)
 
