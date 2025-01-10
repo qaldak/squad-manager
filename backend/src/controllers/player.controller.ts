@@ -1,8 +1,7 @@
-import playersData from "../../tests/__mocks__/mock.players";
 import PlayerService from "../services/player.service";
 
 const getPlayers = async (req, res): Promise<void> => {
-  const players = playersData.getPlayers();
+  const players = await PlayerService.getPlayers()
   res.json(players);
 };
 
@@ -12,23 +11,27 @@ const addPlayer = async (req, res): Promise<void> => {
 };
 
 const readPlayer = async (req, res): Promise<void> => {
-  const player = playersData.readPlayer(req.params.id);
+  const player = await PlayerService.readPlayer(req.params.id);
   res.json(player);
 };
 
 const updatePlayer = async (req, res): Promise<void> => {
-  const playerId = req.params.id;
-  const player = playersData.readPlayer(playerId);
   try {
-    const updatedPlayer = { ...player, ...req.body };
-    const result = playersData.updatePlayer(updatedPlayer);
+    const playerId = req.params.id;
+    console.log("Player ID: ", playerId);
+    const player = await PlayerService.readPlayer(playerId);
+    console.log("Player: ", player)
+    const updatedPlayer = {...player, ...req.body};
+    console.log("updatedPlayer", updatedPlayer);
+    const result = await PlayerService.updatePlayer(updatedPlayer);
+    console.log("Result: ", result);
     if (result) {
       res.status(200).json(result);
     } else {
-      res.status(404).json({ message: "Player not found" });
+      res.status(404).json({message: "Player not found"});
     }
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    res.status(404).json({message: error.message});
   }
 };
 

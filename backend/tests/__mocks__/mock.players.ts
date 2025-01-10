@@ -1,128 +1,138 @@
-import { Position } from "../../src/models/Player";
+import {Position} from "../../src/models/Player";
 
-const players = [
+const mockPlayers = [
   {
-    playerId: "1",
+    id: "1",
     name: "Doe",
     firstname: "John",
-    birthYear: null,
+    birthyear: null,
     position: Position.DEFENDER,
   },
   {
-    playerId: "2",
+    id: "2",
     name: "Smith",
     firstname: "Jane",
-    birthYear: null,
+    birthyear: null,
     position: Position.FORWARD,
   },
   {
-    playerId: "3",
+    id: "3",
     name: "Lee",
     firstname: "Mike",
-    birthYear: null,
+    birthyear: null,
     position: Position.MIDFIELDER,
   },
   {
-    playerId: "4",
+    id: "4",
     name: "Brown",
     firstname: "Alice",
-    birthYear: null,
+    birthyear: null,
+    position: null,
   },
   {
-    playerId: "5",
+    id: "5",
     name: "Garcia",
     firstname: "Carlos",
-    birthYear: null,
+    birthyear: null,
     position: Position.GOALKEEPER,
   },
   {
-    playerId: "6",
+    id: "6",
     name: "Nguyen",
     firstname: "Linh",
-    birthYear: null,
+    birthyear: null,
+    position: null,
   },
   {
-    playerId: "7",
+    id: "7",
     name: "Schmidt",
     firstname: "Peter",
-    birthYear: null,
+    birthyear: null,
     position: Position.DEFENDER,
   },
   {
-    playerId: "8",
+    id: "8",
     name: "Kim",
     firstname: "Soo-hyun",
-    birthYear: null,
+    birthyear: null,
+    position: null,
   },
   {
-    playerId: "9",
+    id: "9",
     name: "Popescu",
     firstname: "Ion",
-    birthYear: null,
+    birthyear: null,
     position: Position.FORWARD,
   },
   {
-    playerId: "10",
+    id: "10",
     name: "Müller",
     firstname: "Franz",
-    birthYear: null,
+    birthyear: null,
+    position: null,
   },
   {
-    playerId: "11",
+    id: "11",
     name: "Zhang",
     firstname: "Wei",
-    birthYear: null,
+    birthyear: null,
+    position: null,
   },
   {
-    playerId: "12",
+    id: "12",
     name: "Santos",
     firstname: "Ricardo",
-    birthYear: null,
+    birthyear: null,
     position: Position.MIDFIELDER,
   },
   {
-    playerId: "13",
+    id: "13",
     name: "Johnson",
     firstname: "David",
-    birthYear: null,
+    birthyear: null,
+    position: null,
   },
   {
-    playerId: "14",
+    id: "14",
     name: "Bertrand",
     firstname: "Olivier",
-    birthYear: null,
+    birthyear: null,
     position: Position.DEFENDER,
   },
   {
-    playerId: "15",
+    id: "15",
     name: "Diaz",
     firstname: "Isabella",
-    birthYear: null,
+    birthyear: null,
+    position: null,
   },
 ];
 
-const getPlayers = () => players;
+const getPlayers = () => mockPlayers;
 
-const readPlayer = (playerId) => {
-  return players.find((player) => player.playerId === playerId);
+const readPlayer = (playerId: string) => {
+  return mockPlayers.find((player) => player.id === playerId);
 };
 
 const addPlayer = (player) => {
-  players.push(player);
+  player.id = "123e4567-e89b-12d3-a456-426614174000"
+  mockPlayers.push(player);
+  return mockPlayers[mockPlayers.length - 1];
 };
 
 const updatePlayer = (updatedPlayer) => {
-  const index = players.findIndex(
-    (player) => player.playerId === updatedPlayer.playerId
+  const index = mockPlayers.findIndex(
+    (player) => player.id === updatedPlayer.id
   );
+  console.log("INDEX", index)
   if (index !== -1) {
-    players[index] = { ...players[index], ...updatedPlayer };
-    return players[index];
+    mockPlayers[index] = { ...mockPlayers[index], ...updatedPlayer };
+    return mockPlayers[index];
   }
 };
 
 export default {
-  players,
+  mockPlayers,
   getPlayers,
   readPlayer,
   addPlayer,

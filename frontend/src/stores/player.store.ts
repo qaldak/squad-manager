@@ -56,16 +56,17 @@ export const usePlayerStore = defineStore('player', {
       // Todo: auch Daten im Playerstore aktualisieren, damit read via Playerstore geamcht werden kann.
       // this.players.push(addedPlayer)
       // this.totalPlayers
-      console.log(addedPlayer)
+      console.log("Store addedPlayer:", addedPlayer)
     },
     async updatePlayer(player: Player) {
+      console.log("Store updatePlayer:", player)
       const updatedPlayer = await updatePlayer(player)
       // Todo: auch Daten im Playerstore aktualisieren, damit read via Playerstore geamcht werden kann.
       // const index = this.players.findIndex(p => p.playerId === player.playerId)
       // if (index !== -1) {
       //  this.players.splice(index, 1, updatedPlayer)
       // }
-      console.log(updatedPlayer)
+      console.log("Store updatedPlayer:", updatedPlayer)
     }
   }
 })

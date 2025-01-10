@@ -9,8 +9,8 @@
           <v-text-field v-model="detailPlayer.firstname" label="Vorname" :rules="[rules.required]"
                         required></v-text-field>
           <v-text-field v-model="detailPlayer.name" label="Name" :rules="[rules.required]" required></v-text-field>
-          <v-text-field v-model="detailPlayer.birthYear" label="Geburtsjahr"></v-text-field>
-          <v-select v-model="detailPlayer.position" :items="positions" label="Position"></v-select>
+          <v-text-field clearable v-model.number="detailPlayer.birthYear" label="Geburtsjahr" :rules="[rules.birthYear]"></v-text-field>
+          <v-select clearable v-model="detailPlayer.position" :items="positions" label="Position"></v-select>
         </v-form>
       </v-card-text>
       <v-card-actions>
@@ -42,7 +42,8 @@ const detailDialog = ref(props.dialog)
 const detailPlayer = ref({ ...props.player })
 const valid = ref(false)
 const rules = {
-  required: (value: string) => !!value || 'This field is required'
+  required: (value: string) => !!value || 'This field is required',
+  birthYear: (value: number) => ((value > 1930 && value <= new Date().getFullYear()) || value === null) || 'Value not allowd'
 }
 
 const positions = Object.values(Position)
@@ -77,6 +78,10 @@ const savePlayer = async (closeAfterSave: boolean) => {
   if (props.isNew) {
     await playerStore.addPlayer(detailPlayer.value)
   } else {
+    console.log("FOO", typeof detailPlayer.value.birthYear)
+    if (detailPlayer.value.birthYear === "") {
+      detailPlayer.value.birthYear = null
+    }
     await playerStore.updatePlayer(detailPlayer.value)
   }
   if (closeAfterSave) {
