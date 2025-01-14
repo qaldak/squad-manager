@@ -1,8 +1,7 @@
 import ScheduleService from '../services/schedule.services'
-import schedulesData from '../../tests/__mocks__/mock.schedule'
 
 const getSchedules = async (req, res): Promise<void> => {
-  const schedules = schedulesData.getSchedules()
+  const schedules = await ScheduleService.getAllSchedules()
   res.json(schedules)
 }
 
@@ -13,7 +12,7 @@ const readSchedule = async (req, res): Promise<void> => {
 
 const readScheduleByDate = async (req, res): Promise<void> => {
   const date = new Date(req.params.date)
-  const schedule = schedulesData.readScheduleByDate(date)
+  const schedule = await ScheduleService.readScheduleByDate(date)
   res.json(schedule)
 }
 
@@ -27,7 +26,7 @@ const addSchedule = async (req, res): Promise<void> => {
 
 const updateSchedule = async (req, res): Promise<void> => {
   const scheduleId = req.params.id
-  const schedule = schedulesData.readSchedule(scheduleId)
+  const schedule = await ScheduleService.readSchedule(scheduleId)
 
   console.log(`req: ${JSON.stringify(req.body)}, schedule: ${JSON.stringify(schedule)}`)
   try {

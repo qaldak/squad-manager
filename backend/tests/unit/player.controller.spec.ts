@@ -8,56 +8,58 @@ import {jest, describe, it, expect} from "@jest/globals"
 // Mock db
 jest.mock('@supabase/supabase-js', () => {
   return {
-    createClient: () => ({
-      from: jest.fn(() => ({
-        select: jest.fn(() => {
-          return {
-            eq: jest.fn((column, value: string) => {
-              if (column === 'id') {
-                const player = playersData.readPlayer(value)
-                return Promise.resolve({
-                  data: player ? [player] : [],
-                  error: null
-                })
-              }
-            }),
-            then: jest.fn((callback: (result: { data: any[]; error: null }) => void) => {
-              const players = playersData.getPlayers();
-              return callback({
-                data: players,
-                error: null
-              })
-            })
-          }
-        }),
-        update: jest.fn((data) => {
-          const updatedPlayer = playersData.updatePlayer(data)
-          return {
-            eq: jest.fn(() => {
-              return {
-                select: jest.fn(() => {
+    createClient: () => {
+      return ({
+        from: jest.fn(() => ({
+          select: jest.fn(() => {
+            return {
+              eq: jest.fn((column, value: string) => {
+                if (column === 'id') {
+                  const player = playersData.readPlayer(value)
                   return Promise.resolve({
-                    data: [updatedPlayer],
+                    data: player ? [player] : [],
                     error: null
                   })
+                }
+              }),
+              then: jest.fn((callback: (result: { data: any[]; error: null }) => void) => {
+                const players = playersData.getPlayers();
+                return callback({
+                  data: players,
+                  error: null
                 })
-              }
-            })
-          }
-        }),
-        insert: jest.fn((data) => {
-          const newPlayer = playersData.addPlayer(data)
-          return {
-            select: jest.fn(() => {
-              return Promise.resolve({
-                data: [newPlayer],
-                error: null
               })
-            })
-          }
-        })
-      }))
-    })
+            }
+          }),
+          update: jest.fn((data) => {
+            const updatedPlayer = playersData.updatePlayer(data)
+            return {
+              eq: jest.fn(() => {
+                return {
+                  select: jest.fn(() => {
+                    return Promise.resolve({
+                      data: [updatedPlayer],
+                      error: null
+                    })
+                  })
+                }
+              })
+            }
+          }),
+          insert: jest.fn((data) => {
+            const newPlayer = playersData.addPlayer(data)
+            return {
+              select: jest.fn(() => {
+                return Promise.resolve({
+                  data: [newPlayer],
+                  error: null
+                })
+              })
+            }
+          })
+        }))
+      });
+    }
   }
 })
 

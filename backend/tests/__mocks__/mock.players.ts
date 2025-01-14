@@ -124,7 +124,7 @@ const updatePlayer = (updatedPlayer) => {
   const index = mockPlayers.findIndex(
     (player) => player.id === updatedPlayer.id
   );
-  console.log("INDEX", index)
+
   if (index !== -1) {
     mockPlayers[index] = { ...mockPlayers[index], ...updatedPlayer };
     return mockPlayers[index];

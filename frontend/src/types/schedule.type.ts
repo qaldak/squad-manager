@@ -6,13 +6,13 @@ export interface Schedule {
 }
 
 export enum ScheduleType {
+  MATCH_DAY = 'Match',
   TRAINING = 'Training',
-  MATCH_DAY = 'Match day'
 }
 
 export enum MatchType {
-  CUP_GAME = 'Cup Game',
-  LEAGUE_GAME = 'League Game',
-  INDOOR_GAME = 'Indoor Game',
-  FRIENDLY_GAME = 'Friendly Game'
+  CUP_GAME = 'Cup',
+  LEAGUE_GAME = 'League',
+  INDOOR_GAME = 'Indoor',
+  FRIENDLY_GAME = 'Friendly'
 }

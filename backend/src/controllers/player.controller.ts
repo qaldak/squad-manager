@@ -18,11 +18,8 @@ const readPlayer = async (req, res): Promise<void> => {
 const updatePlayer = async (req, res): Promise<void> => {
   try {
     const playerId = req.params.id;
-    console.log("Player ID: ", playerId);
     const player = await PlayerService.readPlayer(playerId);
-    console.log("Player: ", player)
     const updatedPlayer = {...player, ...req.body};
-    console.log("updatedPlayer", updatedPlayer);
     const result = await PlayerService.updatePlayer(updatedPlayer);
     console.log("Result: ", result);
     if (result) {

@@ -98,7 +98,7 @@ watch(
   (newVal) => {
     scheduleDetailDialog.value = newVal
     if (newVal) {
-      // Initialisiere die Daten erst, wenn der Dialog geöffnet wird
+      // Initialize data set on opening dialog
       detailSchedule.value = { ...props.schedule }
       console.log('Check', detailSchedule.value)
       scheduledDate.value = detailSchedule.value.scheduleId ? new Date(detailSchedule.value.date) : undefined

@@ -12,8 +12,8 @@ class PlayerService {
       }
       return mapPlayers(players);
     } catch (error) {
-      console.error(`Error fetching players from db: ${JSON.stringify(error)}`);
-      throw error;
+        console.error(`Error fetching players from db: ${JSON.stringify(error)}`);
+        throw error;
     }
 
   }

@@ -1,103 +1,112 @@
 import { ScheduleType, MatchType } from '../../src/models/Schedule'
 
-const schedules = [
+const mockSchedules = [
   {
-    scheduleId: 'M0810',
+    id: 'M0810',
     date: new Date('2024-08-10'),
     type: ScheduleType.MATCH_DAY,
-    matchType: MatchType.LEAGUE_GAME
+    matchtype: MatchType.LEAGUE_GAME
   },
   {
-    scheduleId: 'M0817',
+    id: 'M0817',
     date: new Date('2024-08-17'),
     type: ScheduleType.MATCH_DAY,
-    matchType: MatchType.LEAGUE_GAME
+    matchtype: MatchType.LEAGUE_GAME
   },
   {
-    scheduleId: 'M0824',
+    id: 'M0824',
     date: new Date('2024-08-24'),
     type: ScheduleType.MATCH_DAY,
-    matchType: MatchType.LEAGUE_GAME
+    matchtype: MatchType.LEAGUE_GAME
   },
   {
-    scheduleId: 'M0827',
+    id: 'M0827',
     date: new Date('2024-08-27'),
     type: ScheduleType.MATCH_DAY,
-    matchType: MatchType.CUP_GAME
+    matchtype: MatchType.CUP_GAME
   },
   {
-    scheduleId: 'M0831',
+    id: 'M0831',
     date: new Date('2024-08-31'),
     type: ScheduleType.MATCH_DAY,
-    matchType: MatchType.LEAGUE_GAME
+    matchtype: MatchType.LEAGUE_GAME
   },
   {
-    scheduleId: 'T0813',
+    id: 'T0813',
     date: new Date('2024-08-13'),
-    type: ScheduleType.TRAINING
+    type: ScheduleType.TRAINING,
+    matchtype: undefined
   },
   {
-    scheduleId: 'T0815',
+    id: 'T0815',
     date: new Date('2024-08-15'),
-    type: ScheduleType.TRAINING
+    type: ScheduleType.TRAINING,
+    matchtype: undefined
   },
   {
-    scheduleId: 'T0820',
+    id: 'T0820',
     date: new Date('2024-08-20'),
-    type: ScheduleType.TRAINING
+    type: ScheduleType.TRAINING,
+    matchtype: undefined
   },
   {
-    scheduleId: 'T0822',
+    id: 'T0822',
     date: new Date('2024-08-22'),
-    type: ScheduleType.TRAINING
+    type: ScheduleType.TRAINING,
+    matchtype: undefined
   },
   {
-    scheduleId: 'T0827',
+    id: 'T0827',
     date: new Date('2024-08-27'),
-    type: ScheduleType.TRAINING
+    type: ScheduleType.TRAINING,
+    matchtype: undefined
   },
   {
-    scheduleId: 'T0829',
+    id: 'T0829',
     date: new Date('2024-08-29'),
-    type: ScheduleType.TRAINING
+    type: ScheduleType.TRAINING,
+    matchtype: undefined
   },
   {
-    scheduleId: 'M0903',
+    id: 'M0903',
     date: new Date('2024-09-03'),
     type: ScheduleType.MATCH_DAY,
-    matchType: MatchType.INDOOR_GAME
+    matchtype: MatchType.INDOOR_GAME
   }
 ]
 
-const getSchedules = () => schedules
+const getSchedules = () => mockSchedules
 
 const readSchedule = (scheduleId: string) => {
-  return schedules.find((schedule) => schedule.scheduleId === scheduleId)
+  return mockSchedules.find((schedule) => schedule.id === scheduleId)
 }
 
 const readScheduleByDate = (date: Date) => {
-  return schedules.find(
+  return mockSchedules.find(
     (schedule) => schedule.date.toISOString() === date.toISOString()
   )
 }
 
 const addSchedule = (schedule) => {
-  schedules.push(schedule)
+  schedule.id = "987z4321-e89b-12d3-a456-426614174000"
+  mockSchedules.push(schedule)
+  return mockSchedules[mockSchedules.length - 1];
 }
 
 const updateSchedule = (updatedSchedule) => {
-  const index = schedules.findIndex(
-    (schedule) =>
-      schedule.date.toISOString() === updatedSchedule.date.toISOString()
-  )
+  const index = mockSchedules.findIndex(
+    (schedule) => schedule.id === updatedSchedule.id)
+
+  console.log("INDEX", index)
+
   if (index !== -1) {
-    schedules[index] = { ...schedules[index], ...updatedSchedule }
-    return schedules[index]
+    mockSchedules[index] = { ...mockSchedules[index], ...updatedSchedule }
+    return mockSchedules[index]
   }
 }
 
 export default {
-  schedules,
+  mockSchedules,
   getSchedules,
   readSchedule,
   readScheduleByDate,

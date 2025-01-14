@@ -44,10 +44,10 @@ const schedules = ref<Schedule[]>([])
 const scheduleDialog = ref(false)
 const scheduleStore = useScheduleStore()
 const actualSchedule = ref<Schedule>({
-  scheduleId: '',
+  id: '',
   date: new Date(),
   type: ScheduleType.TRAINING,
-  matchType: undefined
+  matchtype: undefined
 })
 
 const formatSchedules = () => {
@@ -72,10 +72,10 @@ const openScheduleDialog = (createNew: boolean, schedule?: Schedule) => {
   isNew.value = createNew
   if (createNew) {
     actualSchedule.value = {
-      scheduleId: '',
+      id: '',
       date: new Date(),
       type: ScheduleType.MATCH_DAY,
-      matchType: undefined
+      matchtype: undefined
     }
     scheduleDialog.value = true
   } else if (schedule) {
