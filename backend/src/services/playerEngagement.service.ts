@@ -96,9 +96,11 @@ class PlayerEngagementService {
         let matchCount = 0
 
         const matchSchedules = (await ScheduleServices.getAllSchedules()).filter(schedule => schedule.type === ScheduleType.MATCH_DAY)
+        console.log("MATCHES: ", matchSchedules)
         const matchIds: Set<string> = new Set(matchSchedules.map(schedule => schedule.scheduleId))
 
         const playerSchedules = playerEngagementsData.findPlayerEngagementsByPlayer(playerId)
+        console.log("Player Schedules: ", playerSchedules)
 
         playerSchedules.forEach(schedule => {
             if (matchIds.has(schedule.scheduleId) && schedule.status === 'definitive') {
@@ -134,6 +136,10 @@ class PlayerEngagementService {
 
         // TODO: log?
         return cancellations
+    }
+
+    async getPlayerEngagements(): Promise<PlayerEngagement[]> {
+        return playerEngagementsData.getPlayerEngagements();
     }
 
     async addPlayerEngagement(

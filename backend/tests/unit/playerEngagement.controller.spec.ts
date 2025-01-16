@@ -1,4 +1,4 @@
-import { describe, expect, it } from '@jest/globals'
+import {describe, expect, it, jest} from '@jest/globals'
 import express from 'express'
 import request from 'supertest'
 import {
@@ -7,16 +7,40 @@ import {
 } from '../../src/models/PlayerEngagement'
 import playerEngagementRoutes from '../../src/routes/playerEngangement.routes'
 import PlayerEngagementService from "../../src/services/playerEngagement.service";
+import schedulesData from "../__mocks__/mock.schedule";
 
 const app = express()
 
 app.use(express.json())
 app.use('/api', playerEngagementRoutes)
 
+jest.mock('@supabase/supabase-js', () => {
+  return {
+    createClient: () => {
+      return ({
+        from: jest.fn((tableName: string) => {
+          if (tableName === 'schedules') {
+            return {
+              select: jest.fn(() => {
+                const schedules = schedulesData.getSchedules();
+                return Promise.resolve({
+                  data: schedules,
+                  error: null
+                })
+              })
+            }
+          }
+        })
+      })
+    }
+  }
+})
+
+
 describe('PlayerEngagement Controller', () => {
   it('should get all playerEngagements', async () => {
     const res = await request(app).get('/api/playerEngagements')
-    expect(res.body).toHaveLength(17)
+    expect(res.body).toHaveLength(21)
     expect(res.statusCode).toEqual(200)
   })
 
@@ -110,7 +134,7 @@ describe('PlayerEngagement Controller', () => {
     expect(res.body).toEqual(newPlayerEngagement)
 
     const resCount = await request(app).get('/api/playerEngagements')
-    expect(resCount.body).toHaveLength(18)
+    expect(resCount.body).toHaveLength(22)
   })
 
   it('should add new player engagements', async () => {
@@ -143,7 +167,7 @@ describe('PlayerEngagement Controller', () => {
 
   it('should delete entry from player engagement', async () => {
     const playerId = 7
-    const scheduleId = 'M0820'
+    const scheduleId = 'T0820'
 
     const res = await request(app).delete(`/api/playerEngagement/${playerId}/${scheduleId}`)
     expect(res.statusCode).toEqual(200)
