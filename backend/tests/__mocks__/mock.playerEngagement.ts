@@ -1,188 +1,210 @@
 import { EngagementStatus } from "../../src/models/PlayerEngagement";
 
-const playerEngagements = [
+const mockPlayerEngagements = [
   {
-    playerId: "1",
-    scheduleId: "M0810",
-    status: EngagementStatus.PROVISIONAL,
-    manually: false,
+    id: "M081001",
+    player_id: "1",
+    schedule_id: "M0810",
+    participation_status: EngagementStatus.PROVISIONAL,
+    manually_added: false,
   },
   {
-    playerId: "2",
-    scheduleId: "M0810",
-    status: EngagementStatus.DEFINITIVE,
-    manually: false,
+    id: "M081002",
+    player_id: "2",
+    schedule_id: "M0810",
+    participation_status: EngagementStatus.DEFINITIVE,
+    manually_added: false,
   },
   {
-    playerId: "3",
-    scheduleId: "T0813",
-    status: EngagementStatus.CANCELED,
-    manually: true,
+    id: "T081303",
+    player_id: "3",
+    schedule_id: "T0813",
+    participation_status: EngagementStatus.CANCELED,
+    manually_added: true,
   },
   {
-    playerId: "4",
-    scheduleId: "T0813",
-    status: EngagementStatus.PROVISIONAL,
-    manually: false,
+    id: "T081304",
+    player_id: "4",
+    schedule_id: "T0813",
+    participation_status: EngagementStatus.PROVISIONAL,
+    manually_added: false,
   },
   {
-    playerId: "5",
-    scheduleId: "M0810",
-    status: EngagementStatus.DEFINITIVE,
-    manually: true,
+    id: "M081005",
+    player_id: "5",
+    schedule_id: "M0810",
+    participation_status: EngagementStatus.DEFINITIVE,
+    manually_added: true,
   },
   {
-    playerId: "6",
-    scheduleId: "T0815",
-    status: EngagementStatus.PROVISIONAL,
-    manually: false,
+    id: "T081506",
+    player_id: "6",
+    schedule_id: "T0815",
+    participation_status: EngagementStatus.PROVISIONAL,
+    manually_added: false,
   },
   {
-    playerId: "7",
-    scheduleId: "T0820",
-    status: EngagementStatus.DEFINITIVE,
-    manually: true,
+    id: "T082007",
+    player_id: "7",
+    schedule_id: "T0820",
+    participation_status: EngagementStatus.DEFINITIVE,
+    manually_added: true,
   },
   {
-    playerId: "8",
-    scheduleId: "T0822",
-    status: EngagementStatus.PROVISIONAL,
-    manually: false,
+    id: "T082208",
+    player_id: "8",
+    schedule_id: "T0822",
+    participation_status: EngagementStatus.PROVISIONAL,
+    manually_added: false,
   },
   {
-    playerId: "9",
-    scheduleId: "M0824",
-    status: EngagementStatus.CANCELED,
-    manually: true,
+    id: "M082409",
+    player_id: "9",
+    schedule_id: "M0824",
+    participation_status: EngagementStatus.CANCELED,
+    manually_added: true,
   },
   {
-    playerId: "10",
-    scheduleId: "T0829",
-    status: EngagementStatus.DEFINITIVE,
-    manually: false,
+    id: "T082910",
+    player_id: "10",
+    schedule_id: "T0829",
+    participation_status: EngagementStatus.DEFINITIVE,
+    manually_added: false,
   },
   {
-    playerId: "11",
-    scheduleId: "T0813",
-    status: EngagementStatus.PROVISIONAL,
-    manually: false,
+    id: "T081311",
+    player_id: "11",
+    schedule_id: "T0813",
+    participation_status: EngagementStatus.PROVISIONAL,
+    manually_added: false,
   },
   {
-    playerId: "12",
-    scheduleId: "T0815",
-    status: EngagementStatus.DEFINITIVE,
-    manually: false,
+    id: "T081512",
+    player_id: "12",
+    schedule_id: "T0815",
+    participation_status: EngagementStatus.DEFINITIVE,
+    manually_added: false,
   },
   {
-    playerId: "13",
-    scheduleId: "M0817",
-    status: EngagementStatus.PROVISIONAL,
-    manually: false,
+    id: "M081713",
+    player_id: "13",
+    schedule_id: "M0817",
+    participation_status: EngagementStatus.PROVISIONAL,
+    manually_added: false,
   },
   {
-    playerId: "14",
-    scheduleId: "T0820",
-    status: EngagementStatus.DEFINITIVE,
-    manually: true,
+    id: "T082014",
+    player_id: "14",
+    schedule_id: "T0820",
+    participation_status: EngagementStatus.DEFINITIVE,
+    manually_added: true,
   },
   {
-    playerId: "15",
-    scheduleId: "M0827",
-    status: EngagementStatus.CANCELED,
-    manually: true,
+    id: "M082715",
+    player_id: "15",
+    schedule_id: "M0827",
+    participation_status: EngagementStatus.CANCELED,
+    manually_added: true,
   },
   {
-    playerId: "1",
-    scheduleId: "M0831",
-    status: EngagementStatus.PROVISIONAL,
-    manually: true,
+    id: "M083101",
+    player_id: "1",
+    schedule_id: "M0831",
+    participation_status: EngagementStatus.PROVISIONAL,
+    manually_added: true,
   },
   {
-    playerId: "2",
-    scheduleId: "M0831",
-    status: EngagementStatus.DEFINITIVE,
-    manually: false,
+    id: "M083102",
+    player_id: "2",
+    schedule_id: "M0831",
+    participation_status: EngagementStatus.DEFINITIVE,
+    manually_added: false,
   },
   {
-    playerId: "14",
-    scheduleId: "M0824",
-    status: EngagementStatus.DEFINITIVE,
-    manually: true,
+    id: "M082414",
+    player_id: "14",
+    schedule_id: "M0824",
+    participation_status: EngagementStatus.DEFINITIVE,
+    manually_added: true,
   },
   {
-    playerId: "3",
-    scheduleId: "M0817",
-    status: EngagementStatus.DEFINITIVE,
-    manually: true,
+    id: "M081703",
+    player_id: "3",
+    schedule_id: "M0817",
+    participation_status: EngagementStatus.DEFINITIVE,
+    manually_added: true,
   },
   {
-    playerId: "3",
-    scheduleId: "M0824",
-    status: EngagementStatus.CANCELED,
-    manually: true,
+    id: "M082403",
+    player_id: "3",
+    schedule_id: "M0824",
+    participation_status: EngagementStatus.CANCELED,
+    manually_added: true,
   },
   {
-    playerId: "3",
-    scheduleId: "M0831",
-    status: EngagementStatus.DEFINITIVE,
-    manually: false,
+    id: "M083103",
+    player_id: "3",
+    schedule_id: "M0831",
+    participation_status: EngagementStatus.DEFINITIVE,
+    manually_added: false,
   },
 ];
 
-const getPlayerEngagements = () => playerEngagements;
+const getPlayerEngagements = () => mockPlayerEngagements;
 
 const readPlayerEngagement = (playerId: string, scheduleId: string) => {
-  return playerEngagements.find(
+  return mockPlayerEngagements.find(
     (engagement) =>
-      engagement.playerId === playerId && engagement.scheduleId === scheduleId
+      engagement.player_id === playerId && engagement.schedule_id === scheduleId
   );
 };
 
-const findPlayerEngagementBySchedule = (scheduleId: string) => {
-  return playerEngagements.filter(
-    (engagement) => engagement.scheduleId === scheduleId
+const searchPlayerEngagementBySchedule = (scheduleId: string) => {
+  return mockPlayerEngagements.filter(
+    (engagement) => engagement.schedule_id === scheduleId
   );
 };
 
-const findPlayerEngagementsByPlayer = (playerId: string) => {
-  return playerEngagements.filter(
-    (engagement) => engagement.playerId === playerId
+const searchPlayerEngagementsByPlayer = (playerId: string) => {
+  return mockPlayerEngagements.filter(
+    (engagement) => engagement.player_id === playerId
   );
 };
 
-const addPlayerEngagement = (engagement) => playerEngagements.push(engagement);
+const addPlayerEngagement = (engagement) => mockPlayerEngagements.push(engagement);
 
 const updatePlayerEngagement = (updatedPlayerEngagement) => {
-  const index = playerEngagements.findIndex(
+  const index = mockPlayerEngagements.findIndex(
     (engagement) =>
-      engagement.playerId === updatedPlayerEngagement.playerId &&
-      engagement.scheduleId === updatedPlayerEngagement.scheduleId
+      engagement.player_id === updatedPlayerEngagement.player_id &&
+      engagement.schedule_id === updatedPlayerEngagement.schedule_id
   );
+  console.log(`updatePlayer: ${index}, ${JSON.stringify(updatedPlayerEngagement)}`)
   if (index !== -1) {
-    playerEngagements[index] = {
-      ...playerEngagements[index],
+    mockPlayerEngagements[index] = {
+      ...mockPlayerEngagements[index],
       ...updatedPlayerEngagement,
     };
-    return playerEngagements[index];
+    return mockPlayerEngagements[index];
   }
 };
 
 const deletePlayerEngagement = (playerId: string, scheduleId: string) => {
-  const index = playerEngagements.findIndex(
+  const index = mockPlayerEngagements.findIndex(
     (engagement) =>
-      engagement.playerId === playerId && engagement.scheduleId === scheduleId
+      engagement.player_id === playerId && engagement.schedule_id === scheduleId
   );
   if (index !== -1) {
-    playerEngagements.splice(index, 1);
+    mockPlayerEngagements.splice(index, 1);
   }
 };
 
 export default {
-  playerEngagements,
+  mockPlayerEngagements,
   getPlayerEngagements,
   readPlayerEngagement,
-  findPlayerEngagementsByPlayer,
-  findPlayerEngagementBySchedule,
+  searchPlayerEngagementsByPlayer,
+  searchPlayerEngagementBySchedule,
   addPlayerEngagement,
   updatePlayerEngagement,
   deletePlayerEngagement,

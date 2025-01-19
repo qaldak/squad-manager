@@ -7,7 +7,9 @@ import {
 } from '../../src/models/PlayerEngagement'
 import playerEngagementRoutes from '../../src/routes/playerEngangement.routes'
 import PlayerEngagementService from "../../src/services/playerEngagement.service";
-import schedulesData from "../__mocks__/mock.schedule";
+import playerEngagementsData from "../__mocks__/mock.playerEngagement"
+import schedulesData from "../__mocks__/mock.schedule"
+import {Player} from "../../src/models/Player";
 
 const app = express()
 
@@ -30,6 +32,17 @@ jest.mock('@supabase/supabase-js', () => {
               })
             }
           }
+          else if (tableName === 'player_engagements') {
+            return {
+              select: jest.fn(() => {
+                const player_engagements = playerEngagementsData.getPlayerEngagements();
+                return Promise.resolve({
+                  data: player_engagements,
+                  error: null
+                })
+              })
+            }
+          }
         })
       })
     }
@@ -47,6 +60,7 @@ describe('PlayerEngagement Controller', () => {
   it('should read one playerEngagement', async () => {
     const res = await request(app).get('/api/playerEngagement/2/M0810')
     expect(res.body).toEqual({
+      id: 'M081002',
       manually: false,
       playerId: '2',
       scheduleId: 'M0810',
@@ -61,12 +75,14 @@ describe('PlayerEngagement Controller', () => {
     expect(res.body).toHaveLength(2)
     expect(res.body).toEqual([
       {
+        id: 'M081002',
         playerId: '2',
         scheduleId: 'M0810',
         status: 'definitive',
         manually: false
       },
       {
+        id: 'M083102',
         playerId: '2',
         scheduleId: 'M0831',
         status: 'definitive',
@@ -82,18 +98,21 @@ describe('PlayerEngagement Controller', () => {
     expect(res.body).toHaveLength(3)
     expect(res.body).toEqual([
       {
+        id: 'M081001',
         manually: false,
         playerId: '1',
         scheduleId: 'M0810',
         status: 'provisional'
       },
       {
+        id: 'M081002',
         manually: false,
         playerId: '2',
         scheduleId: 'M0810',
         status: 'definitive'
       },
       {
+        id: 'M081005',
         manually: true,
         playerId: '5',
         scheduleId: 'M0810',
@@ -120,7 +139,8 @@ describe('PlayerEngagement Controller', () => {
   })
 
   it('should add a new player engagement', async () => {
-    const newPlayerEngagement = new PlayerEngagement(
+    const newPlayerEngagement = new PlayerEngagement (
+      undefined,
       '99',
       'M1212',
       EngagementStatus.PROVISIONAL,
@@ -131,7 +151,9 @@ describe('PlayerEngagement Controller', () => {
       .post('/api/playerEngagement')
       .send(newPlayerEngagement)
     expect(res.statusCode).toEqual(201)
-    expect(res.body).toEqual(newPlayerEngagement)
+    expect(res.body).toEqual({
+      ...newPlayerEngagement
+    })
 
     const resCount = await request(app).get('/api/playerEngagements')
     expect(resCount.body).toHaveLength(22)

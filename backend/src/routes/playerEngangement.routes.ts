@@ -13,12 +13,12 @@ router.get(
 );
 router.get(
   "/playerEngagements/player/:playerId",
-  playerEngagementController.findPlayerEngagementsByPlayerId
+  playerEngagementController.searchPlayerEngagementsByPlayerId
 );
 
 router.get(
   "/playerEngagements/schedule/:scheduleId",
-  playerEngagementController.findPlayerEngagementByScheduleId
+  playerEngagementController.searchPlayerEngagementByScheduleId
 );
 
 router.put(

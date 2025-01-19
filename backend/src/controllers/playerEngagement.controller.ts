@@ -1,43 +1,40 @@
-import playerEngagementsData from "../../tests/__mocks__/mock.playerEngagement";
-import playerEngagementService from "../services/playerEngagement.service";
 import PlayerEngagementService from "../services/playerEngagement.service";
 
 const getPlayerEngagements = async (req, res): Promise<void> => {
-  const playerEngagements = playerEngagementsData.getPlayerEngagements();
+  const playerEngagements = await PlayerEngagementService.getPlayerEngagements()
   res.json(playerEngagements);
 };
 
 const readPlayerEngagement = async (req, res): Promise<void> => {
-  const playerEngagement = playerEngagementsData.readPlayerEngagement(
+  const playerEngagement = await PlayerEngagementService.readPlayerEngagement(
     req.params.playerId,
     req.params.scheduleId
   );
   res.json(playerEngagement);
 };
 
-const findPlayerEngagementsByPlayerId = async (req, res): Promise<void> => {
-  const playerEngagements = playerEngagementsData.findPlayerEngagementsByPlayer(
+const searchPlayerEngagementsByPlayerId = async (req, res): Promise<void> => {
+  const playerEngagements = await PlayerEngagementService.searchPlayerEngagementsByPlayerId(
     req.params.playerId
   );
   res.json(playerEngagements);
 };
 
-const findPlayerEngagementByScheduleId = async (req, res): Promise<void> => {
-  const playerEngagements =
-    playerEngagementsData.findPlayerEngagementBySchedule(req.params.scheduleId);
+const searchPlayerEngagementByScheduleId = async (req, res): Promise<void> => {
+  const playerEngagements = await PlayerEngagementService.searchPlayerEngagementsByScheduleId(req.params.scheduleId);
   res.json(playerEngagements);
 };
 
 const updatePlayerEngagement = async (req, res): Promise<void> => {
   const { playerId, scheduleId } = req.params;
-  const engagement = playerEngagementsData.readPlayerEngagement(
+  const engagement = await PlayerEngagementService.readPlayerEngagement(
     playerId,
     scheduleId
   );
 
   try {
     const updatedEngagement = { ...engagement, ...req.body };
-    const result = await playerEngagementService.updatePlayerEngagement(
+    const result = await PlayerEngagementService.updatePlayerEngagement(
       updatedEngagement
     );
 
@@ -54,7 +51,7 @@ const updatePlayerEngagement = async (req, res): Promise<void> => {
 const addPlayerEngagement = async (req, res): Promise<void> => {
   try {
     const newPlayerEngagement =
-      await playerEngagementService.addPlayerEngagement(req.body);
+      await PlayerEngagementService.addPlayerEngagement(req.body);
     res.status(201).json(newPlayerEngagement);
   } catch (e) {
     res.status(404).json({ message: e.message });
@@ -64,7 +61,7 @@ const addPlayerEngagement = async (req, res): Promise<void> => {
 const addPlayerEngagementsBulk = async (req, res): Promise<void> => {
   try {
     const newPlayerEngagements =
-      await playerEngagementService.addPlayerEngagementsBulk(req.body);
+      await PlayerEngagementService.addPlayerEngagementsBulk(req.body);
     res.status(201).json(newPlayerEngagements);
   } catch (e) {
     res.status(404).json({ message: e.message });
@@ -74,7 +71,7 @@ const addPlayerEngagementsBulk = async (req, res): Promise<void> => {
 const deletePlayerEngagement = async (req, res): Promise<void> => {
   const { playerId, scheduleId } = req.params;
   try {
-    const deleted = await playerEngagementService.deletePlayerEngagement(playerId, scheduleId);
+    const deleted = await PlayerEngagementService.deletePlayerEngagement(playerId, scheduleId);
     if (deleted) {
       res.status(200).json({ message: "Player engagement deleted successfully" });
     } else {
@@ -88,7 +85,7 @@ const deletePlayerEngagement = async (req, res): Promise<void> => {
 const generateSquadProposal = async (req, res): Promise<void> => {
   try {
     const scheduleId = req.params.scheduleId;
-    await playerEngagementService.generateSquadProposal(scheduleId)
+    await PlayerEngagementService.generateSquadProposal(scheduleId)
     res.status(200).json({ message: "Proposal successfully generated squad proposal" });
   } catch (e) {
     res.status(400).json({ message: e.message });
@@ -109,8 +106,8 @@ const confirmProposal = async (req, res): Promise<void> => {
 export default {
   getPlayerEngagements,
   readPlayerEngagement,
-  findPlayerEngagementsByPlayerId,
-  findPlayerEngagementByScheduleId,
+  searchPlayerEngagementsByPlayerId,
+  searchPlayerEngagementByScheduleId,
   updatePlayerEngagement,
   addPlayerEngagement,
   addPlayerEngagementsBulk,
