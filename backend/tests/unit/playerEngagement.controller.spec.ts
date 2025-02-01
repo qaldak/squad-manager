@@ -1,15 +1,11 @@
 import {describe, expect, it, jest} from '@jest/globals'
 import express from 'express'
 import request from 'supertest'
-import {
-  EngagementStatus,
-  PlayerEngagement
-} from '../../src/models/PlayerEngagement'
+import {EngagementStatus} from '../../src/models/PlayerEngagement'
 import playerEngagementRoutes from '../../src/routes/playerEngangement.routes'
 import PlayerEngagementService from "../../src/services/playerEngagement.service";
 import playerEngagementsData from "../__mocks__/mock.playerEngagement"
 import schedulesData from "../__mocks__/mock.schedule"
-import {Player} from "../../src/models/Player";
 
 const app = express()
 
@@ -31,16 +27,84 @@ jest.mock('@supabase/supabase-js', () => {
                 })
               })
             }
-          }
-          else if (tableName === 'player_engagements') {
+          } else if (tableName === 'player_engagements') {
             return {
               select: jest.fn(() => {
-                const player_engagements = playerEngagementsData.getPlayerEngagements();
-                return Promise.resolve({
-                  data: player_engagements,
-                  error: null
-                })
-              })
+                return {
+                  eq: jest.fn((column: string, value: string) => {
+                    if (column === 'player_id') {
+                      const engagementsByPlayer = playerEngagementsData.searchPlayerEngagementsByPlayer(value)
+                      return Promise.resolve({
+                        data: engagementsByPlayer ? engagementsByPlayer : [],
+                        error: null
+                      })
+                    } else if (column === 'schedule_id') {
+                      const engagementsBySchedule = playerEngagementsData.searchPlayerEngagementBySchedule(value)
+                      return Promise.resolve({
+                        data: engagementsBySchedule ? engagementsBySchedule : [],
+                        error: null
+                      })
+                    }
+                  }),
+                  then: jest.fn((callback: (result: { data: any[], error: null }) => void) => {
+                    const player_engagements = playerEngagementsData.getPlayerEngagements();
+                    return callback({
+                      data: player_engagements,
+                      error: null
+                    })
+                  })
+                }
+              }),
+              insert: jest.fn((data) => {
+                const newPlayerEngagement = playerEngagementsData.addPlayerEngagement(data)
+                return {
+                  select: jest.fn(() => {
+                    return Promise.resolve({
+                      data: [newPlayerEngagement],
+                      error: null
+                    })
+                  })
+                }
+              }),
+              update: jest.fn((data) => {
+                const updatedPlayerEngagement = playerEngagementsData.updatePlayerEngagement(data);
+                return {
+                  eq: jest.fn(() => {
+                    return {
+                      select: jest.fn(() => {
+                        return Promise.resolve({
+                          data: [updatedPlayerEngagement],
+                          error: null
+                        })
+                      })
+                    }
+                  })
+                }
+              }),
+              delete: jest.fn(() => {
+                  return {
+                    eq: jest.fn((column: string, value: string) => {
+                      console.log(column, value)
+                      const {
+                        data: deletedPlayerEngagement,
+                        status,
+                        statusText
+                      } = playerEngagementsData.deletePlayerEngagement(value)
+                      return {
+                        select: jest.fn(() => {
+                          return Promise.resolve({
+                            data: deletedPlayerEngagement,
+                            status: status,
+                            statusText: statusText
+                          })
+                        })
+                      }
+
+                    })
+
+                  }
+                }
+              )
             }
           }
         })
@@ -57,20 +121,10 @@ describe('PlayerEngagement Controller', () => {
     expect(res.statusCode).toEqual(200)
   })
 
-  it('should read one playerEngagement', async () => {
-    const res = await request(app).get('/api/playerEngagement/2/M0810')
-    expect(res.body).toEqual({
-      id: 'M081002',
-      manually: false,
-      playerId: '2',
-      scheduleId: 'M0810',
-      status: 'definitive'
-    })
-    expect(res.statusCode).toEqual(200)
-  })
-
   it('should get all engagements for given playerId', async () => {
     const res = await request(app).get('/api/playerEngagements/player/2')
+
+    console.log(res.body)
 
     expect(res.body).toHaveLength(2)
     expect(res.body).toEqual([
@@ -123,36 +177,39 @@ describe('PlayerEngagement Controller', () => {
   })
 
   it('should update player engagement', async () => {
-    const playerId = 2
-    const scheduleId = 'M0810'
     const updates = {
+      id: 'M081002',
+      playerId: '2',
+      scheduleId: 'M0810',
       manually: true,
       status: 'provisional'
     }
 
     const res = await request(app)
-      .put(`/api/playerEngagement/${playerId}/${scheduleId}`)
+      .put(`/api/playerEngagement`)
       .send(updates)
+
+    console.log("response: ", res.body)
 
     expect(res.body.manually).toBeTruthy()
     expect(res.body.status).toEqual('provisional')
   })
 
   it('should add a new player engagement', async () => {
-    const newPlayerEngagement = new PlayerEngagement (
-      undefined,
-      '99',
-      'M1212',
-      EngagementStatus.PROVISIONAL,
-      true
-    )
+    const newPlayerEngagement = {
+      playerId: '99',
+      scheduleId: 'M1212',
+      status: EngagementStatus.PROVISIONAL,
+      manually: true
+    }
 
     const res = await request(app)
       .post('/api/playerEngagement')
       .send(newPlayerEngagement)
     expect(res.statusCode).toEqual(201)
     expect(res.body).toEqual({
-      ...newPlayerEngagement
+      ...newPlayerEngagement,
+      id: 'Foo'
     })
 
     const resCount = await request(app).get('/api/playerEngagements')
@@ -162,12 +219,14 @@ describe('PlayerEngagement Controller', () => {
   it('should add new player engagements', async () => {
     const newPlayerEngagements = [
       {
+        id: 'Foo',
         playerId: '88',
         scheduleId: 'M1121',
         status: EngagementStatus.PROVISIONAL,
         manually: false
       },
       {
+        id: 'Foo',
         playerId: '89',
         scheduleId: 'M1121',
         status: EngagementStatus.DEFINITIVE,
@@ -190,17 +249,18 @@ describe('PlayerEngagement Controller', () => {
   it('should delete entry from player engagement', async () => {
     const playerId = 7
     const scheduleId = 'T0820'
+    const id = 'T082007'
 
-    const res = await request(app).delete(`/api/playerEngagement/${playerId}/${scheduleId}`)
-    expect(res.statusCode).toEqual(200)
-    expect(res.body.message).toBe('Player engagement deleted successfully')
+    const res = await request(app).delete(`/api/playerEngagement/${id}`)
+    console.log(JSON.stringify(res))
+    expect(res.statusCode).toEqual(204)
 
     const deletedEngagement = await request(app).get(`/api/playerEngagement/${playerId}/${scheduleId}`)
-    expect(deletedEngagement.body).toEqual('')
+    expect(deletedEngagement.body).toEqual({})
 
     // check message if player engagement does not exist anymore
     const resMsg = await request(app)
-      .delete(`/api/playerEngagement/${playerId}/${scheduleId}`)
+      .delete(`/api/playerEngagement/${id}`)
       .expect(404)
     expect(resMsg.body.message).toBe('Player engagement not found')
   })

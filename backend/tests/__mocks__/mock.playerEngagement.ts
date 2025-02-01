@@ -152,10 +152,10 @@ const mockPlayerEngagements = [
 
 const getPlayerEngagements = () => mockPlayerEngagements;
 
-const readPlayerEngagement = (playerId: string, scheduleId: string) => {
+const readPlayerEngagement = (id: string) => {
   return mockPlayerEngagements.find(
     (engagement) =>
-      engagement.player_id === playerId && engagement.schedule_id === scheduleId
+      engagement.id === id
   );
 };
 
@@ -171,15 +171,18 @@ const searchPlayerEngagementsByPlayer = (playerId: string) => {
   );
 };
 
-const addPlayerEngagement = (engagement) => mockPlayerEngagements.push(engagement);
+const addPlayerEngagement = (engagement) => {
+  engagement.id = "Foo"
+  mockPlayerEngagements.push(engagement);
+  return mockPlayerEngagements[mockPlayerEngagements.length -1]
+}
 
 const updatePlayerEngagement = (updatedPlayerEngagement) => {
   const index = mockPlayerEngagements.findIndex(
     (engagement) =>
-      engagement.player_id === updatedPlayerEngagement.player_id &&
-      engagement.schedule_id === updatedPlayerEngagement.schedule_id
+      engagement.id === updatedPlayerEngagement.id
   );
-  console.log(`updatePlayer: ${index}, ${JSON.stringify(updatedPlayerEngagement)}`)
+
   if (index !== -1) {
     mockPlayerEngagements[index] = {
       ...mockPlayerEngagements[index],
@@ -189,20 +192,25 @@ const updatePlayerEngagement = (updatedPlayerEngagement) => {
   }
 };
 
-const deletePlayerEngagement = (playerId: string, scheduleId: string) => {
+const deletePlayerEngagement = (id: string) => {
   const index = mockPlayerEngagements.findIndex(
     (engagement) =>
-      engagement.player_id === playerId && engagement.schedule_id === scheduleId
+      engagement.id === id
   );
+
+  const deletedEngagement = readPlayerEngagement(id)
+  console.log(deletedEngagement)
   if (index !== -1) {
     mockPlayerEngagements.splice(index, 1);
+    return { data: [deletedEngagement], status: 200, statusText: `OK`}
+  } else {
+    return { status: 404, statusText: `Error deleting player engagement, id: ${id}`}
   }
 };
 
 export default {
   mockPlayerEngagements,
   getPlayerEngagements,
-  readPlayerEngagement,
   searchPlayerEngagementsByPlayer,
   searchPlayerEngagementBySchedule,
   addPlayerEngagement,

@@ -1,6 +1,4 @@
-import {v4 as uuidv4} from 'uuid'
-import schedulesData from '../../tests/__mocks__/mock.schedule'
-import {ScheduleData, Schedule} from '../models/Schedule'
+import {Schedule, ScheduleData} from '../models/Schedule'
 import utc from 'dayjs/plugin/utc'
 import dayjs from 'dayjs'
 import dbClient from "../dbClient";
@@ -33,7 +31,7 @@ class ScheduleService {
     try {
       const {data: schedules, error} = await dbClient.from('schedules').select()
       if (error) {
-        console.log(`Error fetching players: ${error.message}`);
+        console.error(`Error fetching schedules: ${error.message}`);
       }
       return mapSchedules(schedules)
     } catch (error) {

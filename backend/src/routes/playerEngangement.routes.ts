@@ -7,10 +7,7 @@ router.get(
   "/playerEngagements",
   playerEngagementController.getPlayerEngagements
 );
-router.get(
-  "/playerEngagement/:playerId/:scheduleId",
-  playerEngagementController.readPlayerEngagement
-);
+
 router.get(
   "/playerEngagements/player/:playerId",
   playerEngagementController.searchPlayerEngagementsByPlayerId
@@ -26,6 +23,11 @@ router.put(
   playerEngagementController.updatePlayerEngagement
 );
 
+router.put(
+  "/playerEngagement",
+  playerEngagementController.updatePlayerEngagement
+);
+
 router.post(
   "/playerEngagement",
   playerEngagementController.addPlayerEngagement
@@ -37,7 +39,7 @@ router.post(
 );
 
 router.delete(
-  "/playerEngagement/:playerId/:scheduleId", 
+  "/playerEngagement/:id",
   playerEngagementController.deletePlayerEngagement
 )
 

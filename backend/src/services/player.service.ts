@@ -15,7 +15,6 @@ class PlayerService {
         console.error(`Error fetching players from db: ${JSON.stringify(error)}`);
         throw error;
     }
-
   }
 
   async addPlayer(playerDataIn: PlayerData): Promise<Player> {

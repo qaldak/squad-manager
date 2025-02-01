@@ -1,5 +1,4 @@
 import {EngagementStatus, PlayerEngagement, PlayerEngagementData} from '../models/PlayerEngagement'
-import playerEngagementsData from '../../tests/__mocks__/mock.playerEngagement'
 import PlayerService from "./player.service";
 import ScheduleServices from "./schedule.services";
 import {ScheduleType} from "../models/Schedule";
@@ -24,7 +23,7 @@ class PlayerEngagementService {
       switch (engagement.status) {
         case 'provisional':
           console.log(`delete engagement: ${engagement}`);
-          this.deletePlayerEngagement(engagement.playerId, engagement.scheduleId)
+          this.deletePlayerEngagement(engagement.id)
           break;
         case 'definitive':
           definitivePlayers.add(engagement.playerId);
@@ -44,9 +43,11 @@ class PlayerEngagementService {
       throw new Error(`No further players needed for this match!`);
     }
 
-    const eligiblePlayers = (await PlayerService.getPlayers()).filter(player => !canceledPlayers.has(player.playerId) && !definitivePlayers.has(player.playerId)).map(player => ({
-      ...player, participation: 0, cancellations: 0
-    }));
+    const eligiblePlayers = (await PlayerService.getPlayers())
+      .filter(player => !canceledPlayers.has(player.playerId) && !definitivePlayers.has(player.playerId))
+      .map(player => ({
+        ...player, participation: 0, cancellations: 0
+      }));
 
     const matchDay = await ScheduleServices.readSchedule(scheduleId);
 
@@ -69,14 +70,18 @@ class PlayerEngagementService {
     console.log('sorted eligible Players', eligiblePlayers)
 
     const selectedPlayers: PlayerEngagement[] = eligiblePlayers.slice(0, neededPlayers).map(player => ({
-      id: undefined, playerId: player.playerId, scheduleId: matchDay.scheduleId, status: EngagementStatus.PROVISIONAL, manually: false
+      id: undefined,
+      playerId: player.playerId,
+      scheduleId: matchDay.scheduleId,
+      status: EngagementStatus.PROVISIONAL,
+      manually: false
     }))
 
     try {
       const newPlayerEngagements = await this.addPlayerEngagementsBulk(selectedPlayers)
       console.log(`new players added: ${newPlayerEngagements.length}`)
-    } catch (e) {
-      throw new Error(`Error adding player engagements (bulk): ${e}`);
+    } catch (error) {
+      throw new Error(`Error adding player engagements (bulk): ${error.message}`);
     }
 
   }
@@ -108,7 +113,8 @@ class PlayerEngagementService {
   async determineCancellations(playerId: string, matchDate: Date): Promise<number> {
     let cancellations = 0
 
-    const matchSchedules = (await ScheduleServices.getAllSchedules()).filter(schedule => schedule.type === ScheduleType.MATCH_DAY && schedule.date >= matchDate)
+    const matchSchedules = (await ScheduleServices.getAllSchedules())
+      .filter(schedule => schedule.type === ScheduleType.MATCH_DAY && schedule.date >= matchDate)
     const matchIds: Set<string> = new Set(matchSchedules.map(schedule => schedule.scheduleId))
 
     const playerSchedules = await this.searchPlayerEngagementsByPlayerId(playerId)
@@ -141,17 +147,25 @@ class PlayerEngagementService {
   }
 
   async addPlayerEngagement(playerEngagementDataIn: PlayerEngagementData): Promise<PlayerEngagement> {
-    const newPlayerEngagement = mapPlayerEngagementForDb(playerEngagementDataIn) //new PlayerEngagement(playerEngagementDataIn.playerId, playerEngagementDataIn.scheduleId, playerEngagementDataIn.status, playerEngagementDataIn.manually)
-    playerEngagementsData.addPlayerEngagement(newPlayerEngagement)
-    return mapPlayerEngagement(newPlayerEngagement)
+    try {
+      const newPlayerEngagement = mapPlayerEngagementForDb(playerEngagementDataIn)
+      const {
+        data: playerEngagement, error
+      } = await dbClient.from('player_engagements').insert(newPlayerEngagement).select()
+      if (error) {
+        console.error(`Error adding new player engagement: ${error.message}`)
+      }
+      return mapPlayerEngagement(playerEngagement[0])
+    } catch (error) {
+      console.error(`Error insert new player engagement in db: ${error.message}`)
+      throw error
+    }
   }
 
   async addPlayerEngagementsBulk(playerEngagementDataIn: PlayerEngagementData[]): Promise<PlayerEngagement[]> {
-    return await Promise.all(
-      playerEngagementDataIn.map(async (engagementData) => {
-        return this.addPlayerEngagement(engagementData)
-      })
-    )
+    return await Promise.all(playerEngagementDataIn.map(async (engagementData) => {
+      return this.addPlayerEngagement(engagementData)
+    }))
   }
 
   async setEngagementDefinitive(scheduleIdIn: string): Promise<void> {
@@ -171,32 +185,35 @@ class PlayerEngagementService {
     }
   }
 
-  async deletePlayerEngagement(playerId: string, scheduleId: string): Promise<boolean> {
-    const engagement = await this.readPlayerEngagement(playerId, scheduleId)
-    if (engagement) {
-      playerEngagementsData.deletePlayerEngagement(playerId, scheduleId)
-      return true
-    }
-    return false
-  }
-
-  async readPlayerEngagement(playerId: string, scheduleId: string): Promise<PlayerEngagement | undefined> {
+  async deletePlayerEngagement(engagementId: string): Promise<boolean> {
     try {
-      const data = await playerEngagementsData.readPlayerEngagement(playerId, scheduleId)
-      if (!data) {
-        console.log(`No player engagements found in db: playerId: ${playerId}, scheduleId: ${scheduleId}`)
-        return undefined
+      const {
+        data: deletedEngagement, status, statusText
+      } = await dbClient.from('player_engagements').delete().eq('id', engagementId).select()
+      console.log('deleted Engagement: ', JSON.stringify(deletedEngagement))
+      if ((deletedEngagement.length === 1) && (status === 200)) {
+        return true
       }
-      return mapPlayerEngagement(data)
+
+      let errMsg = `Failed to delete engagement ${engagementId}, status: ${status} ${statusText}`
+      console.error(errMsg)
+      return false
+
     } catch (error) {
-      console.error(`Error read player engagement from db: ${error.message}`)
-      throw error
+      console.error(`Error deleting engagement: ${error.message}`)
+      return false
     }
   }
 
   async searchPlayerEngagementsByPlayerId(playerId: string): Promise<PlayerEngagement[] | undefined> {
     try {
-      return mapPlayerEngagements(playerEngagementsData.searchPlayerEngagementsByPlayer(playerId))
+      const {data: engagementsByPlayer, error} = await dbClient.from('player_engagements')
+        .select()
+        .eq('player_id', playerId)
+      if (error) {
+        console.error(`Error search engagements by playerId: ${error.message}`)
+      }
+      return mapPlayerEngagements(engagementsByPlayer)
     } catch (error) {
       console.error(`Error search player engagements by playerId from db: ${error.message}`)
       throw error
@@ -205,7 +222,13 @@ class PlayerEngagementService {
 
   async searchPlayerEngagementsByScheduleId(scheduleId: string): Promise<PlayerEngagement[] | undefined> {
     try {
-      return mapPlayerEngagements(playerEngagementsData.searchPlayerEngagementBySchedule(scheduleId))
+      const {data: engagementsBySchedule, error} = await dbClient.from('player_engagements')
+        .select()
+        .eq('schedule_id', scheduleId)
+      if (error) {
+        console.error(`Error search engagements by scheduleId: ${error.message}`)
+      }
+      return mapPlayerEngagements(engagementsBySchedule)
     } catch (error) {
       console.error(`Error search player engagements by scheduleId from db: ${error.message}`)
       throw error
@@ -213,14 +236,25 @@ class PlayerEngagementService {
   }
 
   async updatePlayerEngagement(playerEngagementDataIn: PlayerEngagementData): Promise<PlayerEngagement | undefined> {
-    const playerEngagement = await this.readPlayerEngagement(playerEngagementDataIn.playerId, playerEngagementDataIn.scheduleId)
-    if (playerEngagement) {
-      playerEngagement.manually = playerEngagementDataIn.manually
-      playerEngagement.status = playerEngagementDataIn.status
-      playerEngagementsData.updatePlayerEngagement(mapPlayerEngagementForDb(playerEngagement))
-      return playerEngagement
+    try {
+      const engagementUpdateData = mapPlayerEngagementForDb(playerEngagementDataIn, true)
+      console.log("updated player Engagement: ", engagementUpdateData)
+
+      const {data: updatedPlayer, error} = await dbClient.from('player_engagements')
+        .update(engagementUpdateData)
+        .eq('id', playerEngagementDataIn.id)
+        .select()
+      if (error) {
+        console.error(`Error on update player engagement: ${error.message}`)
+        return undefined
+      }
+      console.log(`data: `, updatedPlayer)
+      return mapPlayerEngagement(updatedPlayer[0])
+    } catch (error) {
+      console.error(`Error on update player engagement in db: ${error.message}`)
+      throw error
+      // return undefined // TODO: return undefined vs. throw error?
     }
-    return undefined
   }
 }
 
