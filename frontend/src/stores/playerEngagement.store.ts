@@ -1,7 +1,11 @@
 import { defineStore } from 'pinia'
 import { getPlayerEngagementsByScheduleId } from '@/services/playerEngagement.service'
 import { readPlayer } from '@/services/player.service'
-import type { PlayerEngagement, PlayerEngagementWithPlayerInfo } from '@/types/playerEngagement.type'
+import {
+  EngagementStatus,
+  type PlayerEngagement,
+  type PlayerEngagementWithPlayerInfo
+} from '@/types/playerEngagement.type'
 
 export const usePlayerEngagementStore = defineStore('playerEngagement', {
   state: () => ({
@@ -21,7 +25,7 @@ export const usePlayerEngagementStore = defineStore('playerEngagement', {
         if (!Array.isArray(fetchedPlayerEngagements)) {
           throw new TypeError('fetchedPlayerEngagements is not an array')
         }
-        
+
         console.log(`playerEngagement, fetchedPlayerEngagements: ${fetchedPlayerEngagements}`)
         this.playerEngagements = fetchedPlayerEngagements
         this.totalPlayerEngagements = fetchedPlayerEngagements.length
@@ -40,30 +44,65 @@ export const usePlayerEngagementStore = defineStore('playerEngagement', {
         this.playerEngagementsWithPlayerInfo = playerEngagementsWithPlayerInfo
         this.totalPlayerEngagementsWithPlayerInfo = playerEngagementsWithPlayerInfo.length
 
-        console.log(`Check difference: ${this.totalPlayerEngagements} vs. ${this.totalPlayerEngagementsWithPlayerInfo}`)
+        console.log(
+          `Check difference: ${this.totalPlayerEngagements} vs. ${this.totalPlayerEngagementsWithPlayerInfo}`
+        )
 
-        console.log(`extended Player Engagements: ${playerEngagementsWithPlayerInfo}`)
+        console.log(
+          `extended Player Engagements: ${JSON.stringify(playerEngagementsWithPlayerInfo)}`
+        )
         return playerEngagementsWithPlayerInfo
-
-      } catch (e) {
-        console.error(e)
-        throw e
+      } catch (error) {
+        console.error(error)
+        throw error
       } finally {
         this.loading = false
       }
     },
+    async assignNewPlayer(playerEngagementIn: PlayerEngagement) {
+      this.loading = true
+      try {
+        await this.isPlayerAssignable(playerEngagementIn.playerId, playerEngagementIn.scheduleId)
+        return
+      } catch (error) {
+        console.log('Foo Already Assigned')
+        console.error(error)
+        throw error
+      } finally {
+        console.log('BAR')
+        this.loading = false
+      }
+    },
+    /**
+     * isPlayerAssignable
+     *
+     * @param playerId
+     * @param scheduleId
+     * @returns boolean if player is already assigned to schedule
+     * */
+    async isPlayerAssignable(playerId: string, scheduleId: string) {
+      console.log(`Start assignment with playerId ${playerId} and scheduleId ${scheduleId}`)
+      const isAlreadyAssigned = this.playerEngagements.some(
+        (engagement) => engagement.playerId === playerId && engagement.scheduleId === scheduleId
+      )
+      console.log('isAlreadyAssigned', isAlreadyAssigned)
+      if (isAlreadyAssigned) {
+        console.log('Player already assigned.')
+        // throw new Error('Player already assigned.')
+      }
+      return !isAlreadyAssigned
+    },
     formatEngagementsByPlayer() {
-      return this.playerEngagementsWithPlayerInfo.sort((a, b) => {
-        // Mehrstufige Sortierung
-        const statusOrder = { 'definitive': 0, 'provisional': 1, 'canceled': 2 }
-        const statusComparison = statusOrder[a.status] - statusOrder[b.status]
-        if (statusComparison !== 0)
-          return statusComparison
-        const nameComparison = a.playerName.localeCompare(b.playerName)
-        if (nameComparison !== 0)
-          return nameComparison
-        return a.playerFirstname.localeCompare(b.playerFirstname)
-      })
+      return this.playerEngagementsWithPlayerInfo
+        .sort((a, b) => {
+          // Mehrstufige Sortierung
+          const statusOrder = { definitive: 0, provisional: 1, canceled: 2 }
+          const statusComparison = statusOrder[a.status] - statusOrder[b.status]
+          if (statusComparison !== 0) return statusComparison
+          const nameComparison = a.playerName.localeCompare(b.playerName)
+          if (nameComparison !== 0) return nameComparison
+          return a.playerFirstname.localeCompare(b.playerFirstname)
+        })
         .map((engagement) => ({
           ...engagement // Korrekte Verwendung des Spread-Operators
         }))

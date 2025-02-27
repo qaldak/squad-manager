@@ -1,10 +1,9 @@
 <template>
-  <v-dialog v-model="scheduleDetailDialog" persistent max-width="400">
+  <v-dialog v-model="scheduleDetailDialog" persistent width="auto" scrollable>
     <v-locale-provider>
       <v-card>
-        <v-card-title class="headline">{{
-            isNew ? 'Neuer Termin' : 'Termin bearbeiten'
-          }}
+        <v-card-title class="headline"
+          >{{ isNew ? 'Neuer Termin' : 'Termin bearbeiten' }}
         </v-card-title>
         <v-card-text>
           <v-form ref="form" v-model="isValid">
@@ -28,16 +27,27 @@
               v-model="detailSchedule.matchType"
               :items="matchTypes"
               :disabled="detailSchedule.type === computedScheduleType.TRAINING"
-              :rules="detailSchedule.type === computedScheduleType.MATCH_DAY ? [rules.required] : []"
+              :rules="
+                detailSchedule.type === computedScheduleType.MATCH_DAY ? [rules.required] : []
+              "
               label="Matchtyp"
             ></v-select>
           </v-form>
+          <PlayerEngagementList
+            :context-id="detailSchedule.scheduleId"
+            :context-type="'schedule'"
+          />
         </v-card-text>
-        <PlayerEngagementList :context-id="detailSchedule.scheduleId" :context-type="'schedule'" />
+
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn variant="outlined" color="primary" :disabled="!isValid" flat @click="saveSchedule(false)"
-          >Save
+          <v-btn
+            variant="outlined"
+            color="primary"
+            :disabled="!isValid"
+            flat
+            @click="saveSchedule(false)"
+            >Save
           </v-btn>
           <v-btn variant="text" color="secondary" @click="closeDialog()">Close</v-btn>
         </v-card-actions>
@@ -52,13 +62,16 @@ import { useScheduleStore } from '@/stores/schedule.store'
 import { MatchType, ScheduleType, type Schedule } from '@/types/schedule.type'
 import PlayerEngagementList from '@/components/playerEngagements/PlayerEngagementList.vue'
 
-const props = withDefaults(defineProps<{
-  scheduleDialog: boolean;
-  schedule: Schedule
-  isNew: boolean;
-}>(), {
-  isNew: true
-})
+const props = withDefaults(
+  defineProps<{
+    scheduleDialog: boolean
+    schedule: Schedule
+    isNew: boolean
+  }>(),
+  {
+    isNew: true
+  }
+)
 
 const emit = defineEmits(['update:dialog', 'dialogClosed'])
 
@@ -101,7 +114,9 @@ watch(
       // Initialize data set on opening dialog
       detailSchedule.value = { ...props.schedule }
       console.log('Check', detailSchedule.value)
-      scheduledDate.value = detailSchedule.value.scheduleId ? new Date(detailSchedule.value.date) : undefined
+      scheduledDate.value = detailSchedule.value.scheduleId
+        ? new Date(detailSchedule.value.date)
+        : undefined
       console.log('Dialog geöffnet - initialisierte Daten:', detailSchedule.value)
       console.log('Dialog geöffnet - initialisierte Daten 2 :', detailSchedule.value.date)
       // console.log('Dialog geöffnet - initialisierte Daten 2.1 :', detailSchedule.value.date.toISOString())
@@ -129,11 +144,14 @@ watch(
   }
 )
 
-watch(() => detailSchedule.value.type, (newType) => {
-  if (newType === ScheduleType.TRAINING) {
-    detailSchedule.value.matchType = null
+watch(
+  () => detailSchedule.value.type,
+  (newType) => {
+    if (newType === ScheduleType.TRAINING) {
+      detailSchedule.value.matchType = null
+    }
   }
-})
+)
 
 const closeDialog = () => {
   console.log('what', detailSchedule.value?.date)
