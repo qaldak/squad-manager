@@ -1,5 +1,8 @@
 import { defineStore } from 'pinia'
-import { getPlayerEngagementsByScheduleId } from '@/services/playerEngagement.service'
+import {
+  addPlayerEngagement,
+  getPlayerEngagementsByScheduleId
+} from '@/services/playerEngagement.service'
 import { readPlayer } from '@/services/player.service'
 import {
   EngagementStatus,
@@ -62,12 +65,15 @@ export const usePlayerEngagementStore = defineStore('playerEngagement', {
     async assignNewPlayer(playerEngagementIn: PlayerEngagement) {
       this.loading = true
       try {
-        await this.isPlayerAssignable(playerEngagementIn.playerId, playerEngagementIn.scheduleId)
-        return
+        const newPlayerEngagement = await addPlayerEngagement(playerEngagementIn)
+        this.playerEngagements.push(newPlayerEngagement)
+        return { success: true, message: 'Player successfully assigned!' }
       } catch (error) {
         console.log('Foo Already Assigned')
         console.error(error)
-        throw error
+        throw new Error(
+          error instanceof Error ? error.message : `An unexpected error occurred: ${error}`
+        )
       } finally {
         console.log('BAR')
         this.loading = false
@@ -86,16 +92,12 @@ export const usePlayerEngagementStore = defineStore('playerEngagement', {
         (engagement) => engagement.playerId === playerId && engagement.scheduleId === scheduleId
       )
       console.log('isAlreadyAssigned', isAlreadyAssigned)
-      if (isAlreadyAssigned) {
-        console.log('Player already assigned.')
-        // throw new Error('Player already assigned.')
-      }
       return !isAlreadyAssigned
     },
     formatEngagementsByPlayer() {
       return this.playerEngagementsWithPlayerInfo
         .sort((a, b) => {
-          // Mehrstufige Sortierung
+          // Multi-stage sorting
           const statusOrder = { definitive: 0, provisional: 1, canceled: 2 }
           const statusComparison = statusOrder[a.status] - statusOrder[b.status]
           if (statusComparison !== 0) return statusComparison
@@ -104,7 +106,7 @@ export const usePlayerEngagementStore = defineStore('playerEngagement', {
           return a.playerFirstname.localeCompare(b.playerFirstname)
         })
         .map((engagement) => ({
-          ...engagement // Korrekte Verwendung des Spread-Operators
+          ...engagement
         }))
     }
   }

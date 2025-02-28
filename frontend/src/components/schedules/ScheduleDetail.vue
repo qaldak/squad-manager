@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="scheduleDetailDialog" persistent width="auto" scrollable>
+  <v-dialog v-model="scheduleDetailDialog" persistent scrollable width="60%">
     <v-locale-provider>
       <v-card>
         <v-card-title class="headline"
@@ -7,31 +7,39 @@
         </v-card-title>
         <v-card-text>
           <v-form ref="form" v-model="isValid">
-            <v-date-input
-              v-model="scheduledDate"
-              hide-actions
-              :first-day-of-week="1"
-              label="Datum"
-              :rules="[rules.required]"
-              required
-            >
-            </v-date-input>
-            <v-select
-              v-model="detailSchedule.type"
-              :items="scheduleTypes"
-              label="Terminart"
-              :rules="[rules.required]"
-              required
-            ></v-select>
-            <v-select
-              v-model="detailSchedule.matchType"
-              :items="matchTypes"
-              :disabled="detailSchedule.type === computedScheduleType.TRAINING"
-              :rules="
-                detailSchedule.type === computedScheduleType.MATCH_DAY ? [rules.required] : []
-              "
-              label="Matchtyp"
-            ></v-select>
+            <v-row>
+              <v-col>
+                <v-date-input
+                  v-model="scheduledDate"
+                  hide-actions
+                  :first-day-of-week="1"
+                  label="Datum"
+                  :rules="[rules.required]"
+                  required
+                >
+                </v-date-input>
+              </v-col>
+              <v-col>
+                <v-select
+                  v-model="detailSchedule.type"
+                  :items="scheduleTypes"
+                  label="Terminart"
+                  :rules="[rules.required]"
+                  required
+                ></v-select>
+              </v-col>
+              <v-col>
+                <v-select
+                  v-model="detailSchedule.matchType"
+                  :items="matchTypes"
+                  :disabled="detailSchedule.type === computedScheduleType.TRAINING"
+                  :rules="
+                    detailSchedule.type === computedScheduleType.MATCH_DAY ? [rules.required] : []
+                  "
+                  label="Matchtyp"
+                ></v-select>
+              </v-col>
+            </v-row>
           </v-form>
           <PlayerEngagementList
             :context-id="detailSchedule.scheduleId"
