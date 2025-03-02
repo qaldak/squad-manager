@@ -1,7 +1,7 @@
 <!-- PlayerList.vue -->
 <template>
-  <header>Spieler</header>
-  <v-btn @click="openDialog(true)">Neuer Spieler</v-btn>
+  <header>Players</header>
+  <v-btn @click="openDialog(true)">Add new player</v-btn>
   <v-data-table
     :headers="headers"
     :items="players"
@@ -103,10 +103,9 @@ onMounted(() => {
 })
 
 const headers = [
-  { title: 'Vorname', key: 'firstname', sortable: true },
+  { title: 'Firstname', key: 'firstname', sortable: true },
   { title: 'Name', key: 'name', sortable: true },
   { title: 'Position', key: 'position' },
-  { title: 'Jahrgang', key: 'birthYear' }
+  { title: 'Birth year', key: 'birthYear' }
 ]
-
 </script>

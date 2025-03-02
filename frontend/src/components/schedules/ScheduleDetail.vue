@@ -2,9 +2,7 @@
   <v-dialog v-model="scheduleDetailDialog" persistent scrollable width="60%">
     <v-locale-provider>
       <v-card>
-        <v-card-title class="headline"
-          >{{ isNew ? 'Neuer Termin' : 'Termin bearbeiten' }}
-        </v-card-title>
+        <v-card-title class="headline">{{ isNew ? 'New Event' : 'Edit Event' }}</v-card-title>
         <v-card-text>
           <v-form ref="form" v-model="isValid">
             <v-row>
@@ -13,7 +11,7 @@
                   v-model="scheduledDate"
                   hide-actions
                   :first-day-of-week="1"
-                  label="Datum"
+                  label="Date"
                   :rules="[rules.required]"
                   required
                 >
@@ -23,7 +21,7 @@
                 <v-select
                   v-model="detailSchedule.type"
                   :items="scheduleTypes"
-                  label="Terminart"
+                  label="Event type"
                   :rules="[rules.required]"
                   required
                 ></v-select>
@@ -36,7 +34,7 @@
                   :rules="
                     detailSchedule.type === computedScheduleType.MATCH_DAY ? [rules.required] : []
                   "
-                  label="Matchtyp"
+                  label="Match type"
                 ></v-select>
               </v-col>
             </v-row>

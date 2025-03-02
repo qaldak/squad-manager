@@ -37,10 +37,17 @@
     color="primary"
     :loading="playerEngagementStore.loading"
     @click="generateProposal"
-    >Generate Proposal
+    >Generate squad
   </v-btn>
 
-  <v-alert v-if="message.text" :type="message.type" variant="tonal">{{ message.text }}</v-alert>
+  <v-btn
+    class="ma-2"
+    variant="outlined"
+    color="primary"
+    :loading="playerEngagementStore.loading"
+    @click="confirmProposal"
+    >Confirm squad
+  </v-btn>
 
   <v-data-table
     :items-per-page="5"
@@ -52,7 +59,24 @@
     :headers="engagementHeaders"
     :items="playerEngagements"
     :loading="playerEngagementStore.loading"
-  />
+  >
+    <template v-slot:item="{ item }">
+      <tr>
+        <td>{{ item.playerFirstname }}</td>
+        <td>{{ item.playerName }}</td>
+        <td>{{ item.status }}</td>
+        <td>{{ item.manually }}</td>
+        <td>
+          <v-btn small @click="deleteEngagement(item)">
+            <font-awesome-icon icon="fa-solid fa-trash" />
+            <v-tooltip activator="parent">Delete player engagement</v-tooltip>
+          </v-btn>
+        </td>
+      </tr>
+    </template>
+  </v-data-table>
+
+  <v-alert v-if="message.text" :type="message.type" variant="tonal">{{ message.text }}</v-alert>
 </template>
 
 <script lang="ts" setup>
@@ -90,7 +114,8 @@ const engagementHeaders = [
   { title: 'Vorname', key: 'playerFirstname', sortable: true },
   { title: 'Name', key: 'playerName', sortable: true },
   { title: 'Status', key: 'status', sortable: true },
-  { title: 'manuell hinzugefügt', key: 'manually', sortable: true }
+  { title: 'manuell hinzugefügt', key: 'manually', sortable: true },
+  { title: '', key: 'deleteBtn', sortable: false }
 ]
 
 const loadPlayerEngagements = async () => {
@@ -99,7 +124,7 @@ const loadPlayerEngagements = async () => {
   )
   if (props.contextId !== '' && props.contextType === 'schedule') {
     await playerEngagementStore.loadPlayerEngagementsByScheduleId(props.contextId)
-    playerEngagements.value = playerEngagementStore.formatEngagementsByPlayer()
+    playerEngagements.value = playerEngagementStore.formatEngagementsByPlayer
     console.log(`Assigned players: ${JSON.stringify(playerEngagements.value)}`)
   }
 }
@@ -126,10 +151,7 @@ const onPlayerSelection = async (playerId: any) => {
   }
 
   try {
-    isPlayerAssignable.value = await playerEngagementStore.isPlayerAssignable(
-      playerId,
-      props.contextId
-    )
+    isPlayerAssignable.value = playerEngagementStore.isPlayerAssignable(playerId, props.contextId)
     if (!isPlayerAssignable.value) {
       message.value = {
         text: 'Player is already assigned.',
@@ -152,6 +174,7 @@ const assignPlayer = async (playerIdIn: string) => {
   try {
     console.log('Selected player: ', playerIdIn)
     const playerEngagementData: PlayerEngagement = {
+      id: '',
       playerId: playerIdIn,
       scheduleId: props.contextId,
       status: selectedEngagement.value,
@@ -183,7 +206,32 @@ const assignPlayer = async (playerIdIn: string) => {
   }
 }
 
+const deleteEngagement = async (engagement: PlayerEngagementWithPlayerInfo) => {
+  console.log('DELETE ENGAGEMENT: ', typeof engagement)
+  console.log('DELETE ENGAGEMENT: ', JSON.stringify(engagement))
+  const result = await playerEngagementStore.deletePlayerEngagement(engagement)
+  console.log(`Delete result: ${JSON.stringify(result)}`)
+  if (result.success) {
+    message.value = {
+      text: result.message,
+      type: 'success'
+    }
+    setTimeout(() => {
+      message.value.text = ''
+    }, 2000)
+    await loadPlayerEngagements()
+  }
+}
+
 const generateProposal = async () => {
   console.log('GENERATE PROPOSAL')
+  await playerEngagementStore.generateProposal(props.contextId)
+  await loadPlayerEngagements()
+}
+
+const confirmProposal = async () => {
+  console.log('CONFIRM PROPOSAL')
+  await playerEngagementStore.confirmProposal(props.contextId)
+  await loadPlayerEngagements()
 }
 </script>

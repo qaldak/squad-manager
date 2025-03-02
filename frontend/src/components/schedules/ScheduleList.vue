@@ -1,7 +1,7 @@
 <!-- ScheduleList.vue -->
 <template>
-  <header>Termine</header>
-  <v-btn class="text-none" @click="openScheduleDialog(true)">Neuer Termin</v-btn>
+  <header>Schedule</header>
+  <v-btn class="text-none" @click="openScheduleDialog(true)">Add new event</v-btn>
   <v-data-table
     :headers="headers"
     :items="schedules"
@@ -103,8 +103,8 @@ onMounted(() => {
 })
 
 const headers = [
-  { title: 'Datum', key: 'date', sortable: true },
-  { title: 'Terminart', key: 'type', sortable: true },
-  { title: 'Matchtyp', key: 'matchType' }
+  { title: 'Date', key: 'date', sortable: true },
+  { title: 'Event type', key: 'type', sortable: true },
+  { title: 'Match type', key: 'matchType' }
 ]
 </script>

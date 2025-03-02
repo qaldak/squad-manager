@@ -1,6 +1,7 @@
 import type { Position } from '@/types/player.type'
 
 export interface PlayerEngagement {
+  id: string
   playerId: string
   scheduleId: string
   status: EngagementStatus
@@ -21,5 +22,5 @@ export interface PlayerEngagementWithScheduleInfo extends PlayerEngagement {
 export enum EngagementStatus {
   PROVISIONAL = 'provisional',
   DEFINITIVE = 'definitive',
-  CANCELED = 'canceled',
+  CANCELED = 'canceled'
 }
