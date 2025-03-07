@@ -16,7 +16,7 @@ export const getPlayerEngagementsByScheduleId = async (
 
 export const addPlayerEngagement = async (
   playerEngagement: PlayerEngagement
-): Promise<PlayerEngagement | undefined> => {
+): Promise<PlayerEngagement> => {
   try {
     const response = await axios.post(`/api/playerEngagement`, playerEngagement)
     return response.data
@@ -52,7 +52,7 @@ export const generateProposal = async (scheduleId: string): Promise<void> => {
   }
 }
 
-function handleAxiosErrors(error: any) {
+function handleAxiosErrors(error: any): never {
   if (axios.isAxiosError(error)) {
     console.error(error.response?.status, error.response?.data?.message)
     throw new Error(

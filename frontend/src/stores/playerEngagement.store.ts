@@ -134,8 +134,8 @@ export const usePlayerEngagementStore = defineStore('playerEngagement', {
     async generateProposal(scheduleId: string) {
       this.loading = true
       try {
-        console.log('FOO1')
         const result = await generateProposal(scheduleId)
+        console.log(`Result: ${JSON.stringify(result)}`)
         await this.loadPlayerEngagementsByScheduleId(scheduleId)
       } catch (error) {
         console.log('FOO2')

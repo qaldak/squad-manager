@@ -22,23 +22,23 @@ const router = createRouter({
     },
     {
       path: '/players',
-      name: 'Spieler',
+      name: 'Players',
       component: () => import('../views/PlayerListView.vue')
     },
     {
       path: '/players/:id',
-      name: 'Spielerinformationen',
+      name: 'Player information',
       component: () => import('../components/players/PlayerDetail.vue'),
       props: true
     },
     {
       path: '/schedules',
-      name: 'Trainings- und Spielplan',
+      name: 'Schedules',
       component: ScheduleListView
     },
     {
       path: '/playerEngagements',
-      name: 'Spielkader und Trainingsteilnahme',
+      name: 'Player engagements',
       component: PlayerEngagementList
     }
   ]
