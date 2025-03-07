@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run test in WSL",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/backend/node_modules/.bin/jest",
+
+      "args": ["backend/tests/.*.spec.ts"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run test (Windows)",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/backend/node_modules/jest/bin/jest",
+
+      "args": ["backend/tests/.*.spec.ts"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    }
+  ]
+}
