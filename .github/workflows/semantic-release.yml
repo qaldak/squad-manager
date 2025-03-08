@@ -6,23 +6,8 @@ on:
       - main
 
 jobs:
-  check-commits:
-    runs-on: ubuntu-latest
-    outputs:
-      start_release: ${{ steps.check_new_commits.outcome == 'success' }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Run commit check script
-        id: check_new_commits
-        run: node .github/scripts/checkNewCommits.js
-
   release:
-    needs: check-commits
-    if: ${{ needs.check-commits.outcome == 'success' && !startsWith(github.event.head_commit.message, 'chore(release)') }}
+    if: ${{ !startsWith(github.event.head_commit.message, 'chore(release)') }}
     runs-on: ubuntu-latest
     concurrency: release
     permissions:
