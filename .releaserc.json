@@ -7,12 +7,12 @@
     {
       "type": "chore",
       "scope": "deps",
-      "release": "patch"
+      "release": false
     },
     {
       "type": "chore",
       "scope": "npm",
-      "release": "patch"
+      "release": false
     }
   ],
   "plugins": [
