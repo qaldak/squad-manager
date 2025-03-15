@@ -67,6 +67,7 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useScheduleStore } from '@/stores/schedule.store'
 import { MatchType, ScheduleType, type Schedule } from '@/types/schedule.type'
 import PlayerEngagementList from '@/components/playerEngagements/PlayerEngagementList.vue'
+import log from 'loglevel'
 
 const props = withDefaults(
   defineProps<{
@@ -119,19 +120,16 @@ watch(
     if (newVal) {
       // Initialize data set on opening dialog
       detailSchedule.value = { ...props.schedule }
-      console.log('Check', detailSchedule.value)
       scheduledDate.value = detailSchedule.value.scheduleId
         ? new Date(detailSchedule.value.date)
         : undefined
-      console.log('Dialog geöffnet - initialisierte Daten:', detailSchedule.value)
-      console.log('Dialog geöffnet - initialisierte Daten 2 :', detailSchedule.value.date)
-      // console.log('Dialog geöffnet - initialisierte Daten 2.1 :', detailSchedule.value.date.toISOString())
+      log.debug(`Open schedule dialog. initialise data ${detailSchedule.value}`)
     }
   }
 )
 
 watch(scheduledDate, (newDate) => {
-  console.log('Datum geändert:', newDate)
+  log.debug(`Date changed to ${newDate}`)
   if (newDate) {
     detailSchedule.value.date = newDate
   }
@@ -145,8 +143,7 @@ watch(
   () => props.schedule,
   (schedule) => {
     detailSchedule.value = { ...schedule }
-    console.log('Neuer Termin', scheduledDate.value)
-    console.log('Neuer Termin', detailSchedule.value)
+    log.debug(`New schedule ${detailSchedule.value}`)
   }
 )
 
@@ -160,7 +157,7 @@ watch(
 )
 
 const closeDialog = () => {
-  console.log('what', detailSchedule.value?.date)
+  log.debug(`close dialog, ${detailSchedule.value?.date}`)
   emit('update:dialog', false)
   emit('dialogClosed', true)
   scheduleDetailDialog.value = false
@@ -168,11 +165,10 @@ const closeDialog = () => {
 
 const saveSchedule = async (closeAfterSave: boolean) => {
   if (props.isNew) {
-    console.log(`Foo What's the time: ${detailSchedule.value.date.toISOString()}`)
+    log.debug(`New event. Set date/time to ${detailSchedule.value.date.toISOString()}`)
     await scheduleStore.addSchedule(detailSchedule.value)
   } else {
-    console.log('Bar')
-    console.log(detailSchedule.value)
+    log.debug(`change existing event to ${detailSchedule.value}`)
     await scheduleStore.updateSchedule(detailSchedule.value)
   }
   if (closeAfterSave) {

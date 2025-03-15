@@ -1,5 +1,6 @@
 import type { PlayerEngagement } from '@/types/playerEngagement.type'
 import axios from 'axios'
+import log from 'loglevel'
 
 const API_URL = '/api/playerEngagements'
 
@@ -28,7 +29,7 @@ export const addPlayerEngagement = async (
 export const deletePlayerEngagement = async (playerIdIn: string | undefined): Promise<void> => {
   try {
     const response = await axios.delete(`/api/playerEngagement/${playerIdIn}`)
-    console.log('deletePlayerEngagement', response)
+    log.debug('deletePlayerEngagement', response)
   } catch (error) {
     handleAxiosErrors(error)
   }
@@ -54,12 +55,12 @@ export const generateProposal = async (scheduleId: string): Promise<void> => {
 
 function handleAxiosErrors(error: any): never {
   if (axios.isAxiosError(error)) {
-    console.error(error.response?.status, error.response?.data?.message)
+    log.error(error.response?.status, error.response?.data?.message)
     throw new Error(
       error.response?.data?.message || 'Failed to process player engagement operation!'
     )
   } else {
-    console.error('Unexpected error:', error)
+    log.error('Unexpected error:', error)
     throw new Error('An unexpected error occurred!')
   }
 }

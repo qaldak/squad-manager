@@ -89,6 +89,7 @@ import {
 } from '@/types/playerEngagement.type'
 import { usePlayerStore } from '@/stores/player.store.ts'
 import { Player } from 'squad-manager-server/src/models/Player.ts'
+import log from 'loglevel'
 
 const props = defineProps<{
   contextType: 'player' | 'schedule'
@@ -119,13 +120,13 @@ const engagementHeaders = [
 ]
 
 const loadPlayerEngagements = async () => {
-  console.log(
+  log.debug(
     `context-id: ${props.contextId} - ${typeof props.contextId}, context-type: ${props.contextType}`
   )
   if (props.contextId !== '' && props.contextType === 'schedule') {
     await playerEngagementStore.loadPlayerEngagementsByScheduleId(props.contextId)
     playerEngagements.value = playerEngagementStore.formatEngagementsByPlayer
-    console.log(`Assigned players: ${JSON.stringify(playerEngagements.value)}`)
+    log.debug(`Assigned players: ${JSON.stringify(playerEngagements.value)}`)
   }
 }
 
@@ -164,7 +165,7 @@ const onPlayerSelection = async (playerId: any) => {
       type: 'error'
     }
 
-    console.error(`Error occurred: ${message.value}`)
+    log.error(`Error occurred: ${message.value}`)
     selectedPlayer.value = undefined
     autocompleteKey.value++
   }
@@ -172,7 +173,7 @@ const onPlayerSelection = async (playerId: any) => {
 
 const assignPlayer = async (playerIdIn: string) => {
   try {
-    console.log('Selected player: ', playerIdIn)
+    log.debug(`selected Player to assign: ${playerIdIn}`)
     const playerEngagementData: PlayerEngagement = {
       id: '',
       playerId: playerIdIn,
@@ -181,7 +182,7 @@ const assignPlayer = async (playerIdIn: string) => {
       manually: true
     }
 
-    console.log('FOO', JSON.stringify(playerEngagementData))
+    log.debug(`assign Player: ${JSON.stringify(playerEngagementData)}`)
     const result = await playerEngagementStore.assignNewPlayer(playerEngagementData)
     if (result.success) {
       message.value = {
@@ -193,9 +194,8 @@ const assignPlayer = async (playerIdIn: string) => {
       }, 2000)
       await loadPlayerEngagements()
     }
-    console.log('FOOBAR')
   } catch (error) {
-    console.log('ERROR')
+    log.error(`Assign player: unexpected error occured. ${error.message ? error.message : error}`)
     message.value = {
       text: error instanceof Error ? error.message : `An unexpected error occurred: ${error}`,
       type: 'error'
@@ -207,10 +207,9 @@ const assignPlayer = async (playerIdIn: string) => {
 }
 
 const deleteEngagement = async (engagement: PlayerEngagementWithPlayerInfo) => {
-  console.log('DELETE ENGAGEMENT: ', typeof engagement)
-  console.log('DELETE ENGAGEMENT: ', JSON.stringify(engagement))
+  log.debug(`Delete player engagement: ${JSON.stringify(engagement)}`)
   const result = await playerEngagementStore.deletePlayerEngagement(engagement)
-  console.log(`Delete result: ${JSON.stringify(result)}`)
+  log.debug(`Response delete api: ${JSON.stringify(result)}`)
   if (result.success) {
     message.value = {
       text: result.message,
@@ -224,13 +223,14 @@ const deleteEngagement = async (engagement: PlayerEngagementWithPlayerInfo) => {
 }
 
 const generateProposal = async () => {
-  console.log('GENERATE PROPOSAL')
+  log.info(`Starting generate proposal ...`)
   await playerEngagementStore.generateProposal(props.contextId)
   await loadPlayerEngagements()
+  log.debug(`Proposal generated`)
 }
 
 const confirmProposal = async () => {
-  console.log('CONFIRM PROPOSAL')
+  log.info(`Confirm proposal.`)
   await playerEngagementStore.confirmProposal(props.contextId)
   await loadPlayerEngagements()
 }

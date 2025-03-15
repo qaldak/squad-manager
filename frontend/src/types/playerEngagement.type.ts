@@ -14,7 +14,7 @@ export interface PlayerEngagementWithPlayerInfo extends PlayerEngagement {
   playerPosition?: Position
 }
 
-// Todo: braucht's den? Oder packen wir alles zusammen in ExtendedPlayerEngagement?
+// Todo: Check usage and delete if not necessary
 export interface PlayerEngagementWithScheduleInfo extends PlayerEngagement {
   scheduleDate: Date
 }

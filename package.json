@@ -1,28 +1,28 @@
 {
-    "name": "squad-manager",
-    "version": "0.0.1",
-    "private": true,
-    "scripts": {
-        "start": "npm run start:backend & npm run start:frontend",
-        "start:backend": "npm --prefix backend start",
-        "start:frontend": "npm --prefix frontend start",
-        "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-        "dev:backend": "npm --prefix backend run dev",
-        "dev:frontend": "npm --prefix frontend run dev"
-    },
-    "devDependencies": {
-        "@semantic-release/changelog": "^6.0.3",
-        "@semantic-release/commit-analyzer": "^13.0.1",
-        "@semantic-release/exec": "^7.0.3",
-        "@semantic-release/git": "^10.0.1",
-        "@semantic-release/npm": "^12.0.1",
-        "@semantic-release/release-notes-generator": "^14.0.3",
-        "concurrently": "^9.1.2",
-        "conventional-changelog-conventionalcommits": "^8.0.0",
-        "semantic-release": "^24.2.3"
-    },
-    "workspaces": [
-        "backend",
-        "frontend"
-    ]
+  "name": "squad-manager",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "npm run start:backend & npm run start:frontend",
+    "start:backend": "npm --prefix backend start",
+    "start:frontend": "npm --prefix frontend start",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/exec": "^7.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/npm": "^12.0.1",
+    "@semantic-release/release-notes-generator": "^14.0.3",
+    "concurrently": "^9.1.2",
+    "conventional-changelog-conventionalcommits": "^8.0.0",
+    "semantic-release": "^24.2.3"
+  },
+  "workspaces": [
+    "backend",
+    "frontend"
+  ]
 }

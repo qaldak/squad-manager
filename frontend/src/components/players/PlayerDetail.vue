@@ -45,6 +45,7 @@
 import { ref, watch } from 'vue'
 import { Position, type Player } from '@/types/player.type'
 import { usePlayerStore } from '@/stores/player.store'
+import log from 'loglevel'
 
 const props = withDefaults(
   defineProps<{
@@ -85,9 +86,8 @@ watch(detailDialog, (newVal) => {
 watch(
   () => props.player,
   (newPlayer) => {
-    console.log('Foo: ', props.player)
     detailPlayer.value = { ...newPlayer }
-    console.log('Foo: ', detailPlayer.value)
+    log.debug(`open player detail dialog ${detailPlayer.value}`)
   }
 )
 
@@ -101,7 +101,7 @@ const savePlayer = async (closeAfterSave: boolean) => {
   if (props.isNew) {
     await playerStore.addPlayer(detailPlayer.value)
   } else {
-    console.log('FOO', typeof detailPlayer.value.birthYear)
+    log.debug('FOO', typeof detailPlayer.value.birthYear)
     if (detailPlayer.value.birthYear === '') {
       detailPlayer.value.birthYear = null
     }

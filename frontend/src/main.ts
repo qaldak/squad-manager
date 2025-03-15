@@ -23,6 +23,9 @@ import App from './App.vue'
 import router from './router'
 import { VDateInput } from 'vuetify/labs/components'
 import { de, en } from 'vuetify/locale'
+import { initLoglevel } from '@/utils/logger.ts'
+
+initLoglevel()
 
 const app = createApp(App)
 app.component('font-awesome-icon', FontAwesomeIcon)
