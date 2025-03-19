@@ -1,4 +1,5 @@
 import { EngagementStatus } from "../../src/models/PlayerEngagement";
+import logger from "../../src/utils/logger";
 
 const mockPlayerEngagements = [
   {
@@ -153,34 +154,30 @@ const mockPlayerEngagements = [
 const getPlayerEngagements = () => mockPlayerEngagements;
 
 const readPlayerEngagement = (id: string) => {
-  return mockPlayerEngagements.find(
-    (engagement) =>
-      engagement.id === id
-  );
+  return mockPlayerEngagements.find((engagement) => engagement.id === id);
 };
 
 const searchPlayerEngagementBySchedule = (scheduleId: string) => {
   return mockPlayerEngagements.filter(
-    (engagement) => engagement.schedule_id === scheduleId
+    (engagement) => engagement.schedule_id === scheduleId,
   );
 };
 
 const searchPlayerEngagementsByPlayer = (playerId: string) => {
   return mockPlayerEngagements.filter(
-    (engagement) => engagement.player_id === playerId
+    (engagement) => engagement.player_id === playerId,
   );
 };
 
 const addPlayerEngagement = (engagement) => {
-  engagement.id = "Foo"
+  engagement.id = "Foo";
   mockPlayerEngagements.push(engagement);
-  return mockPlayerEngagements[mockPlayerEngagements.length -1]
-}
+  return mockPlayerEngagements[mockPlayerEngagements.length - 1];
+};
 
 const updatePlayerEngagement = (updatedPlayerEngagement) => {
   const index = mockPlayerEngagements.findIndex(
-    (engagement) =>
-      engagement.id === updatedPlayerEngagement.id
+    (engagement) => engagement.id === updatedPlayerEngagement.id,
   );
 
   if (index !== -1) {
@@ -194,17 +191,19 @@ const updatePlayerEngagement = (updatedPlayerEngagement) => {
 
 const deletePlayerEngagement = (id: string) => {
   const index = mockPlayerEngagements.findIndex(
-    (engagement) =>
-      engagement.id === id
+    (engagement) => engagement.id === id,
   );
 
-  const deletedEngagement = readPlayerEngagement(id)
-  console.log(deletedEngagement)
+  const deletedEngagement = readPlayerEngagement(id);
+  logger.debug(`deletedEngagement ${deletedEngagement}`);
   if (index !== -1) {
     mockPlayerEngagements.splice(index, 1);
-    return { data: [deletedEngagement], status: 200, statusText: `OK`}
+    return { data: [deletedEngagement], status: 200, statusText: `OK` };
   } else {
-    return { status: 404, statusText: `Error deleting player engagement, id: ${id}`}
+    return {
+      status: 404,
+      statusText: `Error deleting player engagement, id: ${id}`,
+    };
   }
 };
 

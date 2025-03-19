@@ -1,7 +1,8 @@
 import PlayerService from "../services/player.service";
+import logger from "../utils/logger";
 
 const getPlayers = async (req, res): Promise<void> => {
-  const players = await PlayerService.getPlayers()
+  const players = await PlayerService.getPlayers();
   res.json(players);
 };
 
@@ -19,16 +20,16 @@ const updatePlayer = async (req, res): Promise<void> => {
   try {
     const playerId = req.params.id;
     const player = await PlayerService.readPlayer(playerId);
-    const updatedPlayer = {...player, ...req.body};
+    const updatedPlayer = { ...player, ...req.body };
     const result = await PlayerService.updatePlayer(updatedPlayer);
-    console.log("Result: ", result);
+    logger.debug(`Result updated player: ${result}`);
     if (result) {
       res.status(200).json(result);
     } else {
-      res.status(404).json({message: "Player not found"});
+      res.status(404).json({ message: "Player not found" });
     }
   } catch (error) {
-    res.status(404).json({message: error.message});
+    res.status(404).json({ message: error.message });
   }
 };
 

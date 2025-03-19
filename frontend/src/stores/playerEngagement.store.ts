@@ -11,6 +11,7 @@ import {
   type PlayerEngagement,
   type PlayerEngagementWithPlayerInfo
 } from '@/types/playerEngagement.type'
+import log from 'loglevel'
 
 export const usePlayerEngagementStore = defineStore('playerEngagement', {
   state: () => ({
@@ -29,7 +30,7 @@ export const usePlayerEngagementStore = defineStore('playerEngagement', {
      * */
     isPlayerAssignable: (state) => {
       return (playerId: string, scheduleId: string): boolean => {
-        console.log(`Start assignment with playerId ${playerId} and scheduleId ${scheduleId}`)
+        log.debug(`Start assignment with playerId ${playerId} and scheduleId ${scheduleId}`)
         return !state.playerEngagements.some(
           (engagement: PlayerEngagement) =>
             engagement.playerId === playerId && engagement.scheduleId === scheduleId
@@ -56,14 +57,14 @@ export const usePlayerEngagementStore = defineStore('playerEngagement', {
     async loadPlayerEngagementsByScheduleId(scheduleId: string) {
       this.loading = true
       try {
-        console.log(`PlayerEngagement, scheduleId=${scheduleId}`)
+        log.debug(`PlayerEngagement, scheduleId=${scheduleId}`)
 
         const fetchedPlayerEngagements = await getPlayerEngagementsByScheduleId(scheduleId)
         if (!Array.isArray(fetchedPlayerEngagements)) {
           throw new TypeError('fetchedPlayerEngagements is not an array')
         }
 
-        console.log(`playerEngagement, fetchedPlayerEngagements: ${fetchedPlayerEngagements}`)
+        log.debug(`playerEngagement, fetchedPlayerEngagements: ${fetchedPlayerEngagements}`)
         this.playerEngagements = fetchedPlayerEngagements
         this.totalPlayerEngagements = fetchedPlayerEngagements.length
 
@@ -83,7 +84,7 @@ export const usePlayerEngagementStore = defineStore('playerEngagement', {
 
         return playerEngagementsWithPlayerInfo
       } catch (error) {
-        console.error(error)
+        log.error(error)
         throw error
       } finally {
         this.loading = false
@@ -96,7 +97,7 @@ export const usePlayerEngagementStore = defineStore('playerEngagement', {
         this.playerEngagements.push(newPlayerEngagement)
         return { success: true, message: 'Player successfully assigned.' }
       } catch (error) {
-        console.error(error)
+        log.error(error)
         throw new Error(
           error instanceof Error ? error.message : `An unexpected error occurred: ${error}`
         )
@@ -107,12 +108,12 @@ export const usePlayerEngagementStore = defineStore('playerEngagement', {
     async deletePlayerEngagement(playerEngagementIn: PlayerEngagementWithPlayerInfo) {
       this.loading = true
       try {
-        console.log(`deletePlayerEngagement ${JSON.stringify(playerEngagementIn)}`)
+        log.debug(`deletePlayerEngagement ${JSON.stringify(playerEngagementIn)}`)
         await deletePlayerEngagement(playerEngagementIn.id)
         const index = this.playerEngagements.findIndex(
           (engagement) => engagement.id === playerEngagementIn.id
         )
-        console.log(`INDEX: ${index})`)
+        log.debug(`INDEX: ${index})`)
         if (index === -1) {
           throw new Error(
             `An unexpected error occurred: ${playerEngagementIn.playerFirstname} ${playerEngagementIn.playerName} `
@@ -122,7 +123,7 @@ export const usePlayerEngagementStore = defineStore('playerEngagement', {
 
         return { success: true, message: 'Player engagement successfully deleted!' }
       } catch (error) {
-        console.log('Error', error)
+        log.error(error)
         return {
           success: false,
           message: error instanceof Error ? error.message : `An unexpected error occurred: ${error}`
@@ -135,10 +136,10 @@ export const usePlayerEngagementStore = defineStore('playerEngagement', {
       this.loading = true
       try {
         const result = await generateProposal(scheduleId)
-        console.log(`Result: ${JSON.stringify(result)}`)
+        log.debug(`Result: ${JSON.stringify(result)}`)
         await this.loadPlayerEngagementsByScheduleId(scheduleId)
       } catch (error) {
-        console.log('FOO2')
+        log.error(error)
       } finally {
         this.loading = false
       }
@@ -147,10 +148,10 @@ export const usePlayerEngagementStore = defineStore('playerEngagement', {
       this.loading = true
       try {
         const result = await confirmProposal(scheduleId)
-        console.log('Result: ', JSON.stringify(result))
+        log.debug('Result: ', JSON.stringify(result))
         await this.loadPlayerEngagementsByScheduleId(scheduleId)
       } catch (error) {
-        console.log('FOO 3')
+        log.error(error)
       } finally {
         this.loading = false
       }

@@ -1,10 +1,10 @@
 import express from "express";
 import request from "supertest";
 import scheduleRoutes from "../../src/routes/schedule.routes";
-import schedulesData from '../../tests/__mocks__/mock.schedule'
-import {MatchType, ScheduleType} from "../../src/models/Schedule";
-import {jest, describe, it, expect} from "@jest/globals"
-import playersData from "../__mocks__/mock.players";
+import schedulesData from "../../tests/__mocks__/mock.schedule";
+import { MatchType, ScheduleType } from "../../src/models/Schedule";
+import { jest, describe, it, expect } from "@jest/globals";
+import logger from "../../src/utils/logger";
 
 const app = express();
 
@@ -17,73 +17,72 @@ app.use("/api", scheduleRoutes);
 // }));
 
 // Mock db
-jest.mock('@supabase/supabase-js', () => {
+jest.mock("@supabase/supabase-js", () => {
   return {
     createClient: () => {
-      return ({
-          from: jest.fn(() => ({
-            select: jest.fn(() => {
-              return {
-                eq: jest.fn((column, value: any) => {
-                  console.log(column);
-                  if (column === 'id') {
-                    const schedule = schedulesData.readSchedule(value)
-                    return Promise.resolve({
-                      data: schedule ? [schedule] : [],
-                      error: null
-                    })
-                  }
-                  if (column === 'date') {
-                    const schedule = schedulesData.readScheduleByDate(value)
-                    return Promise.resolve({
-                      data: schedule ? [schedule] : [],
-                      error: null
-                    })
-                  }
-                }),
-                then: jest.fn((callback: (result: { data: any[]; error: null }) => void) => {
+      return {
+        from: jest.fn(() => ({
+          select: jest.fn(() => {
+            return {
+              eq: jest.fn((column, value: any) => {
+                logger.debug(`select ${column}`);
+                if (column === "id") {
+                  const schedule = schedulesData.readSchedule(value);
+                  return Promise.resolve({
+                    data: schedule ? [schedule] : [],
+                    error: null,
+                  });
+                }
+                if (column === "date") {
+                  const schedule = schedulesData.readScheduleByDate(value);
+                  return Promise.resolve({
+                    data: schedule ? [schedule] : [],
+                    error: null,
+                  });
+                }
+              }),
+              then: jest.fn(
+                (callback: (result: { data: any[]; error: null }) => void) => {
                   const schedules = schedulesData.getSchedules();
                   return callback({
                     data: schedules,
-                    error: null
-                  })
-                })
-              }
-            }),
-            update: jest.fn((data) => {
-              const updatedSchedule = schedulesData.updateSchedule(data)
-              return {
-                eq: jest.fn(() => {
-                  return {
-                    select: jest.fn(() => {
-                      return Promise.resolve({
-                        data: [updatedSchedule],
-                        error: null
-                      })
-                    })
-                  }
-                })
-              }
-            }),
-            insert: jest.fn((data) => {
-              const newSchedule = schedulesData.addSchedule(data)
-              return {
-                select: jest.fn(() => {
-                  return Promise.resolve({
-                    data: [newSchedule],
-                    error: null
-                  })
-                })
-              }
-
-            })
-          }))
-        }
-      );
-    }
-  }
-})
-
+                    error: null,
+                  });
+                },
+              ),
+            };
+          }),
+          update: jest.fn((data) => {
+            const updatedSchedule = schedulesData.updateSchedule(data);
+            return {
+              eq: jest.fn(() => {
+                return {
+                  select: jest.fn(() => {
+                    return Promise.resolve({
+                      data: [updatedSchedule],
+                      error: null,
+                    });
+                  }),
+                };
+              }),
+            };
+          }),
+          insert: jest.fn((data) => {
+            const newSchedule = schedulesData.addSchedule(data);
+            return {
+              select: jest.fn(() => {
+                return Promise.resolve({
+                  data: [newSchedule],
+                  error: null,
+                });
+              }),
+            };
+          }),
+        })),
+      };
+    },
+  };
+});
 
 describe("Schedule Controller", () => {
   it("should get all schedules", async () => {
