@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import InformationDetail from '../components/InformationDetail.vue'
+import InformationDetail from '@/components/InformationDetail.vue'
 </script>
 
 <template>

@@ -1,6 +1,12 @@
 import { defineStore } from 'pinia'
-import { addSchedule, getScheduleById, getSchedules, updateSchedule } from '@/services/schedule.service'
+import {
+  addSchedule,
+  getScheduleById,
+  getSchedules,
+  updateSchedule
+} from '@/services/schedule.service'
 import type { Schedule } from '@/types/schedule.type'
+import log from 'loglevel'
 
 export const useScheduleStore = defineStore('schedule', {
   state: () => ({
@@ -16,7 +22,7 @@ export const useScheduleStore = defineStore('schedule', {
         this.schedules = fetchedSchedules
         this.totalSchedules = fetchedSchedules.length
       } catch (error) {
-        console.error(error)
+        log.error(error)
       } finally {
         this.loading = false
       }
@@ -24,28 +30,26 @@ export const useScheduleStore = defineStore('schedule', {
     async getScheduleById(scheduleId: string) {
       this.loading = true
       try {
-        console.log('scheduleId: ', scheduleId)
+        log.debug(`scheduleId: ${scheduleId}`)
 
         const fetchedSchedule = await getScheduleById(scheduleId)
-        console.log(`fetchedSchedule: ${fetchedSchedule}`)
+        log.debug(`fetchedSchedule: ${fetchedSchedule}`)
 
         return fetchedSchedule
-
       } catch (error) {
-        console.error(error)
-
+        log.error(error)
       } finally {
         this.loading = false
       }
     },
     async addSchedule(schedule: Schedule) {
       const newSchedule = await addSchedule(schedule)
-      console.log('schedule added 2: ', newSchedule)
+      log.debug(`addSchedule: ${newSchedule}`)
     },
     async updateSchedule(schedule: Schedule) {
-      console.log(`schedule ready to update: ${schedule.matchType}`)
+      log.debug(`schedule ready to update: ${schedule.matchType}`)
       const updatedSchedule = await updateSchedule(schedule)
-      console.log('schedule updated: ', updatedSchedule)
+      log.debug('updated schedule: ', updatedSchedule)
     }
   }
 })

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { addPlayer, getPlayers, readPlayer, updatePlayer } from '@/services/player.service'
 import type { Player } from '@/types/player.type'
+import log from 'loglevel'
 
 export const usePlayerStore = defineStore('player', {
   state: () => ({
@@ -16,7 +17,7 @@ export const usePlayerStore = defineStore('player', {
         this.players = fetchedPlayers
         this.totalPlayers = fetchedPlayers.length
       } catch (error) {
-        console.error(error)
+        log.error(error)
       } finally {
         this.loading = false
       }
@@ -38,35 +39,34 @@ export const usePlayerStore = defineStore('player', {
              this.players.push(fetchedPlayer) // Den abgerufenen Spieler im Store speichern
              this.totalPlayers++ return fetchedPlayer
            } catch (error) {
-             console.error(error)
+             log.error(error)
            } finally {
            this.loading = false
            }
         *
         * */
-
       } catch (error) {
-        console.error(error)
+        logger.error(error)
       } finally {
         this.loading = false
       }
     },
     async addPlayer(newPlayer: Player) {
       const addedPlayer = await addPlayer(newPlayer)
-      // Todo: auch Daten im Playerstore aktualisieren, damit read via Playerstore geamcht werden kann.
+      // Todo: update data in Playerstore, for reading data from Playerstore.
       // this.players.push(addedPlayer)
       // this.totalPlayers
-      console.log("Store addedPlayer:", addedPlayer)
+      log.debug(`store addedPlayer: ${addedPlayer}`)
     },
     async updatePlayer(player: Player) {
-      console.log("Store updatePlayer:", player)
+      log.debug(`Store updated player: ${player}`)
       const updatedPlayer = await updatePlayer(player)
-      // Todo: auch Daten im Playerstore aktualisieren, damit read via Playerstore geamcht werden kann.
+      // Todo: update data in Playerstore, for reading data from Playerstore.
       // const index = this.players.findIndex(p => p.playerId === player.playerId)
       // if (index !== -1) {
       //  this.players.splice(index, 1, updatedPlayer)
       // }
-      console.log("Store updatedPlayer:", updatedPlayer)
+      log.debug(`store updatedPlayer: ${updatedPlayer}`)
     }
   }
 })

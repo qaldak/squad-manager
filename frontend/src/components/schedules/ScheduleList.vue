@@ -38,6 +38,7 @@ import { useScheduleStore } from '@/stores/schedule.store'
 import { ScheduleType, type Schedule } from '@/types/schedule.type'
 import ScheduleDetail from '@/components/schedules/ScheduleDetail.vue'
 import { formatDate } from 'date-fns'
+import log from 'loglevel'
 
 const isNew = ref(true)
 const schedules = ref<Schedule[]>([])
@@ -66,8 +67,8 @@ const formatSchedules = () => {
 }
 
 const openScheduleDialog = (createNew: boolean, schedule?: Schedule) => {
-  console.log('FOOBAR:', schedule)
-  console.log('Barfoo: ', createNew, isNew.value)
+  log.debug(`openScheduleDialog with schedule: ${schedule}`)
+  log.debug(`openScheduleDialog is new? ${createNew}`)
 
   isNew.value = createNew
   if (createNew) {
