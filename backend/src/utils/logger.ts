@@ -1,7 +1,4 @@
 import pino from "pino";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const logLevel = process.env.LOG_LEVEL || "warn";
 
@@ -19,5 +16,7 @@ const logger = pino({
     ],
   },
 });
+
+logger.debug(`loglevel set to '${logLevel}'`);
 
 export default logger;

@@ -1,8 +1,6 @@
 import { createClient, Session, SupabaseClient } from "@supabase/supabase-js";
-import dotenv from "dotenv";
 import logger from "./utils/logger";
 
-dotenv.config();
 const dbUrl = process.env.SUPABASE_URL;
 const dbServiceKey = process.env.SUPABASE_SERVICE_KEY;
 const dbLogin = process.env.SUPABASE_LOGIN;
@@ -44,13 +42,13 @@ async function signIn(email: string, password: string): Promise<Session> {
 
 // initializeDb from app.ts
 export async function initializeDb(): Promise<void> {
-  logger.debug(dbLogin);
   session = await signIn(dbLogin, dbPassword);
-  logger.info("Database initialized with session: %s", JSON.stringify(session));
-  logger.info(
-    `Database initialized with session: ${JSON.stringify(session)}`,
-    "Foo",
+  logger.debug(
+    "Database initialized with session: %s",
+    JSON.stringify(session),
   );
+
+  logger.info("log into db successfully.");
 }
 
 // sign out user from database
