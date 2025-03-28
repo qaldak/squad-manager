@@ -1,6 +1,9 @@
 import pino from "pino";
+import dotenv from "dotenv";
 
-const logLevel = process.env.LOG_LEVEL;
+dotenv.config();
+
+const logLevel = process.env.LOG_LEVEL || "warn";
 
 const logger = pino({
   level: logLevel,
@@ -8,7 +11,7 @@ const logger = pino({
     targets: [
       {
         target: "pino-pretty",
-        level: "logLevel",
+        level: logLevel,
         options: {
           colorize: true,
         },

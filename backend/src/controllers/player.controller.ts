@@ -22,7 +22,7 @@ const updatePlayer = async (req, res): Promise<void> => {
     const player = await PlayerService.readPlayer(playerId);
     const updatedPlayer = { ...player, ...req.body };
     const result = await PlayerService.updatePlayer(updatedPlayer);
-    logger.debug(`Result updated player: ${result}`);
+    logger.debug(`Result updated player: ${JSON.stringify(result)}`);
     if (result) {
       res.status(200).json(result);
     } else {

@@ -1,10 +1,12 @@
 import { createClient, Session, SupabaseClient } from "@supabase/supabase-js";
 import dotenv from "dotenv";
+import logger from "./utils/logger";
 
 dotenv.config();
-
 const dbUrl = process.env.SUPABASE_URL;
 const dbServiceKey = process.env.SUPABASE_SERVICE_KEY;
+const dbLogin = process.env.SUPABASE_LOGIN;
+const dbPassword = process.env.SUPABASE_PASSWORD;
 
 if (!dbUrl || !dbServiceKey) {
   throw new Error(
@@ -12,43 +14,54 @@ if (!dbUrl || !dbServiceKey) {
   );
 }
 
-const dbLogin = process.env.SUPABASE_LOGIN;
-const dbPassword = process.env.SUPABASE_PASSWORD;
-
 if (!dbLogin || !dbPassword) {
   throw new Error(
     "Database Login or Password not set in environment variables",
   );
 }
 
-let dbClient: SupabaseClient = createClient(dbUrl, dbServiceKey);
+const dbClient: SupabaseClient = createClient(dbUrl, dbServiceKey);
+let session: Session;
 
 async function signIn(email: string, password: string): Promise<Session> {
   const { data, error } = await dbClient.auth.signInWithPassword({
     email: email,
     password: password,
   });
-  console.log("Foo", data);
-  console.log("Bar", error);
+  logger.debug(`response data: ${JSON.stringify(data)}`);
+
+  if (error) {
+    logger.error(`Sign-in failed: ${error}`);
+    throw new Error("Sign-in failed");
+  }
+
+  if (!data.session) {
+    logger.warn("No session returned from sign-in.");
+  }
+
   return data.session;
 }
 
-(async () => {
-  console.log(dbLogin);
-  let session: Session = await signIn(dbLogin, dbPassword);
-  console.log("Baz", session);
-})();
-
-// temp code
 // initializeDb from app.ts
 export async function initializeDb(): Promise<void> {
-  dbClient = createClient(dbUrl, dbServiceKey);
-  const session: Session = await signIn(dbLogin, dbPassword);
-  console.log("Database initialized with session:", session);
+  logger.debug(dbLogin);
+  session = await signIn(dbLogin, dbPassword);
+  logger.info("Database initialized with session: %s", JSON.stringify(session));
+  logger.info(
+    `Database initialized with session: ${JSON.stringify(session)}`,
+    "Foo",
+  );
 }
-export async function closeDbConnection(): Promise<void> {
-  // Todo: implement code to signout and close db connection
-  console.log("Database connection closed.");
+
+// sign out user from database
+export async function signOutFromDb(): Promise<void> {
+  const { error } = await dbClient.auth.signOut();
+  if (error) {
+    logger.error(error);
+    throw error;
+  }
+
+  logger.info("Database connection closed.");
 }
 
 export default dbClient;
