@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "start": "vite --mode prd",
     "dev": "vite --mode dev",
     "build": "run-p type-check \"build-only {@}\" --",
-    "preview": "vite preview",
     "test:unit": "vitest",
     "test:e2e": "playwright test",
     "build-only": "vite build",

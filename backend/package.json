@@ -4,8 +4,8 @@
   "description": "Determine team selection for the next match",
   "main": "./src/app.ts",
   "scripts": {
-    "start": "ts-node ./src/app.ts",
-    "dev": "NODE_ENV=dev ts-node ./src/app.ts",
+    "start": "cross-env NODE_ENV=prd ts-node ./src/app.ts",
+    "dev": "cross-env NODE_ENV=dev ts-node ./src/app.ts",
     "test": "jest"
   },
   "keywords": [],
@@ -16,6 +16,7 @@
     "@supabase/supabase-js": "^2.49.3",
     "@types/express": "^5.0.0",
     "@types/uuid": "^10.0.0",
+    "cross-env": "^7.0.3",
     "dayjs": "^1.11.13",
     "dayjs-plugin-utc": "^0.1.2",
     "express": "^4.21.2",
