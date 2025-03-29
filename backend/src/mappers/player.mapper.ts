@@ -38,7 +38,7 @@ export function mapPlayerForDb(
   if (includeId) {
     mappedPlayer.id = playerDataIn.playerId;
   }
-  logger.debug(`Mapped player: ${mappedPlayer}`);
+  logger.debug(`Mapped player: ${JSON.stringify(mappedPlayer)}`);
 
   return mappedPlayer;
 }

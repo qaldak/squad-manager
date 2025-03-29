@@ -1,6 +1,6 @@
 import pino from "pino";
 
-const logLevel = process.env.LOG_LEVEL;
+const logLevel = process.env.LOG_LEVEL || "warn";
 
 const logger = pino({
   level: logLevel,
@@ -8,7 +8,7 @@ const logger = pino({
     targets: [
       {
         target: "pino-pretty",
-        level: "logLevel",
+        level: logLevel,
         options: {
           colorize: true,
         },
@@ -16,5 +16,7 @@ const logger = pino({
     ],
   },
 });
+
+logger.debug(`loglevel set to '${logLevel}'`);
 
 export default logger;
