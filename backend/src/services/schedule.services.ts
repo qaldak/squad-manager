@@ -8,6 +8,11 @@ import {
   mapSchedules,
 } from "../mappers/schedule.mapper";
 import logger from "../utils/logger";
+import dbConfig from "../../db.config";
+
+const schedulesTable =
+  dbConfig[process.env.NODE_ENV]?.schedulesTable || "schedules";
+logger.debug(`Use schedulesTable: '${schedulesTable}'`);
 
 dayjs.extend(utc);
 
@@ -22,7 +27,7 @@ class ScheduleService {
       const newSchedule = mapScheduleForDb(scheduleDataIn);
 
       const { data: schedule, error } = await dbClient
-        .from("schedules")
+        .from(schedulesTable)
         .insert(newSchedule)
         .select();
       if (error) {
@@ -38,7 +43,7 @@ class ScheduleService {
   async getAllSchedules(): Promise<Schedule[]> {
     try {
       const { data: schedules, error } = await dbClient
-        .from("schedules")
+        .from(schedulesTable)
         .select();
       if (error) {
         logger.error(`Error fetching schedules: ${error.message}`);
@@ -55,7 +60,7 @@ class ScheduleService {
   async readSchedule(scheduleId: string): Promise<Schedule> {
     try {
       const { data: schedule, error } = await dbClient
-        .from("schedules")
+        .from(schedulesTable)
         .select()
         .eq("id", scheduleId);
       if (error) {
@@ -73,7 +78,7 @@ class ScheduleService {
     logger.debug(`Schedules Date In: ${dateIn}`);
     try {
       const { data: schedule, error } = await dbClient
-        .from("schedules")
+        .from(schedulesTable)
         .select()
         .eq("date", dateIn);
       if (error) {
@@ -96,7 +101,7 @@ class ScheduleService {
     try {
       const updatedSchedule = mapScheduleForDb(scheduleDataIn, true);
       const { data: schedule, error } = await dbClient
-        .from("schedules")
+        .from(schedulesTable)
         .update(updatedSchedule)
         .eq("id", scheduleDataIn.scheduleId)
         .select();

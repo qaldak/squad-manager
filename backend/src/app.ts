@@ -1,10 +1,10 @@
 import "./utils/loadEnvFile";
+import logger from "./utils/logger";
 import express from "express";
 import playerRoutes from "./routes/player.routes";
 import scheduleRoutes from "./routes/schedule.routes";
 import playerEngagementRoutes from "./routes/playerEngangement.routes";
 import { initializeDb, signOutFromDb } from "./dbClient";
-import logger from "./utils/logger";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
