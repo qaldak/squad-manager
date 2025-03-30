@@ -13,6 +13,11 @@ import {
   mapPlayerEngagements,
 } from "../mappers/playerEngagement.mapper";
 import logger from "../utils/logger";
+import dbConfig from "../../db.config";
+
+const engagementsTable =
+  dbConfig[process.env.NODE_ENV]?.engagementsTable || "player_engagements";
+logger.debug(`Use engagementsTable: '${engagementsTable}'`);
 
 class PlayerEngagementService {
   async generateSquadProposal(
@@ -184,7 +189,7 @@ class PlayerEngagementService {
   async getPlayerEngagements(): Promise<PlayerEngagement[]> {
     try {
       const { data: playerEngagements, error } = await dbClient
-        .from("player_engagements")
+        .from(engagementsTable)
         .select();
       if (error) {
         logger.error(`Error fetching player engagements: ${error.message}`);
@@ -206,7 +211,7 @@ class PlayerEngagementService {
         playerEngagementDataIn,
       );
       const { data: playerEngagement, error } = await dbClient
-        .from("player_engagements")
+        .from(engagementsTable)
         .insert(newPlayerEngagement)
         .select();
       if (error) {
@@ -259,7 +264,7 @@ class PlayerEngagementService {
         status,
         statusText,
       } = await dbClient
-        .from("player_engagements")
+        .from(engagementsTable)
         .delete()
         .eq("id", engagementId)
         .select();
@@ -282,7 +287,7 @@ class PlayerEngagementService {
   ): Promise<PlayerEngagement[] | undefined> {
     try {
       const { data: engagementsByPlayer, error } = await dbClient
-        .from("player_engagements")
+        .from(engagementsTable)
         .select()
         .eq("player_id", playerId);
       if (error) {
@@ -302,7 +307,7 @@ class PlayerEngagementService {
   ): Promise<PlayerEngagement[] | undefined> {
     try {
       const { data: engagementsBySchedule, error } = await dbClient
-        .from("player_engagements")
+        .from(engagementsTable)
         .select()
         .eq("schedule_id", scheduleId);
       if (error) {
@@ -330,7 +335,7 @@ class PlayerEngagementService {
       logger.debug("updated player Engagement: ", engagementUpdateData);
 
       const { data: updatedPlayer, error } = await dbClient
-        .from("player_engagements")
+        .from(engagementsTable)
         .update(engagementUpdateData)
         .eq("id", playerEngagementDataIn.id)
         .select();

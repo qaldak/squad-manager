@@ -1,16 +1,22 @@
+import dbConfig from "../../db.config";
 import dbClient from "../dbClient";
+import logger from "../utils/logger";
 import {
   mapPlayers,
   mapPlayerForDb,
   mapPlayer,
 } from "../mappers/player.mapper";
 import { Player, PlayerData } from "../models/Player";
-import logger from "../utils/logger";
+
+const playersTable = dbConfig[process.env.NODE_ENV]?.playerTable || "players";
+logger.debug(`Use playerTable: '${playersTable}'`);
 
 class PlayerService {
   async getPlayers(): Promise<Player[]> {
     try {
-      const { data: players, error } = await dbClient.from("players").select();
+      const { data: players, error } = await dbClient
+        .from(playersTable)
+        .select();
       if (error) {
         logger.error(`Error fetching players: ${error.message}`);
         throw error;
@@ -28,7 +34,7 @@ class PlayerService {
       logger.debug(`newPlayer (mapped): ${newPlayer}`);
 
       const { data: player, error } = await dbClient
-        .from("players")
+        .from(playersTable)
         .insert(newPlayer)
         .select();
 
@@ -48,7 +54,7 @@ class PlayerService {
     try {
       const updatedPlayer = mapPlayerForDb(playerDataIn, true);
       const { data: player, error } = await dbClient
-        .from("players")
+        .from(playersTable)
         .update(updatedPlayer)
         .eq("id", playerDataIn.playerId)
         .select();
@@ -66,7 +72,7 @@ class PlayerService {
   async readPlayer(playerId: string): Promise<Player> {
     try {
       const { data: player, error } = await dbClient
-        .from("players")
+        .from(playersTable)
         .select()
         .eq("id", playerId);
       if (error) {

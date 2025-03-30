@@ -18,7 +18,7 @@ jest.mock("@supabase/supabase-js", () => {
     createClient: () => {
       return {
         from: jest.fn((tableName: string) => {
-          if (tableName === "schedules") {
+          if (tableName === "schedules" || tableName === "tst_schedules") {
             return {
               select: jest.fn(() => {
                 const schedules = schedulesData.getSchedules();
@@ -28,7 +28,10 @@ jest.mock("@supabase/supabase-js", () => {
                 });
               }),
             };
-          } else if (tableName === "player_engagements") {
+          } else if (
+            tableName === "player_engagements" ||
+            tableName === "tst_player_engagements"
+          ) {
             return {
               select: jest.fn(() => {
                 return {
@@ -121,8 +124,27 @@ jest.mock("@supabase/supabase-js", () => {
             };
           }
         }),
+        auth: {
+          signInWithPassword: jest.fn(() => ({
+            data: { session: { user: { id: "mockUserId" } } },
+            error: null,
+          })),
+          signOut: jest.fn(() => ({ error: null })),
+        },
       };
     },
+  };
+});
+
+// Mock dbClient and response supabase mock
+jest.mock("../../src/dbClient", () => {
+  const mockSupabaseClient = require("@supabase/supabase-js").createClient();
+  return {
+    __esModule: true,
+    default: mockSupabaseClient, // response supabase mock
+    // initializeDb: jest.fn(),
+    // signIn: jest.fn(),
+    // signOut: jest.fn(),
   };
 });
 

@@ -1,68 +1,88 @@
 import request from "supertest";
 import express from "express";
-import playersData from "../__mocks__/mock.players"
+import playersData from "../__mocks__/mock.players";
 import playerRoutes from "../../src/routes/player.routes";
-import {Position} from "../../src/models/Player";
-import {jest, describe, it, expect} from "@jest/globals"
+import { Position } from "../../src/models/Player";
+import { jest, describe, it, expect } from "@jest/globals";
 
 // Mock db
-jest.mock('@supabase/supabase-js', () => {
+jest.mock("@supabase/supabase-js", () => {
   return {
     createClient: () => {
-      return ({
+      return {
         from: jest.fn(() => ({
           select: jest.fn(() => {
             return {
               eq: jest.fn((column, value: string) => {
-                if (column === 'id') {
-                  const player = playersData.readPlayer(value)
+                if (column === "id") {
+                  const player = playersData.readPlayer(value);
                   return Promise.resolve({
                     data: player ? [player] : [],
-                    error: null
-                  })
+                    error: null,
+                  });
                 }
               }),
-              then: jest.fn((callback: (result: { data: any[]; error: null }) => void) => {
-                const players = playersData.getPlayers();
-                return callback({
-                  data: players,
-                  error: null
-                })
-              })
-            }
+              then: jest.fn(
+                (callback: (result: { data: any[]; error: null }) => void) => {
+                  const players = playersData.getPlayers();
+                  return callback({
+                    data: players,
+                    error: null,
+                  });
+                },
+              ),
+            };
           }),
           update: jest.fn((data) => {
-            const updatedPlayer = playersData.updatePlayer(data)
+            const updatedPlayer = playersData.updatePlayer(data);
             return {
               eq: jest.fn(() => {
                 return {
                   select: jest.fn(() => {
                     return Promise.resolve({
                       data: [updatedPlayer],
-                      error: null
-                    })
-                  })
-                }
-              })
-            }
+                      error: null,
+                    });
+                  }),
+                };
+              }),
+            };
           }),
           insert: jest.fn((data) => {
-            const newPlayer = playersData.addPlayer(data)
+            const newPlayer = playersData.addPlayer(data);
             return {
               select: jest.fn(() => {
                 return Promise.resolve({
                   data: [newPlayer],
-                  error: null
-                })
-              })
-            }
-          })
-        }))
-      });
-    }
-  }
-})
+                  error: null,
+                });
+              }),
+            };
+          }),
+        })),
+        auth: {
+          signInWithPassword: jest.fn(() => ({
+            data: { session: { user: { id: "mockUserId" } } },
+            error: null,
+          })),
+          signOut: jest.fn(() => ({ error: null })),
+        },
+      };
+    },
+  };
+});
 
+// Mock dbClient and response supabase mock
+jest.mock("../../src/dbClient", () => {
+  const mockSupabaseClient = require("@supabase/supabase-js").createClient();
+  return {
+    __esModule: true,
+    default: mockSupabaseClient, // response supabase mock
+    // initializeDb: jest.fn(),
+    // signIn: jest.fn(),
+    // signOut: jest.fn(),
+  };
+});
 
 const app = express();
 app.use(express.json());
@@ -121,5 +141,4 @@ describe("Player Controller", () => {
     const res2 = await request(app).get("/api/players");
     expect(res2.body).toHaveLength(16);
   });
-
 });
