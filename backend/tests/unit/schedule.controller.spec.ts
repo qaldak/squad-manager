@@ -79,8 +79,27 @@ jest.mock("@supabase/supabase-js", () => {
             };
           }),
         })),
+        auth: {
+          signInWithPassword: jest.fn(() => ({
+            data: { session: { user: { id: "mockUserId" } } },
+            error: null,
+          })),
+          signOut: jest.fn(() => ({ error: null })),
+        },
       };
     },
+  };
+});
+
+// Mock dbClient and response supabase mock
+jest.mock("../../src/dbClient", () => {
+  const mockSupabaseClient = require("@supabase/supabase-js").createClient();
+  return {
+    __esModule: true,
+    default: mockSupabaseClient, // response supabase mock
+    // initializeDb: jest.fn(),
+    // signIn: jest.fn(),
+    // signOut: jest.fn(),
   };
 });
 
