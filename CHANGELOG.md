@@ -1,3 +1,9 @@
+## [0.2.0](https://github.com/qaldak/squad-manager/compare/v0.1.0...v0.2.0) (2025-04-01)
+
+### Features
+
+* add filter chip on schedules list ([38647af](https://github.com/qaldak/squad-manager/commit/38647afc705c6b2a711b456abd0b23a361339299))
+
 ## [0.1.0](https://github.com/qaldak/squad-manager/compare/v0.0.1...v0.1.0) (2025-03-30)
 
 ### Features
