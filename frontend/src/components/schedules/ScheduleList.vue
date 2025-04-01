@@ -2,9 +2,18 @@
 <template>
   <header>Schedule</header>
   <v-btn class="text-none" @click="openScheduleDialog(true)">Add new event</v-btn>
+  <v-chip-group>
+    <v-chip
+      color="white"
+      filter
+      text="inkl.vergangene"
+      variant="outlined"
+      @click="togglePastFilter"
+    ></v-chip>
+  </v-chip-group>
   <v-data-table
     :headers="headers"
-    :items="schedules"
+    :items="filteredSchedules"
     :loading="scheduleStore.loading"
     :server-items-length="scheduleStore.totalSchedules"
     :items-per-page="10"
@@ -33,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useScheduleStore } from '@/stores/schedule.store'
 import { ScheduleType, type Schedule } from '@/types/schedule.type'
 import ScheduleDetail from '@/components/schedules/ScheduleDetail.vue'
@@ -41,6 +50,7 @@ import { formatDate } from 'date-fns'
 import log from 'loglevel'
 
 const isNew = ref(true)
+const pastFilterActive = ref(false)
 const schedules = ref<Schedule[]>([])
 const scheduleDialog = ref(false)
 const scheduleStore = useScheduleStore()
@@ -49,6 +59,14 @@ const actualSchedule = ref<Schedule>({
   date: new Date(),
   type: ScheduleType.TRAINING,
   matchType: undefined
+})
+
+const filteredSchedules = computed(() => {
+  if (pastFilterActive.value) {
+    return schedules.value
+  }
+  const today = new Date()
+  return schedules.value.filter((schedule) => new Date(schedule.date) >= today)
 })
 
 const formatSchedules = () => {
@@ -88,6 +106,10 @@ const openScheduleDialog = (createNew: boolean, schedule?: Schedule) => {
 const reloadSchedules = async () => {
   await scheduleStore.loadSchedules()
   schedules.value = formatSchedules()
+}
+
+const togglePastFilter = () => {
+  pastFilterActive.value = !pastFilterActive.value
 }
 
 const updateDialog = (value: boolean) => {
