@@ -1,12 +1,14 @@
 <!-- ScheduleList.vue -->
 <template>
-  <header>Schedule</header>
-  <v-btn class="text-none" @click="openScheduleDialog(true)">Add new event</v-btn>
+  <header>{{ t('schedule.schedules') }}</header>
+  <v-btn class="text-none" @click="openScheduleDialog(true)"
+    >{{ t('schedule.buttons.new_schedule') }}
+  </v-btn>
   <v-chip-group>
     <v-chip
       color="white"
       filter
-      text="inkl.vergangene"
+      :text="t('schedule.buttons.incl_past')"
       variant="outlined"
       @click="togglePastFilter"
     ></v-chip>
@@ -43,12 +45,14 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useScheduleStore } from '@/stores/schedule.store'
 import { ScheduleType, type Schedule } from '@/types/schedule.type'
 import ScheduleDetail from '@/components/schedules/ScheduleDetail.vue'
 import { formatDate } from 'date-fns'
 import log from 'loglevel'
 
+const { t } = useI18n()
 const isNew = ref(true)
 const pastFilterActive = ref(false)
 const schedules = ref<Schedule[]>([])
@@ -126,8 +130,8 @@ onMounted(() => {
 })
 
 const headers = [
-  { title: 'Date', key: 'date', sortable: true },
-  { title: 'Event type', key: 'type', sortable: true },
-  { title: 'Match type', key: 'matchType' }
+  { title: t('schedule.date'), key: 'date', sortable: true },
+  { title: t('schedule.event_type'), key: 'type', sortable: true },
+  { title: t('schedule.match_type'), key: 'matchType' }
 ]
 </script>

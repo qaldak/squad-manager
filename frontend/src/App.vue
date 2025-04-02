@@ -1,11 +1,20 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import Welcome from './components/Welcome.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    <img
+      alt="squad manager"
+      class="logo"
+      src="@/assets/squad-manager-logo.svg"
+      width="125"
+      height="125"
+    />
 
     <div class="wrapper">
       <Welcome msg="squad manager" />
@@ -13,8 +22,8 @@ import Welcome from './components/Welcome.vue'
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/players">Players</RouterLink>
-        <RouterLink to="/schedules">Schedule</RouterLink>
+        <RouterLink to="/players">{{ t('player.players') }}</RouterLink>
+        <RouterLink to="/schedules">{{ t('schedule.schedules') }}</RouterLink>
       </nav>
     </div>
   </header>
