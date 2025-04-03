@@ -21,7 +21,7 @@
                 <v-select
                   v-model="detailSchedule.type"
                   :items="scheduleTypes"
-                  :label="t('schedule.event_type')"
+                  :label="t('schedule.eventType')"
                   :rules="[rules.required]"
                   required
                 ></v-select>
@@ -34,7 +34,7 @@
                   :rules="
                     detailSchedule.type === computedScheduleType.MATCH_DAY ? [rules.required] : []
                   "
-                  :label="t('schedule.match_type')"
+                  :label="t('schedule.matchType')"
                 ></v-select>
               </v-col>
             </v-row>

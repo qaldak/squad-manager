@@ -2,13 +2,13 @@
 <template>
   <header>{{ t('schedule.schedules') }}</header>
   <v-btn class="text-none" @click="openScheduleDialog(true)"
-    >{{ t('schedule.buttons.new_schedule') }}
+    >{{ t('schedule.buttons.newSchedule') }}
   </v-btn>
   <v-chip-group>
     <v-chip
       color="white"
       filter
-      :text="t('schedule.buttons.incl_past')"
+      :text="t('schedule.buttons.inclPastFilter')"
       variant="outlined"
       @click="togglePastFilter"
     ></v-chip>
@@ -131,7 +131,7 @@ onMounted(() => {
 
 const headers = [
   { title: t('schedule.date'), key: 'date', sortable: true },
-  { title: t('schedule.event_type'), key: 'type', sortable: true },
-  { title: t('schedule.match_type'), key: 'matchType' }
+  { title: t('schedule.eventType'), key: 'type', sortable: true },
+  { title: t('schedule.matchType'), key: 'matchType' }
 ]
 </script>

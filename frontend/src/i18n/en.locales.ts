@@ -5,54 +5,75 @@ export const enTranslations: ITranslations = {
     firstname: 'firstname',
     name: 'name',
     position: 'position',
-    year_of_birth: 'year of birth',
+    yearOfBirth: 'year of birth',
     birthday: 'birthday',
     players: 'Players',
     buttons: {
-      new_player: 'add new player'
+      newPlayer: 'add new player'
+    },
+    titles: {
+      newPlayer: 'New player',
+      editPlayer: 'Edit player'
     }
   },
   schedule: {
     date: 'date',
     location: 'location',
-    event_type: 'event type',
-    game: 'game',
-    training: 'training',
-    match_type: 'match type',
-    cup: 'Cup game',
-    league: 'League game',
-    indoor: 'Indoor game',
-    friendly: 'Friendly game',
+    eventType: 'event type',
+    matchType: 'match type',
     schedules: 'Schedules',
     buttons: {
-      new_schedule: 'add new schedule',
-      incl_past: 'incl. past'
+      newSchedule: 'add new schedule',
+      inclPastFilter: 'incl. past'
+    },
+    enums: {
+      eventType: {
+        game: 'game',
+        training: 'training'
+      },
+      matchType: {
+        cup: 'Cup game',
+        league: 'League game',
+        indoor: 'Indoor game',
+        friendly: 'Friendly game'
+      }
     }
   },
   playerEngagement: {
-    definitive: 'definitive',
-    canceled: 'canceled',
-    provisional: 'provisional',
-    manually_added: 'manually added',
-    state: 'state',
-    assign_player: 'Assign player',
-    player_engagement: 'player engagement',
+    manuallyAdded: 'manually added',
+    status: 'state',
+    assignPlayer: 'Assign player',
     buttons: {
-      assign_player: 'assign',
-      generate_squad: 'generate squad',
-      confirm_squad: 'confirm squad'
+      assignPlayer: 'assign',
+      generateProposal: 'generate squad',
+      confirmProposal: 'confirm squad'
+    },
+    enums: {
+      status: {
+        canceled: 'canceled',
+        definitive: 'definitive',
+        provisional: 'provisional'
+      }
+    },
+    messages: {
+      deletePlayer: 'Remove player from list',
+      playerAlreadyAssigned: 'Player already assigned',
+      playerAssigned: 'Player assigned successfully',
+      playerDeleted: 'Player successfully deleted',
+      searchPlayer: 'Enter name or first name'
+    },
+    titles: {
+      playerEngagement: 'Player engagement'
     }
   },
   common: {
     buttons: {
       cancel: 'cancel',
       save: 'save',
-      save_and_close: 'save and close'
+      saveAndClose: 'save and close'
     },
     messages: {
-      field_required: 'field is required',
-      player_assigned_success: 'Player assigned successfully',
-      player_already_assigned: 'Player already assigned.'
+      fieldRequired: 'field is required'
     }
   }
 }

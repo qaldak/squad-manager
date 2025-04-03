@@ -1,5 +1,5 @@
 <template>
-  <v-card-title>Player engagement</v-card-title>
+  <v-card-title>{{ t('playerEngagement.titles.playerEngagement') }}</v-card-title>
   <v-row>
     <v-col>
       <v-autocomplete
@@ -9,8 +9,8 @@
         clearable
         item-title="fullName"
         item-value="playerId"
-        label="assign player"
-        placeholder="enter name or first name"
+        :label="t('playerEngagement.assignPlayer')"
+        :placeholder="t('playerEngagement.messages.searchPlayer')"
         @update:modelValue="onPlayerSelection"
       ></v-autocomplete>
     </v-col>
@@ -26,7 +26,7 @@
         :disabled="!isPlayerAssignable"
         :loading="playerEngagementStore.loading"
         @click="assignPlayer(selectedPlayer)"
-        >Assign
+        >{{ t('playerEngagement.buttons.assignPlayer') }}
       </v-btn>
     </v-col>
   </v-row>
@@ -37,7 +37,7 @@
     color="primary"
     :loading="playerEngagementStore.loading"
     @click="generateProposal"
-    >Generate squad
+    >{{ t('playerEngagement.buttons.generateProposal') }}
   </v-btn>
 
   <v-btn
@@ -46,7 +46,7 @@
     color="primary"
     :loading="playerEngagementStore.loading"
     @click="confirmProposal"
-    >Confirm squad
+    >{{ t('playerEngagement.buttons.confirmProposal') }}
   </v-btn>
 
   <v-data-table
@@ -69,7 +69,9 @@
         <td>
           <v-btn small @click="deleteEngagement(item)">
             <font-awesome-icon icon="fa-solid fa-trash" />
-            <v-tooltip activator="parent">Delete player engagement</v-tooltip>
+            <v-tooltip activator="parent">{{
+              t('playerEngagement.messages.deletePlayer')
+            }}</v-tooltip>
           </v-btn>
         </td>
       </tr>
@@ -90,7 +92,9 @@ import {
 import { usePlayerStore } from '@/stores/player.store.ts'
 import { Player } from 'squad-manager-server/src/models/Player.ts'
 import log from 'loglevel'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const props = defineProps<{
   contextType: 'player' | 'schedule'
   contextId: string
@@ -112,10 +116,10 @@ onMounted(async () => {
 })
 
 const engagementHeaders = [
-  { title: 'Vorname', key: 'playerFirstname', sortable: true },
-  { title: 'Name', key: 'playerName', sortable: true },
-  { title: 'Status', key: 'status', sortable: true },
-  { title: 'manuell hinzugefügt', key: 'manually', sortable: true },
+  { title: t('player.firstname'), key: 'playerFirstname', sortable: true },
+  { title: t('player.name'), key: 'playerName', sortable: true },
+  { title: t('playerEngagement.status'), key: 'status', sortable: true },
+  { title: t('playerEngagement.manuallyAdded'), key: 'manually', sortable: true },
   { title: '', key: 'deleteBtn', sortable: false }
 ]
 
@@ -155,7 +159,7 @@ const onPlayerSelection = async (playerId: any) => {
     isPlayerAssignable.value = playerEngagementStore.isPlayerAssignable(playerId, props.contextId)
     if (!isPlayerAssignable.value) {
       message.value = {
-        text: 'Player is already assigned.',
+        text: t('playerEngagement.messages.playerAlreadyAssigned'),
         type: 'error'
       }
     }
@@ -186,7 +190,7 @@ const assignPlayer = async (playerIdIn: string) => {
     const result = await playerEngagementStore.assignNewPlayer(playerEngagementData)
     if (result.success) {
       message.value = {
-        text: result.message,
+        text: t('playerEngagement.messages.playerAssigned'),
         type: 'success'
       }
       setTimeout(() => {
@@ -212,7 +216,7 @@ const deleteEngagement = async (engagement: PlayerEngagementWithPlayerInfo) => {
   log.debug(`Response delete api: ${JSON.stringify(result)}`)
   if (result.success) {
     message.value = {
-      text: result.message,
+      text: t('playerEngagement.messages.playerDeleted'),
       type: 'success'
     }
     setTimeout(() => {

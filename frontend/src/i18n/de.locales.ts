@@ -5,54 +5,75 @@ export const deTranslations: ITranslations = {
     firstname: 'Vorname',
     name: 'Name',
     position: 'Position',
-    year_of_birth: 'Jahrgang',
+    yearOfBirth: 'Jahrgang',
     birthday: 'Geburtsdatum',
     players: 'Spieler',
     buttons: {
-      new_player: 'Neuer Spieler erfassen'
+      newPlayer: 'Neuer Spieler erfassen'
+    },
+    titles: {
+      newPlayer: 'Neuer Spieler',
+      editPlayer: 'Spieler bearbeiten'
     }
   },
   schedule: {
     date: 'Datum',
     location: 'Ort',
-    event_type: 'Terminart',
-    game: 'Match',
-    training: 'Training',
-    match_type: 'Matchtyp',
-    cup: 'Cup Spiel',
-    league: 'Liga-Spiel',
-    indoor: 'Hallenturnier',
-    friendly: 'Freundschaftsspiel',
+    eventType: 'Terminart',
+    matchType: 'Matchtyp',
     schedules: 'Spielplan',
     buttons: {
-      new_schedule: 'Neuer Termin erfassen',
-      incl_past: 'inkl. vergangene'
+      newSchedule: 'Neuer Termin erfassen',
+      inclPastFilter: 'inkl. vergangene'
+    },
+    enums: {
+      eventType: {
+        game: 'Match',
+        training: 'Training'
+      },
+      matchType: {
+        cup: 'Cup Spiel',
+        league: 'Liga-Spiel',
+        indoor: 'Hallenturnier',
+        friendly: 'Freundschaftsspiel'
+      }
     }
   },
   playerEngagement: {
-    definitive: 'Definitiv',
-    canceled: 'Abgesagt',
-    provisional: 'Provisorisch',
-    manually_added: 'Manuell hinzugefügt',
-    state: 'Status',
-    assign_player: 'Spieler zuteilen',
-    player_engagement: 'Spielerzuteilung',
+    manuallyAdded: 'Manuell hinzugefügt',
+    status: 'Status',
+    assignPlayer: 'Spieler zuteilen',
     buttons: {
-      assign_player: 'Zuteilen',
-      generate_squad: 'Kader generieren',
-      confirm_squad: 'Kader bestätigen'
+      assignPlayer: 'Spieler zuteilen',
+      generateProposal: 'Kader generieren',
+      confirmProposal: 'Kader bestätigen'
+    },
+    enums: {
+      status: {
+        canceled: 'Abgesagt',
+        definitive: 'Definitiv',
+        provisional: 'Provisorisch'
+      }
+    },
+    messages: {
+      deletePlayer: 'Spieler entfernen',
+      playerAlreadyAssigned: 'Spieler bereits hinzugefügt',
+      playerAssigned: 'Spieler erfolgreich hinzugefügt',
+      playerDeleted: 'Spieler erfolgreich gelöscht',
+      searchPlayer: 'Suche Name oder Vorname'
+    },
+    titles: {
+      playerEngagement: 'Spielerzuteilung'
     }
   },
   common: {
     buttons: {
       cancel: 'Abbrechen',
       save: 'Speichern',
-      save_and_close: 'Speichern und schliessen'
+      saveAndClose: 'Speichern und schliessen'
     },
     messages: {
-      field_required: 'Eingabe ist zwingend',
-      player_assigned_success: 'Spieler erfolgreich hinzugefügt',
-      player_already_assigned: 'Spieler bereits hinzugefügt'
+      fieldRequired: 'Eingabe ist zwingend'
     }
   }
 }
