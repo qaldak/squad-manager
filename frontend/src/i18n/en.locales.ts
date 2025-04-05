@@ -11,6 +11,14 @@ export const enTranslations: ITranslations = {
     buttons: {
       newPlayer: 'add new player'
     },
+    enums: {
+      position: {
+        defender: 'Defender',
+        forward: 'Forward',
+        goalkeeper: 'Goalkeeper',
+        midfielder: 'Midfielder'
+      }
+    },
     titles: {
       newPlayer: 'New player',
       editPlayer: 'Edit player'
@@ -19,7 +27,7 @@ export const enTranslations: ITranslations = {
   schedule: {
     date: 'date',
     location: 'location',
-    eventType: 'event type',
+    scheduleType: 'event type',
     matchType: 'match type',
     schedules: 'Schedules',
     buttons: {
@@ -27,13 +35,13 @@ export const enTranslations: ITranslations = {
       inclPastFilter: 'incl. past'
     },
     enums: {
-      eventType: {
-        game: 'game',
+      scheduleType: {
+        game_day: 'game',
         training: 'training'
       },
       matchType: {
         cup: 'Cup game',
-        league: 'League game',
+        league: 'Championship',
         indoor: 'Indoor game',
         friendly: 'Friendly game'
       }
@@ -50,9 +58,9 @@ export const enTranslations: ITranslations = {
     },
     enums: {
       status: {
-        canceled: 'canceled',
-        definitive: 'definitive',
-        provisional: 'provisional'
+        CANCELED: 'canceled',
+        DEFINITIVE: 'definitive',
+        PROVISIONAL: 'provisional'
       }
     },
     messages: {
@@ -67,6 +75,10 @@ export const enTranslations: ITranslations = {
     }
   },
   common: {
+    bool: {
+      false: 'Nein',
+      true: 'Ja'
+    },
     buttons: {
       cancel: 'cancel',
       save: 'save',

@@ -125,16 +125,16 @@ describe("Schedule Controller", () => {
     expect(res.body).toEqual({
       scheduleId: "M0810",
       date: "2024-08-10T00:00:00.000Z",
-      type: ScheduleType.MATCH_DAY,
-      matchType: MatchType.LEAGUE_GAME,
+      type: ScheduleType.GAME_DAY,
+      matchType: MatchType.LEAGUE,
     });
   });
 
   it("should add a new match day", async () => {
     const newSchedule = {
       date: new Date("2025-09-03"),
-      type: ScheduleType.MATCH_DAY,
-      matchType: MatchType.LEAGUE_GAME,
+      type: ScheduleType.GAME_DAY,
+      matchType: MatchType.LEAGUE,
     };
 
     const res = await request(app).post("/api/schedules").send(newSchedule);
@@ -142,8 +142,8 @@ describe("Schedule Controller", () => {
     expect(res.body).toEqual({
       scheduleId: "987z4321-e89b-12d3-a456-426614174000",
       date: "2025-09-03T00:00:00.000Z",
-      type: ScheduleType.MATCH_DAY,
-      matchType: MatchType.LEAGUE_GAME,
+      type: ScheduleType.GAME_DAY,
+      matchType: MatchType.LEAGUE,
     });
 
     const resTotal = await request(app).get("/api/schedules");
@@ -154,12 +154,12 @@ describe("Schedule Controller", () => {
     const scheduleId = "M0817";
     const updates = {
       date: new Date("2024-08-18"),
-      matchType: MatchType.FRIENDLY_GAME,
+      matchType: MatchType.FRIENDLY,
     };
     const res = await request(app)
       .put(`/api/schedules/${scheduleId}`)
       .send(updates);
     expect(res.body.date).toEqual("2024-08-18T00:00:00.000Z");
-    expect(res.body.matchType).toEqual(MatchType.FRIENDLY_GAME);
+    expect(res.body.matchType).toEqual(MatchType.FRIENDLY);
   });
 });

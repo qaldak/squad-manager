@@ -5,32 +5,32 @@ const mockSchedules = [
   {
     id: "M0810",
     date: new Date("2024-08-10"),
-    type: ScheduleType.MATCH_DAY,
-    matchtype: MatchType.LEAGUE_GAME,
+    type: ScheduleType.GAME_DAY,
+    matchtype: MatchType.LEAGUE,
   },
   {
     id: "M0817",
     date: new Date("2024-08-17"),
-    type: ScheduleType.MATCH_DAY,
-    matchtype: MatchType.LEAGUE_GAME,
+    type: ScheduleType.GAME_DAY,
+    matchtype: MatchType.LEAGUE,
   },
   {
     id: "M0824",
     date: new Date("2024-08-24"),
-    type: ScheduleType.MATCH_DAY,
-    matchtype: MatchType.LEAGUE_GAME,
+    type: ScheduleType.GAME_DAY,
+    matchtype: MatchType.LEAGUE,
   },
   {
     id: "M0827",
     date: new Date("2024-08-27"),
-    type: ScheduleType.MATCH_DAY,
-    matchtype: MatchType.CUP_GAME,
+    type: ScheduleType.GAME_DAY,
+    matchtype: MatchType.CUP,
   },
   {
     id: "M0831",
     date: new Date("2024-08-31"),
-    type: ScheduleType.MATCH_DAY,
-    matchtype: MatchType.LEAGUE_GAME,
+    type: ScheduleType.GAME_DAY,
+    matchtype: MatchType.LEAGUE,
   },
   {
     id: "T0813",
@@ -71,8 +71,8 @@ const mockSchedules = [
   {
     id: "M0903",
     date: new Date("2024-09-03"),
-    type: ScheduleType.MATCH_DAY,
-    matchtype: MatchType.INDOOR_GAME,
+    type: ScheduleType.GAME_DAY,
+    matchtype: MatchType.INDOOR,
   },
 ];
 

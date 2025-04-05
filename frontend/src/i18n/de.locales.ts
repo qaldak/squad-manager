@@ -11,6 +11,14 @@ export const deTranslations: ITranslations = {
     buttons: {
       newPlayer: 'Neuer Spieler erfassen'
     },
+    enums: {
+      position: {
+        defender: 'Verteidiger',
+        forward: 'Stürmer',
+        goalkeeper: 'Torhüter',
+        midfielder: 'Mittelfeld'
+      }
+    },
     titles: {
       newPlayer: 'Neuer Spieler',
       editPlayer: 'Spieler bearbeiten'
@@ -19,7 +27,7 @@ export const deTranslations: ITranslations = {
   schedule: {
     date: 'Datum',
     location: 'Ort',
-    eventType: 'Terminart',
+    scheduleType: 'Terminart',
     matchType: 'Matchtyp',
     schedules: 'Spielplan',
     buttons: {
@@ -27,13 +35,13 @@ export const deTranslations: ITranslations = {
       inclPastFilter: 'inkl. vergangene'
     },
     enums: {
-      eventType: {
-        game: 'Match',
+      scheduleType: {
+        game_day: 'Match',
         training: 'Training'
       },
       matchType: {
         cup: 'Cup Spiel',
-        league: 'Liga-Spiel',
+        league: 'Meisterschaft',
         indoor: 'Hallenturnier',
         friendly: 'Freundschaftsspiel'
       }
@@ -50,9 +58,9 @@ export const deTranslations: ITranslations = {
     },
     enums: {
       status: {
-        canceled: 'Abgesagt',
-        definitive: 'Definitiv',
-        provisional: 'Provisorisch'
+        CANCELED: 'Abgesagt',
+        DEFINITIVE: 'Definitiv',
+        PROVISIONAL: 'Provisorisch'
       }
     },
     messages: {
@@ -67,6 +75,10 @@ export const deTranslations: ITranslations = {
     }
   },
   common: {
+    bool: {
+      false: 'Nein',
+      true: 'Ja'
+    },
     buttons: {
       cancel: 'Abbrechen',
       save: 'Speichern',

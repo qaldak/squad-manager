@@ -18,7 +18,7 @@
       <tr @dblclick="openDialog(false, item)">
         <td>{{ item.firstname }}</td>
         <td>{{ item.name }}</td>
-        <td>{{ item.position }}</td>
+        <td>{{ item.position ? t(`player.enums.position.${item.position}`) : '' }}</td>
         <td>{{ item.birthYear }}</td>
         <td>
           <v-btn small @click.stop="openDialog(false, item)">

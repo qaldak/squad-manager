@@ -28,8 +28,8 @@
     <template v-slot:item="{ item }">
       <tr @dblclick="openScheduleDialog(false, item)">
         <td>{{ formatDate(item.date, 'dd.MM.yyyy') }}</td>
-        <td>{{ item.type }}</td>
-        <td>{{ item.matchType }}</td>
+        <td>{{ t(`schedule.enums.scheduleType.${item.type}`) }}</td>
+        <td>{{ item.matchType ? t(`schedule.enums.matchType.${item.matchType}`) : '' }}</td>
       </tr>
     </template>
   </v-data-table>
@@ -97,7 +97,7 @@ const openScheduleDialog = (createNew: boolean, schedule?: Schedule) => {
     actualSchedule.value = {
       scheduleId: '',
       date: new Date(),
-      type: ScheduleType.MATCH_DAY,
+      type: ScheduleType.GAME_DAY,
       matchType: undefined
     }
     scheduleDialog.value = true
@@ -131,7 +131,7 @@ onMounted(() => {
 
 const headers = [
   { title: t('schedule.date'), key: 'date', sortable: true },
-  { title: t('schedule.eventType'), key: 'type', sortable: true },
+  { title: t('schedule.scheduleType'), key: 'type', sortable: true },
   { title: t('schedule.matchType'), key: 'matchType' }
 ]
 </script>

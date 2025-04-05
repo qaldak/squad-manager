@@ -9,6 +9,14 @@ export type ITranslations = {
     buttons: {
       newPlayer: string
     }
+    enums: {
+      position: {
+        defender: string
+        forward: string
+        goalkeeper: string
+        midfielder: string
+      }
+    }
     titles: {
       newPlayer: string
       editPlayer: string
@@ -17,7 +25,7 @@ export type ITranslations = {
   schedule: {
     date: string
     location: string
-    eventType: string
+    scheduleType: string
     matchType: string
     schedules: string
     buttons: {
@@ -25,8 +33,8 @@ export type ITranslations = {
       inclPastFilter: string
     }
     enums: {
-      eventType: {
-        game: string
+      scheduleType: {
+        game_day: string
         training: string
       }
       matchType: {
@@ -48,9 +56,9 @@ export type ITranslations = {
     }
     enums: {
       status: {
-        canceled: string
-        definitive: string
-        provisional: string
+        CANCELED: string
+        DEFINITIVE: string
+        PROVISIONAL: string
       }
     }
     messages: {
@@ -65,6 +73,10 @@ export type ITranslations = {
     }
   }
   common: {
+    bool: {
+      false: string
+      true: string
+    }
     buttons: {
       cancel: string
       save: string

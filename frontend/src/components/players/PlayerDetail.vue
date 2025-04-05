@@ -30,18 +30,20 @@
             clearable
             v-model="detailPlayer.position"
             :items="positions"
+            item-title="label"
+            item-value="value"
             :label="t('player.position')"
           ></v-select>
         </v-form>
       </v-card-text>
       <v-card-actions>
         <v-btn @click="closeDialog">{{ t('common.buttons.cancel') }}</v-btn>
-        <v-btn color="primary" :disabled="!valid" @click="savePlayer(false)">{{
-          t('common.buttons.save')
-        }}</v-btn>
-        <v-btn color="primary" :disabled="!valid" @click="savePlayer(true)">{{
-          t('common.buttons.saveAndClose')
-        }}</v-btn>
+        <v-btn color="primary" :disabled="!valid" @click="savePlayer(false)"
+          >{{ t('common.buttons.save') }}
+        </v-btn>
+        <v-btn color="primary" :disabled="!valid" @click="savePlayer(true)"
+          >{{ t('common.buttons.saveAndClose') }}
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -78,7 +80,10 @@ const rules = {
     (value > 1930 && value <= new Date().getFullYear()) || value === null || 'Value not allowd'
 }
 
-const positions = Object.values(Position)
+const positions = Object.values(Position).map((position) => ({
+  value: position,
+  label: t(`player.enums.position.${position}`)
+}))
 
 watch(
   () => props.dialog,

@@ -16,8 +16,14 @@
     </v-col>
     <v-col class="justify-center">
       <v-radio-group v-model="selectedEngagement" inline>
-        <v-radio :label="EngagementStatus.DEFINITIVE" :value="EngagementStatus.DEFINITIVE" />
-        <v-radio :label="EngagementStatus.CANCELED" :value="EngagementStatus.CANCELED" />
+        <v-radio
+          :label="t('playerEngagement.enums.status.DEFINITIVE')"
+          :value="EngagementStatus.DEFINITIVE"
+        />
+        <v-radio
+          :label="t('playerEngagement.enums.status.CANCELED')"
+          :value="EngagementStatus.CANCELED"
+        />
       </v-radio-group>
     </v-col>
     <v-col class="justify-center">
@@ -64,14 +70,14 @@
       <tr>
         <td>{{ item.playerFirstname }}</td>
         <td>{{ item.playerName }}</td>
-        <td>{{ item.status }}</td>
-        <td>{{ item.manually }}</td>
+        <td>{{ t(`playerEngagement.enums.status.${item.status.toUpperCase()}`) }}</td>
+        <td>{{ t(`common.bool.${item.manually}`) }}</td>
         <td>
           <v-btn small @click="deleteEngagement(item)">
             <font-awesome-icon icon="fa-solid fa-trash" />
-            <v-tooltip activator="parent">{{
-              t('playerEngagement.messages.deletePlayer')
-            }}</v-tooltip>
+            <v-tooltip activator="parent"
+              >{{ t('playerEngagement.messages.deletePlayer') }}
+            </v-tooltip>
           </v-btn>
         </td>
       </tr>

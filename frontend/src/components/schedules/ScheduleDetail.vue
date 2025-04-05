@@ -21,7 +21,9 @@
                 <v-select
                   v-model="detailSchedule.type"
                   :items="scheduleTypes"
-                  :label="t('schedule.eventType')"
+                  item-title="label"
+                  item-value="value"
+                  :label="t('schedule.scheduleType')"
                   :rules="[rules.required]"
                   required
                 ></v-select>
@@ -30,11 +32,13 @@
                 <v-select
                   v-model="detailSchedule.matchType"
                   :items="matchTypes"
+                  item-title="label"
+                  item-value="value"
+                  :label="t('schedule.matchType')"
                   :disabled="detailSchedule.type === computedScheduleType.TRAINING"
                   :rules="
-                    detailSchedule.type === computedScheduleType.MATCH_DAY ? [rules.required] : []
+                    detailSchedule.type === computedScheduleType.GAME_DAY ? [rules.required] : []
                   "
-                  :label="t('schedule.matchType')"
                 ></v-select>
               </v-col>
             </v-row>
@@ -92,11 +96,17 @@ const detailSchedule = ref<Schedule>({ ...props.schedule })
 const scheduledDate = ref<Date>()
 const isValid = ref(false)
 const rules = {
-  required: (value: string) => !!value || t('common.messages.field_required')
+  required: (value: string) => !!value || t('common.messages.fieldRequired')
 }
 
-const scheduleTypes = Object.values(ScheduleType)
-const matchTypes = Object.values(MatchType)
+const scheduleTypes = Object.values(ScheduleType).map((scheduleType) => ({
+  value: scheduleType,
+  label: t(`schedule.enums.scheduleType.${scheduleType}`)
+}))
+const matchTypes = Object.values(MatchType).map((matchType) => ({
+  value: matchType,
+  label: t(`schedule.enums.matchType.${matchType}`)
+}))
 
 const handleEsc = (event: KeyboardEvent) => {
   // check dropdown menu is open, if yes, just close dropdown
