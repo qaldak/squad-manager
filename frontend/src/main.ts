@@ -30,9 +30,11 @@ import { enTranslations } from '@/i18n/en.locales'
 
 initLoglevel()
 
+const lang = import.meta.env.VITE_LANGUAGE
+
 const i18n = createI18n({
   legacy: false,
-  locale: 'de',
+  locale: lang,
   fallbackLocale: 'en',
   messages: {
     de: deTranslations,
@@ -54,7 +56,7 @@ const vuetifyMessages = {
 const vuetify = createVuetify({
   components: { ...components, VDateInput }, // imports vuetify components for app
   locale: {
-    locale: 'de',
+    locale: lang,
     fallback: 'en',
     messages: vuetifyMessages
   },
