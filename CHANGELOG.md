@@ -1,3 +1,12 @@
+## [0.3.0](https://github.com/qaldak/squad-manager/compare/v0.2.0...v0.3.0) (2025-04-05)
+
+### Features
+
+* add locales ([fc633f7](https://github.com/qaldak/squad-manager/commit/fc633f7c54b87d13409bd55b504e0481efe40a55))
+* add locales ([735c059](https://github.com/qaldak/squad-manager/commit/735c059118275b9a745e2b6429530d27c8edf182))
+* add locales ([886033c](https://github.com/qaldak/squad-manager/commit/886033cd307d0d797899f3d87747c7cd5258e5a7))
+* init language from env file ([d0a70d6](https://github.com/qaldak/squad-manager/commit/d0a70d6279d16cbb25c4bf564f6019fb8d6ef6f1))
+
 ## [0.2.0](https://github.com/qaldak/squad-manager/compare/v0.1.0...v0.2.0) (2025-04-01)
 
 ### Features
