@@ -1,3 +1,9 @@
+## [0.3.1](https://github.com/qaldak/squad-manager/compare/v0.3.0...v0.3.1) (2025-04-05)
+
+### Bug Fixes
+
+* filter chip ([5033fcf](https://github.com/qaldak/squad-manager/commit/5033fcfb5a29bbcb978c14c38e342683863ca560))
+
 ## [0.3.0](https://github.com/qaldak/squad-manager/compare/v0.2.0...v0.3.0) (2025-04-05)
 
 ### Features
