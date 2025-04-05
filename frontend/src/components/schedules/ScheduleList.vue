@@ -49,7 +49,7 @@ import { useI18n } from 'vue-i18n'
 import { useScheduleStore } from '@/stores/schedule.store'
 import { ScheduleType, type Schedule } from '@/types/schedule.type'
 import ScheduleDetail from '@/components/schedules/ScheduleDetail.vue'
-import { formatDate } from 'date-fns'
+import { formatDate, startOfDay } from 'date-fns'
 import log from 'loglevel'
 
 const { t } = useI18n()
@@ -69,7 +69,7 @@ const filteredSchedules = computed(() => {
   if (pastFilterActive.value) {
     return schedules.value
   }
-  const today = new Date()
+  const today = startOfDay(new Date())
   return schedules.value.filter((schedule) => new Date(schedule.date) >= today)
 })
 
