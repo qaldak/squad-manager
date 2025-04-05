@@ -122,7 +122,7 @@ class PlayerEngagementService {
     let matchCount = 0;
 
     const matchSchedules = (await ScheduleServices.getAllSchedules()).filter(
-      (schedule) => schedule.type === ScheduleType.MATCH_DAY,
+      (schedule) => schedule.type === ScheduleType.GAME_DAY,
     );
     logger.debug("Matches: ", matchSchedules);
     const matchIds: Set<string> = new Set(
@@ -159,7 +159,7 @@ class PlayerEngagementService {
 
     const matchSchedules = (await ScheduleServices.getAllSchedules()).filter(
       (schedule) =>
-        schedule.type === ScheduleType.MATCH_DAY && schedule.date >= matchDate,
+        schedule.type === ScheduleType.GAME_DAY && schedule.date >= matchDate,
     );
     const matchIds: Set<string> = new Set(
       matchSchedules.map((schedule) => schedule.scheduleId),

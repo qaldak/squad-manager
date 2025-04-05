@@ -12,22 +12,22 @@ export class Schedule {
   }
 }
 
-export interface ScheduleData{
-  scheduleId: string
-  date: Date,
-  type: ScheduleType,
-  matchType: MatchType,
-  location: string,
+export interface ScheduleData {
+  scheduleId: string;
+  date: Date;
+  type: ScheduleType;
+  matchType: MatchType;
+  location: string;
 }
 
 export enum ScheduleType {
-  TRAINING = "Training",
-  MATCH_DAY = "Match",
+  TRAINING = "training",
+  GAME_DAY = "game_day",
 }
 
 export enum MatchType {
-  CUP_GAME = "Cup",
-  LEAGUE_GAME = "League",
-  INDOOR_GAME = "Indoor",
-  FRIENDLY_GAME = "Friendly"
+  CUP = "cup",
+  LEAGUE = "league",
+  INDOOR = "indoor",
+  FRIENDLY = "friendly",
 }

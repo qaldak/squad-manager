@@ -7,8 +7,8 @@ export interface Player {
 }
 
 export enum Position {
-  GOALKEEPER = 'Goalkeeper',
-  DEFENDER = 'Defender',
-  MIDFIELDER = 'Midfielder',
-  FORWARD = 'Forward'
+  GOALKEEPER = 'goalkeeper',
+  DEFENDER = 'defender',
+  MIDFIELDER = 'midfielder',
+  FORWARD = 'forward'
 }

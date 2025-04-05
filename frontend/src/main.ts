@@ -4,6 +4,7 @@ import { createApp } from 'vue'
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
+import { de, en } from 'vuetify/locale'
 import { createPinia } from 'pinia'
 import * as components from 'vuetify/components'
 
@@ -22,25 +23,51 @@ library.add(faPencil, faTrash)
 import App from './App.vue'
 import router from './router'
 import { VDateInput } from 'vuetify/labs/components'
-import { de, en } from 'vuetify/locale'
-import { initLoglevel } from '@/utils/logger.ts'
+import { initLoglevel } from '@/utils/logger'
+import { createI18n } from 'vue-i18n'
+import { deTranslations } from '@/i18n/de.locales'
+import { enTranslations } from '@/i18n/en.locales'
 
 initLoglevel()
 
-const app = createApp(App)
-app.component('font-awesome-icon', FontAwesomeIcon)
+const lang = import.meta.env.VITE_LANGUAGE
+
+const i18n = createI18n({
+  legacy: false,
+  locale: lang,
+  fallbackLocale: 'en',
+  messages: {
+    de: deTranslations,
+    en: enTranslations
+  }
+})
+
+const vuetifyMessages = {
+  de: {
+    ...de,
+    ...deTranslations
+  },
+  en: {
+    ...en,
+    ...enTranslations
+  }
+}
+
 const vuetify = createVuetify({
   components: { ...components, VDateInput }, // imports vuetify components for app
   locale: {
-    locale: 'de',
+    locale: lang,
     fallback: 'en',
-    messages: { de, en }
+    messages: vuetifyMessages
   },
   theme: {
     defaultTheme: 'dark' // set dark theme as default
   }
 })
 
+const app = createApp(App)
+app.component('font-awesome-icon', FontAwesomeIcon)
+app.use(i18n)
 app.use(vuetify)
 app.use(createPinia())
 app.use(router)

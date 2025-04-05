@@ -1,7 +1,7 @@
 <!-- PlayerList.vue -->
 <template>
-  <header>Players</header>
-  <v-btn @click="openDialog(true)">Add new player</v-btn>
+  <header>{{ t('player.players') }}</header>
+  <v-btn @click="openDialog(true)">{{ t('player.buttons.newPlayer') }}</v-btn>
   <v-data-table
     :headers="headers"
     :items="players"
@@ -18,7 +18,7 @@
       <tr @dblclick="openDialog(false, item)">
         <td>{{ item.firstname }}</td>
         <td>{{ item.name }}</td>
-        <td>{{ item.position }}</td>
+        <td>{{ item.position ? t(`player.enums.position.${item.position}`) : '' }}</td>
         <td>{{ item.birthYear }}</td>
         <td>
           <v-btn small @click.stop="openDialog(false, item)">
@@ -43,7 +43,9 @@ import { onMounted, ref } from 'vue'
 import { usePlayerStore } from '@/stores/player.store'
 import { type Player } from '@/types/player.type'
 import PlayerDetail from '@/components/players/PlayerDetail.vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const playerStore = usePlayerStore()
 const players = ref<Player[]>([])
 const dialog = ref(false)
@@ -103,9 +105,9 @@ onMounted(() => {
 })
 
 const headers = [
-  { title: 'Firstname', key: 'firstname', sortable: true },
-  { title: 'Name', key: 'name', sortable: true },
-  { title: 'Position', key: 'position' },
-  { title: 'Birth year', key: 'birthYear' }
+  { title: t('player.firstname'), key: 'firstname', sortable: true },
+  { title: t('player.name'), key: 'name', sortable: true },
+  { title: t('player.position'), key: 'position' },
+  { title: t('player.yearOfBirth'), key: 'birthYear' }
 ]
 </script>

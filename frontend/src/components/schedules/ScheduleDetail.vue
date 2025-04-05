@@ -11,7 +11,7 @@
                   v-model="scheduledDate"
                   hide-actions
                   :first-day-of-week="1"
-                  label="Date"
+                  :label="t('schedule.date')"
                   :rules="[rules.required]"
                   required
                 >
@@ -21,7 +21,9 @@
                 <v-select
                   v-model="detailSchedule.type"
                   :items="scheduleTypes"
-                  label="Event type"
+                  item-title="label"
+                  item-value="value"
+                  :label="t('schedule.scheduleType')"
                   :rules="[rules.required]"
                   required
                 ></v-select>
@@ -30,11 +32,13 @@
                 <v-select
                   v-model="detailSchedule.matchType"
                   :items="matchTypes"
+                  item-title="label"
+                  item-value="value"
+                  :label="t('schedule.matchType')"
                   :disabled="detailSchedule.type === computedScheduleType.TRAINING"
                   :rules="
-                    detailSchedule.type === computedScheduleType.MATCH_DAY ? [rules.required] : []
+                    detailSchedule.type === computedScheduleType.GAME_DAY ? [rules.required] : []
                   "
-                  label="Match type"
                 ></v-select>
               </v-col>
             </v-row>
@@ -64,11 +68,13 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useScheduleStore } from '@/stores/schedule.store'
 import { MatchType, ScheduleType, type Schedule } from '@/types/schedule.type'
 import PlayerEngagementList from '@/components/playerEngagements/PlayerEngagementList.vue'
 import log from 'loglevel'
 
+const { t } = useI18n()
 const props = withDefaults(
   defineProps<{
     scheduleDialog: boolean
@@ -90,11 +96,17 @@ const detailSchedule = ref<Schedule>({ ...props.schedule })
 const scheduledDate = ref<Date>()
 const isValid = ref(false)
 const rules = {
-  required: (value: string) => !!value || 'This field is required'
+  required: (value: string) => !!value || t('common.messages.fieldRequired')
 }
 
-const scheduleTypes = Object.values(ScheduleType)
-const matchTypes = Object.values(MatchType)
+const scheduleTypes = Object.values(ScheduleType).map((scheduleType) => ({
+  value: scheduleType,
+  label: t(`schedule.enums.scheduleType.${scheduleType}`)
+}))
+const matchTypes = Object.values(MatchType).map((matchType) => ({
+  value: matchType,
+  label: t(`schedule.enums.matchType.${matchType}`)
+}))
 
 const handleEsc = (event: KeyboardEvent) => {
   // check dropdown menu is open, if yes, just close dropdown
