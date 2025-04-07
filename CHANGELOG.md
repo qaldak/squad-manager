@@ -1,3 +1,9 @@
+## [0.3.2](https://github.com/qaldak/squad-manager/compare/v0.3.1...v0.3.2) (2025-04-07)
+
+### Bug Fixes
+
+* title translation ([eea5e16](https://github.com/qaldak/squad-manager/commit/eea5e16eae6dd3f8c6e55f0f0f8546decb4fae52))
+
 ## [0.3.1](https://github.com/qaldak/squad-manager/compare/v0.3.0...v0.3.1) (2025-04-05)
 
 ### Bug Fixes
