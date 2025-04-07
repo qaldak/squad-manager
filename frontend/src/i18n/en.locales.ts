@@ -45,6 +45,10 @@ export const enTranslations: ITranslations = {
         indoor: 'Indoor game',
         friendly: 'Friendly game'
       }
+    },
+    titles: {
+      editSchedule: 'Edit schedule',
+      newSchedule: 'Add schedule'
     }
   },
   playerEngagement: {

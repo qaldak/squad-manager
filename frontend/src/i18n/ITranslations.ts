@@ -44,6 +44,10 @@ export type ITranslations = {
         friendly: string
       }
     }
+    titles: {
+      editSchedule: string
+      newSchedule: string
+    }
   }
   playerEngagement: {
     manuallyAdded: string

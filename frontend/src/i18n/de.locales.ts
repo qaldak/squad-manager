@@ -45,6 +45,10 @@ export const deTranslations: ITranslations = {
         indoor: 'Hallenturnier',
         friendly: 'Freundschaftsspiel'
       }
+    },
+    titles: {
+      editSchedule: 'Termin bearbeiten',
+      newSchedule: 'Termin erfassen'
     }
   },
   playerEngagement: {

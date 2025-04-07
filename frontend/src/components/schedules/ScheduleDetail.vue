@@ -2,7 +2,9 @@
   <v-dialog v-model="scheduleDetailDialog" persistent scrollable width="60%">
     <v-locale-provider>
       <v-card>
-        <v-card-title class="headline">{{ isNew ? 'New Event' : 'Edit Event' }}</v-card-title>
+        <v-card-title class="headline">{{
+          isNew ? t('schedule.titles.newSchedule') : t('schedule.titles.editSchedule')
+        }}</v-card-title>
         <v-card-text>
           <v-form ref="form" v-model="isValid">
             <v-row>
