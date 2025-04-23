@@ -1,41 +1,46 @@
 <!-- PlayerList.vue -->
 <template>
-  <header>{{ t('player.players') }}</header>
-  <v-btn @click="openDialog(true)">{{ t('player.buttons.newPlayer') }}</v-btn>
-  <v-data-table
-    :headers="headers"
-    :items="players"
-    :loading="playerStore.loading"
-    :server-items-length="playerStore.totalPlayers"
-    :items-per-page="10"
-    :items-per-page-options="[
-      { value: 10, title: '10' },
-      { value: 25, title: '25' },
-      { value: 50, title: '50' }
-    ]"
-  >
-    <template v-slot:item="{ item }">
-      <tr @dblclick="openDialog(false, item)">
-        <td>{{ item.firstname }}</td>
-        <td>{{ item.name }}</td>
-        <td>{{ item.position ? t(`player.enums.position.${item.position}`) : '' }}</td>
-        <td>{{ item.birthYear }}</td>
-        <td>
-          <v-btn small @click.stop="openDialog(false, item)">
-            <font-awesome-icon icon="fa-solid fa-pencil" />
-          </v-btn>
-        </td>
-      </tr>
-    </template>
-  </v-data-table>
+  <div class="list-container">
+    <v-row align="center">
+      <header class="text-h4 pa-2 ma-2">{{ t('player.players') }}</header>
+      <v-spacer />
+      <v-btn class="normal-btn" color="primary" variant="outlined" @click="openDialog(true)">
+        {{ t('player.buttons.newPlayer') }}
+      </v-btn>
+    </v-row>
 
-  <PlayerDetail
-    v-model:dialog="dialog"
-    :player="newPlayer"
-    :isNew="isNew"
-    @update:dialog="updateDialog"
-    @dialogClosed="reloadPlayers"
-  />
+    <v-data-table-virtual
+      :headers="headers"
+      :items="players"
+      :loading="playerStore.loading"
+      :server-items-length="playerStore.totalPlayers"
+      scrollable
+      height="75vh"
+      fixed-header
+    >
+      <template v-slot:item="{ item }">
+        <tr @dblclick="openDialog(false, item)">
+          <td>{{ item.firstname }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.position ? t(`player.enums.position.${item.position}`) : '' }}</td>
+          <td>{{ item.birthYear }}</td>
+          <td>
+            <v-btn small @click.stop="openDialog(false, item)">
+              <font-awesome-icon icon="fa-solid fa-pencil" />
+            </v-btn>
+          </td>
+        </tr>
+      </template>
+    </v-data-table-virtual>
+
+    <PlayerDetail
+      v-model:dialog="dialog"
+      :player="newPlayer"
+      :isNew="isNew"
+      @update:dialog="updateDialog"
+      @dialogClosed="reloadPlayers"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -108,6 +113,7 @@ const headers = [
   { title: t('player.firstname'), key: 'firstname', sortable: true },
   { title: t('player.name'), key: 'name', sortable: true },
   { title: t('player.position'), key: 'position' },
-  { title: t('player.yearOfBirth'), key: 'birthYear' }
+  { title: t('player.yearOfBirth'), key: 'birthYear' },
+  { title: '', key: 'edit', sortable: false }
 ]
 </script>

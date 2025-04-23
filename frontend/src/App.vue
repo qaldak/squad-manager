@@ -93,3 +93,7 @@ nav a:first-of-type {
   }
 }
 </style>
+
+<style>
+@import '@/styles/main.css';
+</style>

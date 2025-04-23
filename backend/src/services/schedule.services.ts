@@ -19,7 +19,7 @@ dayjs.extend(utc);
 class ScheduleService {
   async addSchedule(scheduleDataIn: ScheduleData): Promise<Schedule> {
     try {
-      logger.debug(`scheduleDataIn: ${scheduleDataIn}`);
+      logger.debug(`scheduleDataIn: ${JSON.stringify(scheduleDataIn)}`);
       const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       logger.debug(`Timezone is ${timeZone}`);
       const dateUtc = dayjs.utc(scheduleDataIn.date); // Todo: remove?

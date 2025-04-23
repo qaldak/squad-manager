@@ -85,6 +85,7 @@ export const enTranslations: ITranslations = {
     },
     buttons: {
       cancel: 'cancel',
+      close: 'close',
       save: 'save',
       saveAndClose: 'save and close'
     },

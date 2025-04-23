@@ -1,46 +1,48 @@
 <!-- ScheduleList.vue -->
 <template>
-  <header>{{ t('schedule.schedules') }}</header>
-  <v-btn class="text-none" @click="openScheduleDialog(true)"
-    >{{ t('schedule.buttons.newSchedule') }}
-  </v-btn>
-  <v-chip-group>
-    <v-chip
-      color="white"
-      filter
-      :text="t('schedule.buttons.inclPastFilter')"
-      variant="outlined"
-      @click="togglePastFilter"
-    ></v-chip>
-  </v-chip-group>
-  <v-data-table
-    :headers="headers"
-    :items="filteredSchedules"
-    :loading="scheduleStore.loading"
-    :server-items-length="scheduleStore.totalSchedules"
-    :items-per-page="10"
-    :items-per-page-options="[
-      { value: 10, title: '10' },
-      { value: 25, title: '25' },
-      { value: 50, title: '50' }
-    ]"
-  >
-    <template v-slot:item="{ item }">
-      <tr @dblclick="openScheduleDialog(false, item)">
-        <td>{{ formatDate(item.date, 'dd.MM.yyyy') }}</td>
-        <td>{{ t(`schedule.enums.scheduleType.${item.type}`) }}</td>
-        <td>{{ item.matchType ? t(`schedule.enums.matchType.${item.matchType}`) : '' }}</td>
-      </tr>
-    </template>
-  </v-data-table>
+  <div class="list-container">
+    <v-row align="center">
+      <header class="text-h4 pa-2 ma-2">{{ t('schedule.schedules') }}</header>
+      <v-spacer />
+      <v-btn class="normal-btn" color="primary" variant="outlined" @click="openScheduleDialog(true)"
+        >{{ t('schedule.buttons.newSchedule') }}
+      </v-btn>
+    </v-row>
+    <v-chip-group>
+      <v-chip
+        color="white"
+        filter
+        :text="t('schedule.buttons.inclPastFilter')"
+        variant="outlined"
+        @click="togglePastFilter"
+      ></v-chip>
+    </v-chip-group>
+    <v-data-table-virtual
+      :headers="headers"
+      :items="filteredSchedules"
+      :loading="scheduleStore.loading"
+      :server-items-length="scheduleStore.totalSchedules"
+      height="75vh"
+      scrollable
+      fixed-header
+    >
+      <template v-slot:item="{ item }">
+        <tr @dblclick="openScheduleDialog(false, item)">
+          <td>{{ formatDate(item.date, 'dd.MM.yyyy') }}</td>
+          <td>{{ t(`schedule.enums.scheduleType.${item.type}`) }}</td>
+          <td>{{ item.matchType ? t(`schedule.enums.matchType.${item.matchType}`) : '' }}</td>
+        </tr>
+      </template>
+    </v-data-table-virtual>
 
-  <ScheduleDetail
-    v-model:scheduleDialog="scheduleDialog"
-    :schedule="actualSchedule"
-    :isNew="isNew"
-    @update:dialog="updateDialog"
-    @dialogClosed="reloadSchedules"
-  />
+    <ScheduleDetail
+      v-model:scheduleDialog="scheduleDialog"
+      :schedule="actualSchedule"
+      :isNew="isNew"
+      @update:dialog="updateDialog"
+      @dialogClosed="reloadSchedules"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">

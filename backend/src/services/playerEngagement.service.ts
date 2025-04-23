@@ -95,7 +95,7 @@ class PlayerEngagementService {
       return a.participation - b.participation;
     });
 
-    logger.debug(`Sorted eligible players: ${eligiblePlayers}`);
+    logger.info(`Sorted eligible players: ${JSON.stringify(eligiblePlayers)}`);
 
     const selectedPlayers: PlayerEngagement[] = eligiblePlayers
       .slice(0, neededPlayers)
