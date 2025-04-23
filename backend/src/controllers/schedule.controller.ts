@@ -20,7 +20,7 @@ const readScheduleByDate = async (req, res): Promise<void> => {
 const addSchedule = async (req, res): Promise<void> => {
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   logger.debug(`timezone: ${timeZone}`);
-  logger.debug(`scheduleController: ${req}`);
+  logger.debug(`scheduleController: ${JSON.stringify(req.body)}`);
   const newSchedule = await ScheduleService.addSchedule(req.body);
   res.status(201).json(newSchedule);
 };

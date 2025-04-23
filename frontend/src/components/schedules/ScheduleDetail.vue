@@ -1,10 +1,10 @@
 <template>
-  <v-dialog v-model="scheduleDetailDialog" persistent scrollable width="60%">
+  <v-dialog v-model="scheduleDetailDialog" persistent max-height="90vh" width="60%">
     <v-locale-provider>
       <v-card>
-        <v-card-title class="headline">{{
-          isNew ? t('schedule.titles.newSchedule') : t('schedule.titles.editSchedule')
-        }}</v-card-title>
+        <v-card-title class="text-h5 pa-2 ma-2"
+          >{{ isNew ? t('schedule.titles.newSchedule') : t('schedule.titles.editSchedule') }}
+        </v-card-title>
         <v-card-text>
           <v-form ref="form" v-model="isValid">
             <v-row>
@@ -59,9 +59,11 @@
             :disabled="!isValid"
             flat
             @click="saveSchedule(false)"
-            >Save
+            >{{ t('common.buttons.save') }}
           </v-btn>
-          <v-btn variant="text" color="secondary" @click="closeDialog()">Close</v-btn>
+          <v-btn class="normal-btn" variant="text" color="secondary" @click="closeDialog()"
+            >{{ t('common.buttons.close') }}
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-locale-provider>
@@ -157,7 +159,7 @@ watch(
   () => props.schedule,
   (schedule) => {
     detailSchedule.value = { ...schedule }
-    log.debug(`New schedule ${detailSchedule.value}`)
+    log.debug(`New schedule ${JSON.stringify(detailSchedule.value)}`)
   }
 )
 

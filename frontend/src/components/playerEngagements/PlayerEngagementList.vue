@@ -1,5 +1,7 @@
 <template>
-  <v-card-title>{{ t('playerEngagement.titles.playerEngagement') }}</v-card-title>
+  <v-card-title class="text-h6 pa-0"
+    >{{ t('playerEngagement.titles.playerEngagement') }}
+  </v-card-title>
   <v-row>
     <v-col>
       <v-autocomplete
@@ -28,6 +30,7 @@
     </v-col>
     <v-col class="justify-center">
       <v-btn
+        class="normal-btn"
         variant="outlined"
         :disabled="!isPlayerAssignable"
         :loading="playerEngagementStore.loading"
@@ -38,33 +41,32 @@
   </v-row>
 
   <v-btn
-    class="ma-2"
+    class="ma-2 normal-btn"
     variant="outlined"
     color="primary"
+    :disabled="!props.contextId"
     :loading="playerEngagementStore.loading"
     @click="generateProposal"
     >{{ t('playerEngagement.buttons.generateProposal') }}
   </v-btn>
 
   <v-btn
-    class="ma-2"
+    class="ma-2 normal-btn"
     variant="outlined"
     color="primary"
+    :disabled="!props.contextId"
     :loading="playerEngagementStore.loading"
     @click="confirmProposal"
     >{{ t('playerEngagement.buttons.confirmProposal') }}
   </v-btn>
 
-  <v-data-table
-    :items-per-page="5"
-    :items-per-page-options="[
-      { value: 5, title: '5' },
-      { value: 10, title: '10' },
-      { value: 15, title: '15' }
-    ]"
+  <v-data-table-virtual
+    class="scrollable-table"
     :headers="engagementHeaders"
     :items="playerEngagements"
     :loading="playerEngagementStore.loading"
+    height="39vh"
+    fixed-header
   >
     <template v-slot:item="{ item }">
       <tr>
@@ -82,13 +84,13 @@
         </td>
       </tr>
     </template>
-  </v-data-table>
+  </v-data-table-virtual>
 
   <v-alert v-if="message.text" :type="message.type" variant="tonal">{{ message.text }}</v-alert>
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { usePlayerEngagementStore } from '@/stores/playerEngagement.store'
 import {
   EngagementStatus,
@@ -205,7 +207,7 @@ const assignPlayer = async (playerIdIn: string) => {
       await loadPlayerEngagements()
     }
   } catch (error) {
-    log.error(`Assign player: unexpected error occured. ${error.message ? error.message : error}`)
+    log.error(`Assign player: unexpected error occurred. ${error.message ? error.message : error}`)
     message.value = {
       text: error instanceof Error ? error.message : `An unexpected error occurred: ${error}`,
       type: 'error'
@@ -244,4 +246,15 @@ const confirmProposal = async () => {
   await playerEngagementStore.confirmProposal(props.contextId)
   await loadPlayerEngagements()
 }
+
+watch(
+  () => props.contextId,
+  async (newContextId) => {
+    console.log('FOO', newContextId)
+    if (newContextId) {
+      await loadPlayerEngagements()
+      isPlayerAssignable.value = false // Optional: Reset relevante Zustände
+    }
+  }
+)
 </script>

@@ -44,7 +44,7 @@ export const useScheduleStore = defineStore('schedule', {
     },
     async addSchedule(schedule: Schedule) {
       const newSchedule = await addSchedule(schedule)
-      log.debug(`addSchedule: ${newSchedule}`)
+      log.debug(`addSchedule: ${JSON.stringify(newSchedule)}`)
     },
     async updateSchedule(schedule: Schedule) {
       log.debug(`schedule ready to update: ${schedule.matchType}`)

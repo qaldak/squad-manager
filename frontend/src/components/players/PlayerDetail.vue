@@ -1,10 +1,8 @@
 <template>
   <v-dialog v-model="detailDialog" persistent max-width="600px">
     <v-card>
-      <v-card-title>
-        <span class="headline">{{
-          isNew ? t('player.titles.newPlayer') : t('player.titles.editPlayer')
-        }}</span>
+      <v-card-title class="text-h5 pa-2 ma-2">
+        {{ isNew ? t('player.titles.newPlayer') : t('player.titles.editPlayer') }}
       </v-card-title>
       <v-card-text>
         <v-form ref="form" v-model="valid">
@@ -37,13 +35,20 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn @click="closeDialog">{{ t('common.buttons.cancel') }}</v-btn>
-        <v-btn color="primary" :disabled="!valid" @click="savePlayer(false)"
+        <v-btn color="primary" variant="outlined" :disabled="!valid" @click="savePlayer(false)"
           >{{ t('common.buttons.save') }}
         </v-btn>
-        <v-btn color="primary" :disabled="!valid" @click="savePlayer(true)"
+        <v-btn
+          class="normal-btn"
+          color="primary"
+          variant="outlined"
+          :disabled="!valid"
+          @click="savePlayer(true)"
           >{{ t('common.buttons.saveAndClose') }}
         </v-btn>
+        <v-btn class="normal-btn" color="secondary" @click="closeDialog">{{
+          t('common.buttons.cancel')
+        }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

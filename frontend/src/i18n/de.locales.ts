@@ -85,6 +85,7 @@ export const deTranslations: ITranslations = {
     },
     buttons: {
       cancel: 'Abbrechen',
+      close: 'Schliessen',
       save: 'Speichern',
       saveAndClose: 'Speichern und schliessen'
     },

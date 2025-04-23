@@ -83,6 +83,7 @@ export type ITranslations = {
     }
     buttons: {
       cancel: string
+      close: string
       save: string
       saveAndClose: string
     }
