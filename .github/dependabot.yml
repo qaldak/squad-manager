@@ -7,5 +7,16 @@ updates:
       - "/frontend"
     schedule:
       interval: "weekly"
+    groups:
+      production-dependencies:
+        dependency-type: "production"
+      dev-dependencies:
+        dependency-type: "development"
+      minor-updates:
+        update-types:
+          - "minor"
+      major-updates:
+        update-types:
+          - "major"
     commit-message:
       prefix: "chore(npm):"
