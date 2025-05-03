@@ -1,6 +1,6 @@
 {
   "name": "squad-manager",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "private": true,
   "scripts": {
     "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",

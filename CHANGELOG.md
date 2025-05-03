@@ -1,3 +1,10 @@
+## [0.4.0](https://github.com/qaldak/squad-manager/compare/v0.3.2...v0.4.0) (2025-05-03)
+
+### Features
+
+* show player participation as tooltip on schedule details ui ([b2a5b26](https://github.com/qaldak/squad-manager/commit/b2a5b268d6e57603bb67832be26bf6d9a3050bd6))
+* show player participation in player list ([18ada9c](https://github.com/qaldak/squad-manager/commit/18ada9c6e44734e61faf3daf271b5179af2e2509))
+
 ## [0.3.2](https://github.com/qaldak/squad-manager/compare/v0.3.1...v0.3.2) (2025-04-07)
 
 ### Bug Fixes
