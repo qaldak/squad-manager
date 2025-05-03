@@ -19,6 +19,11 @@ export interface PlayerEngagementWithScheduleInfo extends PlayerEngagement {
   scheduleDate: Date
 }
 
+export interface PlayerEngagementSummary {
+  totalParticipation: number
+  totalCancellation: number
+}
+
 export enum EngagementStatus {
   PROVISIONAL = 'provisional',
   DEFINITIVE = 'definitive',

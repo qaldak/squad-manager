@@ -2,6 +2,7 @@ import {
   EngagementStatus,
   PlayerEngagement,
   PlayerEngagementData,
+  PlayerEngagementSummary,
 } from "../models/PlayerEngagement";
 import PlayerService from "./player.service";
 import ScheduleServices from "./schedule.services";
@@ -292,6 +293,7 @@ class PlayerEngagementService {
         .eq("player_id", playerId);
       if (error) {
         logger.error(`Error search engagements by playerId: ${error.message}`);
+        throw error;
       }
       return mapPlayerEngagements(engagementsByPlayer);
     } catch (error) {
@@ -349,6 +351,45 @@ class PlayerEngagementService {
       logger.error(`Error on update player engagement in db: ${error.message}`);
       throw error;
       // return undefined // TODO: return undefined vs. throw error?
+    }
+  }
+
+  async getPlayerEngagementSummary(
+    playerId: string,
+  ): Promise<PlayerEngagementSummary> {
+    const summary: PlayerEngagementSummary = {
+      totalParticipation: 0,
+      totalCancellation: 0,
+    };
+
+    try {
+      const engagements =
+        await this.searchPlayerEngagementsByPlayerId(playerId);
+      logger.debug(
+        `engagement data for playerId ${playerId}: ${JSON.stringify(engagements)}`,
+      );
+
+      engagements.forEach((engagement: PlayerEngagementData) => {
+        switch (engagement.status) {
+          case EngagementStatus.DEFINITIVE:
+            summary.totalParticipation++;
+            break;
+          case EngagementStatus.CANCELED:
+            summary.totalCancellation++;
+            break;
+          default:
+            break;
+        }
+      });
+      logger.debug(
+        `engagement data summary for playerId ${playerId}: ${JSON.stringify(summary)}`,
+      );
+      return summary;
+    } catch (error) {
+      logger.error(
+        `Error on determine player engagement summary: ${error.message}`,
+      );
+      throw error;
     }
   }
 }

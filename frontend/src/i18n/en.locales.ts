@@ -55,6 +55,8 @@ export const enTranslations: ITranslations = {
     manuallyAdded: 'manually added',
     status: 'state',
     assignPlayer: 'Assign player',
+    totalParticipation: 'Participation',
+    totalCancellation: 'Cancellation',
     buttons: {
       assignPlayer: 'assign',
       generateProposal: 'generate squad',
@@ -90,7 +92,9 @@ export const enTranslations: ITranslations = {
       saveAndClose: 'save and close'
     },
     messages: {
-      fieldRequired: 'field is required'
+      fieldRequired: 'field is required',
+      noDataAvailable: 'no data available',
+      errorReadingData: 'error reading data'
     }
   }
 }
