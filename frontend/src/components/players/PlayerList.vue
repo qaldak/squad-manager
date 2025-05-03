@@ -23,7 +23,11 @@
           <td>{{ item.firstname }}</td>
           <td>{{ item.name }}</td>
           <td>{{ item.position ? t(`player.enums.position.${item.position}`) : '' }}</td>
-          <td>{{ item.birthYear }}</td>
+          <td class="text-center">{{ item.birthYear }}</td>
+          <td class="text-center">
+            {{ engagementSummaries[item.playerId]?.totalParticipation }}
+          </td>
+          <td class="text-center">{{ engagementSummaries[item.playerId]?.totalCancellation }}</td>
           <td>
             <v-btn small @click.stop="openDialog(false, item)">
               <font-awesome-icon icon="fa-solid fa-pencil" />
@@ -49,6 +53,9 @@ import { usePlayerStore } from '@/stores/player.store'
 import { type Player } from '@/types/player.type'
 import PlayerDetail from '@/components/players/PlayerDetail.vue'
 import { useI18n } from 'vue-i18n'
+import log from 'loglevel'
+import type { PlayerEngagementSummary } from '@/types/playerEngagement.type.ts'
+import { getPlayerEngagementSummary } from '@/services/playerEngagement.service.ts'
 
 const { t } = useI18n()
 const playerStore = usePlayerStore()
@@ -62,6 +69,8 @@ const newPlayer = ref<Player>({
   birthYear: undefined,
   position: undefined
 })
+
+const engagementSummaries = ref<{ [key: string]: PlayerEngagementSummary }>({})
 
 const formatPlayers = () => {
   return playerStore.players
@@ -98,10 +107,30 @@ const updateDialog = (value: boolean) => {
 const reloadPlayers = async () => {
   await playerStore.loadPlayers()
   players.value = formatPlayers()
+  players.value.forEach((player) => {
+    getEngagementSummary(player.playerId)
+  })
+}
+
+const getEngagementSummary = async (playerId: string) => {
+  try {
+    const summary = await getPlayerEngagementSummary(playerId)
+    console.log(summary)
+    if (summary) {
+      engagementSummaries.value[playerId] = {
+        totalParticipation: summary.totalParticipation,
+        totalCancellation: summary.totalCancellation
+      }
+    }
+  } catch (error) {
+    log.error('Error fetching engagement summary: ', error.message)
+    engagementSummaries.value[playerId] = { totalParticipation: -99, totalCancellation: -99 }
+  }
 }
 
 onMounted(() => {
-  playerStore.loadPlayers()
+  reloadPlayers()
+  // playerStore.loadPlayers()
   playerStore.$subscribe((mutation, state) => {
     if (!state.loading) {
       players.value = formatPlayers()
@@ -114,6 +143,8 @@ const headers = [
   { title: t('player.name'), key: 'name', sortable: true },
   { title: t('player.position'), key: 'position' },
   { title: t('player.yearOfBirth'), key: 'birthYear' },
+  { title: t('playerEngagement.totalParticipation'), key: 'participation', sortable: false },
+  { title: t('playerEngagement.totalCancellation'), key: 'cancellation', sortable: false },
   { title: '', key: 'edit', sortable: false }
 ]
 </script>

@@ -265,7 +265,7 @@ const showEngagementSummary = async (playerId: string) => {
     }
   } catch (error) {
     log.error('Error fetching engagement summary:', error.message)
-    engagementSummaries.value[playerId] = 'Fehler beim Laden der Daten'
+    engagementSummaries.value[playerId] = t('common.messages.errorReadingData')
   }
 }
 
