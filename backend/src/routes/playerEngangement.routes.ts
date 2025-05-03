@@ -5,52 +5,57 @@ const router = express.Router();
 
 router.get(
   "/playerEngagements",
-  playerEngagementController.getPlayerEngagements
+  playerEngagementController.getPlayerEngagements,
 );
 
 router.get(
   "/playerEngagements/player/:playerId",
-  playerEngagementController.searchPlayerEngagementsByPlayerId
+  playerEngagementController.searchPlayerEngagementsByPlayerId,
 );
 
 router.get(
   "/playerEngagements/schedule/:scheduleId",
-  playerEngagementController.searchPlayerEngagementByScheduleId
+  playerEngagementController.searchPlayerEngagementByScheduleId,
 );
 
 router.put(
   "/playerEngagement/:playerId/:scheduleId",
-  playerEngagementController.updatePlayerEngagement
+  playerEngagementController.updatePlayerEngagement,
 );
 
 router.put(
   "/playerEngagement",
-  playerEngagementController.updatePlayerEngagement
+  playerEngagementController.updatePlayerEngagement,
 );
 
 router.post(
   "/playerEngagement",
-  playerEngagementController.addPlayerEngagement
+  playerEngagementController.addPlayerEngagement,
 );
 
 router.post(
   "/playerEngagements/bulk",
-  playerEngagementController.addPlayerEngagementsBulk
+  playerEngagementController.addPlayerEngagementsBulk,
 );
 
 router.delete(
   "/playerEngagement/:id",
-  playerEngagementController.deletePlayerEngagement
-)
+  playerEngagementController.deletePlayerEngagement,
+);
 
 router.post(
-    "/playerEngagements/proposal/:scheduleId",
-    playerEngagementController.generateSquadProposal
-)
+  "/playerEngagements/proposal/:scheduleId",
+  playerEngagementController.generateSquadProposal,
+);
 
 router.patch(
-    "/playerEngagements/confirmProposal/:scheduleId",
-    playerEngagementController.confirmProposal
-)
+  "/playerEngagements/confirmProposal/:scheduleId",
+  playerEngagementController.confirmProposal,
+);
+
+router.get(
+  "/playerEngagements/summary/:playerId",
+  playerEngagementController.getPlayerEngagementSummary,
+);
 
 export default router;

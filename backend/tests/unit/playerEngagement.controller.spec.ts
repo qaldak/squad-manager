@@ -7,6 +7,7 @@ import PlayerEngagementService from "../../src/services/playerEngagement.service
 import playerEngagementsData from "../__mocks__/mock.playerEngagement";
 import schedulesData from "../__mocks__/mock.schedule";
 import logger from "../../src/utils/logger";
+import { getPlayerEngagementSummary } from "squad-manager-ui/src/services/playerEngagement.service";
 
 const app = express();
 
@@ -151,7 +152,7 @@ jest.mock("../../src/dbClient", () => {
 describe("PlayerEngagement Controller", () => {
   it("should get all playerEngagements", async () => {
     const res = await request(app).get("/api/playerEngagements");
-    expect(res.body).toHaveLength(21);
+    expect(res.body).toHaveLength(22);
     expect(res.statusCode).toEqual(200);
   });
 
@@ -243,7 +244,7 @@ describe("PlayerEngagement Controller", () => {
     });
 
     const resCount = await request(app).get("/api/playerEngagements");
-    expect(resCount.body).toHaveLength(22);
+    expect(resCount.body).toHaveLength(23);
   });
 
   it("should add new player engagements", async () => {
@@ -311,6 +312,18 @@ describe("PlayerEngagement Controller", () => {
       new Date("2024-08-18"),
     );
     expect(cancellations).toEqual(1);
+  });
+
+  it("should get player engagement summaries", async () => {
+    const playerId = "3";
+
+    const res = await request(app).get(
+      `/api/playerEngagements/summary/${playerId}`,
+    );
+    const summary = res.body;
+    expect(res.status).toEqual(200);
+    expect(summary.totalParticipation).toEqual(2);
+    expect(summary.totalCancellation).toEqual(2);
   });
 
   it("should confirm all provisional players", async () => {

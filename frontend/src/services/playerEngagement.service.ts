@@ -1,4 +1,4 @@
-import type { PlayerEngagement } from '@/types/playerEngagement.type'
+import type { PlayerEngagement, PlayerEngagementSummary } from '@/types/playerEngagement.type'
 import axios from 'axios'
 import log from 'loglevel'
 
@@ -47,6 +47,17 @@ export const confirmProposal = async (scheduleId: string): Promise<void> => {
 export const generateProposal = async (scheduleId: string): Promise<void> => {
   try {
     const response = await axios.post(`${API_URL}/proposal/${scheduleId}`)
+    return response.data
+  } catch (error) {
+    handleAxiosErrors(error)
+  }
+}
+
+export const getPlayerEngagementSummary = async (
+  playerId: string
+): Promise<PlayerEngagementSummary> => {
+  try {
+    const response = await axios.get(`${API_URL}/summary/${playerId}`)
     return response.data
   } catch (error) {
     handleAxiosErrors(error)

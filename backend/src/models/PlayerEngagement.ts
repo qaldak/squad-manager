@@ -5,7 +5,13 @@ export class PlayerEngagement {
   status: EngagementStatus;
   manually: boolean;
 
-  constructor(id: string, playerId: string, scheduleId: string, status: EngagementStatus, manually: boolean) {
+  constructor(
+    id: string,
+    playerId: string,
+    scheduleId: string,
+    status: EngagementStatus,
+    manually: boolean,
+  ) {
     this.id = id;
     this.playerId = playerId;
     this.scheduleId = scheduleId;
@@ -20,6 +26,11 @@ export interface PlayerEngagementData {
   scheduleId: string;
   status: EngagementStatus;
   manually: boolean;
+}
+
+export interface PlayerEngagementSummary {
+  totalParticipation: number;
+  totalCancellation: number;
 }
 
 export enum EngagementStatus {

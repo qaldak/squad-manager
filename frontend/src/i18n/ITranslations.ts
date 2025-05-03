@@ -53,6 +53,8 @@ export type ITranslations = {
     manuallyAdded: string
     status: string
     assignPlayer: string
+    totalParticipation: string
+    totalCancellation: string
     buttons: {
       assignPlayer: string
       generateProposal: string
@@ -89,6 +91,8 @@ export type ITranslations = {
     }
     messages: {
       fieldRequired: string
+      noDataAvailable: string
+      errorReadingData: string
     }
   }
 }

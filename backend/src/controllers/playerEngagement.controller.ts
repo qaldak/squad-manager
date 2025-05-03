@@ -8,6 +8,17 @@ const getPlayerEngagements = async (req, res): Promise<void> => {
   res.json(playerEngagements);
 };
 
+const getPlayerEngagementSummary = async (req, res): Promise<void> => {
+  try {
+    const summary = await PlayerEngagementService.getPlayerEngagementSummary(
+      req.params.playerId,
+    );
+    res.json(summary);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
 const searchPlayerEngagementsByPlayerId = async (req, res): Promise<void> => {
   const playerEngagements =
     await PlayerEngagementService.searchPlayerEngagementsByPlayerId(
@@ -106,6 +117,7 @@ const confirmProposal = async (req, res): Promise<void> => {
 
 export default {
   getPlayerEngagements,
+  getPlayerEngagementSummary,
   searchPlayerEngagementsByPlayerId,
   searchPlayerEngagementByScheduleId,
   updatePlayerEngagement,

@@ -72,7 +72,12 @@
       <tr>
         <td>{{ item.playerFirstname }}</td>
         <td>{{ item.playerName }}</td>
-        <td>{{ t(`playerEngagement.enums.status.${item.status.toUpperCase()}`) }}</td>
+        <td @mouseover="showEngagementSummary(item.playerId)">
+          <v-tooltip activator="parent" location="top">
+            {{ engagementSummaries[item.playerId] }}
+          </v-tooltip>
+          {{ t(`playerEngagement.enums.status.${item.status.toUpperCase()}`) }}
+        </td>
         <td>{{ t(`common.bool.${item.manually}`) }}</td>
         <td>
           <v-btn small @click="deleteEngagement(item)">
@@ -101,6 +106,7 @@ import { usePlayerStore } from '@/stores/player.store.ts'
 import { Player } from 'squad-manager-server/src/models/Player.ts'
 import log from 'loglevel'
 import { useI18n } from 'vue-i18n'
+import { getPlayerEngagementSummary } from '@/services/playerEngagement.service.ts'
 
 const { t } = useI18n()
 const props = defineProps<{
@@ -114,6 +120,7 @@ const isPlayerAssignable = ref(false)
 const message = ref({ text: '', type: 'error' as 'error' | 'success' | 'info' | 'warning' })
 const playerEngagementStore = usePlayerEngagementStore()
 const playerEngagements = ref<PlayerEngagementWithPlayerInfo[]>([])
+const engagementSummaries = ref<{ [key: string]: string }>({})
 const playerStore = usePlayerStore()
 const selectedEngagement = ref<EngagementStatus>(EngagementStatus.DEFINITIVE)
 const selectedPlayer = ref()
@@ -247,13 +254,28 @@ const confirmProposal = async () => {
   await loadPlayerEngagements()
 }
 
+const showEngagementSummary = async (playerId: string) => {
+  try {
+    const summary = await getPlayerEngagementSummary(playerId)
+    if (summary) {
+      engagementSummaries.value[playerId] =
+        `${t('playerEngagement.totalParticipation')}: ${summary.totalParticipation}, ${t('playerEngagement.totalCancellation')}: ${summary.totalCancellation}`
+    } else {
+      engagementSummaries.value[playerId] = t('common.messages.noDataAvailable')
+    }
+  } catch (error) {
+    log.error('Error fetching engagement summary:', error.message)
+    engagementSummaries.value[playerId] = t('common.messages.errorReadingData')
+  }
+}
+
 watch(
   () => props.contextId,
   async (newContextId) => {
-    console.log('FOO', newContextId)
+    log.debug('newContextId:', newContextId)
     if (newContextId) {
       await loadPlayerEngagements()
-      isPlayerAssignable.value = false // Optional: Reset relevante Zustände
+      isPlayerAssignable.value = false // Optional: Reset
     }
   }
 )

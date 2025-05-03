@@ -55,6 +55,8 @@ export const deTranslations: ITranslations = {
     manuallyAdded: 'Manuell hinzugefügt',
     status: 'Status',
     assignPlayer: 'Spieler zuteilen',
+    totalParticipation: 'Teilnahmen',
+    totalCancellation: 'Absagen',
     buttons: {
       assignPlayer: 'Spieler zuteilen',
       generateProposal: 'Kader generieren',
@@ -90,7 +92,9 @@ export const deTranslations: ITranslations = {
       saveAndClose: 'Speichern und schliessen'
     },
     messages: {
-      fieldRequired: 'Eingabe ist zwingend'
+      fieldRequired: 'Eingabe ist zwingend',
+      noDataAvailable: 'Keine Daten verfügbar',
+      errorReadingData: 'Fehler beim Lesen der Daten'
     }
   }
 }
