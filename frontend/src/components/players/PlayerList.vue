@@ -25,7 +25,24 @@
           <td>{{ item.position ? t(`player.enums.position.${item.position}`) : '' }}</td>
           <td class="text-center">{{ item.birthYear }}</td>
           <td class="text-center">
-            {{ engagementSummaries[item.playerId]?.totalParticipation }}
+            <v-tooltip location="top">
+              <template v-slot:activator="{ props }">
+                <span v-bind="props">
+                  {{ engagementSummaries[item.playerId]?.totalParticipation }}
+                </span>
+              </template>
+              <span
+                v-for="matchTypeSummary in engagementSummaries[item.playerId]?.matchTypeSummaries"
+                :key="matchTypeSummary.matchType"
+              >
+                {{ t(`schedule.enums.matchType.${matchTypeSummary.matchType}`) }}:
+                {{ matchTypeSummary.totalParticipation }}
+                {{ t(`playerEngagement.totalParticipation`) }},
+                {{ matchTypeSummary.totalCancellation }}
+                {{ t(`playerEngagement.totalCancellation`) }}
+                <br />
+              </span>
+            </v-tooltip>
           </td>
           <td class="text-center">{{ engagementSummaries[item.playerId]?.totalCancellation }}</td>
           <td>
@@ -56,6 +73,8 @@ import { useI18n } from 'vue-i18n'
 import log from 'loglevel'
 import type { PlayerEngagementSummary } from '@/types/playerEngagement.type.ts'
 import { getPlayerEngagementSummary } from '@/services/playerEngagement.service.ts'
+import { MatchType } from '@/types/schedule.type.ts'
+import PlayerEngagementParticipationTooltip from '@/components/playerEngagements/PlayerEngagementParticipationTooltip.vue'
 
 const { t } = useI18n()
 const playerStore = usePlayerStore()
@@ -117,14 +136,29 @@ const getEngagementSummary = async (playerId: string) => {
     const summary = await getPlayerEngagementSummary(playerId)
     console.log(summary)
     if (summary) {
+      const matchTypeOrder = [MatchType.LEAGUE, MatchType.CUP, MatchType.INDOOR, MatchType.FRIENDLY]
+
       engagementSummaries.value[playerId] = {
         totalParticipation: summary.totalParticipation,
-        totalCancellation: summary.totalCancellation
+        totalCancellation: summary.totalCancellation,
+        matchTypeSummaries: summary.matchTypeSummaries
+          .map((matchTypeSummary) => ({
+            matchType: matchTypeSummary.matchType,
+            totalParticipation: matchTypeSummary.totalParticipation,
+            totalCancellation: matchTypeSummary.totalCancellation
+          }))
+          .sort((a, b) => {
+            return matchTypeOrder.indexOf(a.matchType) - matchTypeOrder.indexOf(b.matchType)
+          })
       }
     }
   } catch (error) {
     log.error('Error fetching engagement summary: ', error.message)
-    engagementSummaries.value[playerId] = { totalParticipation: -99, totalCancellation: -99 }
+    engagementSummaries.value[playerId] = {
+      totalParticipation: -99,
+      totalCancellation: -99,
+      matchTypeSummaries: []
+    }
   }
 }
 

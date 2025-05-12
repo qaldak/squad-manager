@@ -8,6 +8,7 @@ import playerEngagementsData from "../__mocks__/mock.playerEngagement";
 import schedulesData from "../__mocks__/mock.schedule";
 import logger from "../../src/utils/logger";
 import { getPlayerEngagementSummary } from "squad-manager-ui/src/services/playerEngagement.service";
+import { MatchType } from "../../src/models/Schedule";
 
 const app = express();
 
@@ -22,11 +23,26 @@ jest.mock("@supabase/supabase-js", () => {
           if (tableName === "schedules" || tableName === "tst_schedules") {
             return {
               select: jest.fn(() => {
-                const schedules = schedulesData.getSchedules();
-                return Promise.resolve({
-                  data: schedules,
-                  error: null,
-                });
+                return {
+                  eq: jest.fn((column, value: any) => {
+                    const schedule = schedulesData.readSchedule(value);
+                    return Promise.resolve({
+                      data: schedule ? [schedule] : [],
+                      error: null,
+                    });
+                  }),
+                  then: jest.fn(
+                    (
+                      callback: (result: { data: any[]; error: null }) => void,
+                    ) => {
+                      const schedules = schedulesData.getSchedules();
+                      return callback({
+                        data: schedules,
+                        error: null,
+                      });
+                    },
+                  ),
+                };
               }),
             };
           } else if (
@@ -323,7 +339,28 @@ describe("PlayerEngagement Controller", () => {
     const summary = res.body;
     expect(res.status).toEqual(200);
     expect(summary.totalParticipation).toEqual(2);
-    expect(summary.totalCancellation).toEqual(2);
+    expect(summary.totalCancellation).toEqual(1);
+
+    const expectedValues = {
+      [MatchType.INDOOR]: { totalParticipation: 0, totalCancellation: 0 },
+      [MatchType.LEAGUE]: { totalParticipation: 1, totalCancellation: 1 },
+      [MatchType.CUP]: { totalParticipation: 1, totalCancellation: 0 },
+    };
+
+    // Überprüfen der MatchtypeSummaries für jeden Matchtyp
+    Object.keys(expectedValues).forEach((matchType) => {
+      const matchSummary = summary.matchTypeSummaries.find(
+        (m) => m.matchType === matchType,
+      );
+
+      expect(matchSummary).toBeDefined(); // Prüfen, ob der Eintrag existiert
+      expect(matchSummary.totalParticipation).toEqual(
+        expectedValues[matchType].totalParticipation,
+      ); // Überprüfe die Teilnahme
+      expect(matchSummary.totalCancellation).toEqual(
+        expectedValues[matchType].totalCancellation,
+      ); // Überprüfe die Stornierungen
+    });
   });
 
   it("should confirm all provisional players", async () => {

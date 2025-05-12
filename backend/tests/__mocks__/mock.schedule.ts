@@ -30,7 +30,7 @@ const mockSchedules = [
     id: "M0831",
     date: new Date("2024-08-31"),
     type: ScheduleType.GAME_DAY,
-    matchtype: MatchType.LEAGUE,
+    matchtype: MatchType.CUP,
   },
   {
     id: "T0813",
@@ -71,6 +71,12 @@ const mockSchedules = [
   {
     id: "M0903",
     date: new Date("2024-09-03"),
+    type: ScheduleType.GAME_DAY,
+    matchtype: MatchType.INDOOR,
+  },
+  {
+    id: "M0910",
+    date: new Date("2024-09-10"),
     type: ScheduleType.GAME_DAY,
     matchtype: MatchType.INDOOR,
   },

@@ -1,3 +1,5 @@
+import { MatchType } from "./Schedule";
+
 export class PlayerEngagement {
   id: string;
   playerId: string;
@@ -29,6 +31,13 @@ export interface PlayerEngagementData {
 }
 
 export interface PlayerEngagementSummary {
+  totalParticipation: number;
+  totalCancellation: number;
+  matchTypeSummaries: MatchTypeSummary[];
+}
+
+export interface MatchTypeSummary {
+  matchType: MatchType;
   totalParticipation: number;
   totalCancellation: number;
 }
