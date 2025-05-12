@@ -1,4 +1,5 @@
 import type { Position } from '@/types/player.type'
+import { MatchType } from 'squad-manager-server/src/models/Schedule.ts'
 
 export interface PlayerEngagement {
   id: string
@@ -20,6 +21,13 @@ export interface PlayerEngagementWithScheduleInfo extends PlayerEngagement {
 }
 
 export interface PlayerEngagementSummary {
+  totalParticipation: number
+  totalCancellation: number
+  matchTypeSummaries: MatchTypeSummary[]
+}
+
+export interface MatchTypeSummary {
+  matchType: MatchType
   totalParticipation: number
   totalCancellation: number
 }

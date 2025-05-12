@@ -74,7 +74,7 @@
         <td>{{ item.playerName }}</td>
         <td @mouseover="showEngagementSummary(item.playerId)">
           <v-tooltip activator="parent" location="top">
-            {{ engagementSummaries[item.playerId] }}
+            <span style="white-space: pre-line">{{ engagementSummaries[item.playerId] }}</span>
           </v-tooltip>
           {{ t(`playerEngagement.enums.status.${item.status.toUpperCase()}`) }}
         </td>
@@ -99,6 +99,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { usePlayerEngagementStore } from '@/stores/playerEngagement.store'
 import {
   EngagementStatus,
+  type MatchTypeSummary,
   type PlayerEngagement,
   type PlayerEngagementWithPlayerInfo
 } from '@/types/playerEngagement.type'
@@ -258,8 +259,13 @@ const showEngagementSummary = async (playerId: string) => {
   try {
     const summary = await getPlayerEngagementSummary(playerId)
     if (summary) {
-      engagementSummaries.value[playerId] =
-        `${t('playerEngagement.totalParticipation')}: ${summary.totalParticipation}, ${t('playerEngagement.totalCancellation')}: ${summary.totalCancellation}`
+      let tooltipContent = `${t('playerEngagement.totalParticipation')}: ${summary.totalParticipation}, ${t('playerEngagement.totalCancellation')}: ${summary.totalCancellation}\n`
+
+      summary.matchTypeSummaries.forEach((matchTypeSummary: MatchTypeSummary) => {
+        tooltipContent += `${t(`schedule.enums.matchType.${matchTypeSummary.matchType}`)}: ${t('playerEngagement.totalParticipation')}: ${matchTypeSummary.totalParticipation}, ${t('playerEngagement.totalCancellation')}: ${matchTypeSummary.totalCancellation} \n`
+      })
+
+      engagementSummaries.value[playerId] = tooltipContent
     } else {
       engagementSummaries.value[playerId] = t('common.messages.noDataAvailable')
     }

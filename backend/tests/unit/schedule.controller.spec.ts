@@ -107,7 +107,7 @@ describe("Schedule Controller", () => {
   it("should get all schedules", async () => {
     const res = await request(app).get("/api/schedules");
     expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveLength(12);
+    expect(res.body).toHaveLength(13);
   });
 
   it("should read a schedule by id", async () => {
@@ -147,7 +147,7 @@ describe("Schedule Controller", () => {
     });
 
     const resTotal = await request(app).get("/api/schedules");
-    expect(resTotal.body).toHaveLength(13);
+    expect(resTotal.body).toHaveLength(14);
   });
 
   it("should update a schedule entry", async () => {

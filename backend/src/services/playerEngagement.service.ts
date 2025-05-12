@@ -1,5 +1,6 @@
 import {
   EngagementStatus,
+  MatchTypeSummary,
   PlayerEngagement,
   PlayerEngagementData,
   PlayerEngagementSummary,
@@ -360,7 +361,10 @@ class PlayerEngagementService {
     const summary: PlayerEngagementSummary = {
       totalParticipation: 0,
       totalCancellation: 0,
+      matchTypeSummaries: [],
     };
+
+    const matchSummaryMap: { [key: string]: MatchTypeSummary } = {};
 
     try {
       const engagements =
@@ -369,18 +373,47 @@ class PlayerEngagementService {
         `engagement data for playerId ${playerId}: ${JSON.stringify(engagements)}`,
       );
 
-      engagements.forEach((engagement: PlayerEngagementData) => {
+      for (const engagement of engagements) {
+        const schedule = await ScheduleServices.readSchedule(
+          engagement.scheduleId,
+        );
+
+        // continue if training
+        if (schedule.type === ScheduleType.TRAINING) {
+          continue;
+        }
+
+        logger.debug(
+          `match type: '%s' and engagement details: %s`,
+          schedule.matchType,
+          JSON.stringify(engagement),
+        );
+
+        let matchSummary = matchSummaryMap[schedule.matchType];
+
+        if (!matchSummary) {
+          matchSummary = {
+            matchType: schedule.matchType,
+            totalParticipation: 0,
+            totalCancellation: 0,
+          };
+          matchSummaryMap[schedule.matchType] = matchSummary;
+          summary.matchTypeSummaries.push(matchSummary);
+        }
+
         switch (engagement.status) {
           case EngagementStatus.DEFINITIVE:
             summary.totalParticipation++;
+            matchSummary.totalParticipation++;
             break;
           case EngagementStatus.CANCELED:
             summary.totalCancellation++;
+            matchSummary.totalCancellation++;
             break;
           default:
             break;
         }
-      });
+      }
       logger.debug(
         `engagement data summary for playerId ${playerId}: ${JSON.stringify(summary)}`,
       );
