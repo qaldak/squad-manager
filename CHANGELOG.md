@@ -1,3 +1,9 @@
+## [0.6.0](https://github.com/qaldak/squad-manager/compare/v0.5.0...v0.6.0) (2025-05-20)
+
+### Features
+
+* add search filters in player list and playerEngagement list ([24b7eb5](https://github.com/qaldak/squad-manager/commit/24b7eb59c89264045e57321fa31cd83de6f74c4f))
+
 ## [0.5.0](https://github.com/qaldak/squad-manager/compare/v0.4.0...v0.5.0) (2025-05-12)
 
 ### Features
