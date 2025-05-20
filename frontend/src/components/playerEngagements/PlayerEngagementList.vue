@@ -40,25 +40,38 @@
     </v-col>
   </v-row>
 
-  <v-btn
-    class="ma-2 normal-btn"
-    variant="outlined"
-    color="primary"
-    :disabled="!props.contextId"
-    :loading="playerEngagementStore.loading"
-    @click="generateProposal"
-    >{{ t('playerEngagement.buttons.generateProposal') }}
-  </v-btn>
+  <v-row class="ma-1">
+    <v-btn
+      class="ma-2 normal-btn"
+      variant="outlined"
+      color="primary"
+      :disabled="!props.contextId"
+      :loading="playerEngagementStore.loading"
+      @click="generateProposal"
+      >{{ t('playerEngagement.buttons.generateProposal') }}
+    </v-btn>
 
-  <v-btn
-    class="ma-2 normal-btn"
-    variant="outlined"
-    color="primary"
-    :disabled="!props.contextId"
-    :loading="playerEngagementStore.loading"
-    @click="confirmProposal"
-    >{{ t('playerEngagement.buttons.confirmProposal') }}
-  </v-btn>
+    <v-btn
+      class="ma-2 normal-btn"
+      variant="outlined"
+      color="primary"
+      :disabled="!props.contextId"
+      :loading="playerEngagementStore.loading"
+      @click="confirmProposal"
+      >{{ t('playerEngagement.buttons.confirmProposal') }}
+    </v-btn>
+
+    <v-spacer></v-spacer>
+    <v-btn
+      class="ma-2 normal-btn"
+      variant="outlined"
+      color="secondary"
+      :disabled="!props.contextId"
+      :loading="playerEngagementStore.loading"
+      @click="copyToClipboard"
+      >{{ t('playerEngagement.buttons.copyToClipboard') }}
+    </v-btn>
+  </v-row>
 
   <v-text-field
     v-model="search"
@@ -268,6 +281,30 @@ const confirmProposal = async () => {
   log.info(`Confirm proposal.`)
   await playerEngagementStore.confirmProposal(props.contextId)
   await loadPlayerEngagements()
+}
+
+const copyToClipboard = () => {
+  log.debug('Copy players...')
+  const players: string = playerEngagements.value
+    .filter((item) => item.status !== EngagementStatus.CANCELED) // Filtert nach Status 10
+    .map((item) => item.playerFirstname)
+    .sort((a, b) => a.localeCompare(b))
+    .join(', ')
+
+  navigator.clipboard
+    .writeText(players)
+    .then(() => {
+      message.value = {
+        text: t('common.messages.copySuccessfully'),
+        type: 'success'
+      }
+      setTimeout(() => {
+        message.value.text = ''
+      }, 1500)
+    })
+    .catch((err: Error) => {
+      log.error('Error copying to clipboard: ', err)
+    })
 }
 
 const showEngagementSummary = async (playerId: string) => {

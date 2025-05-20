@@ -60,7 +60,8 @@ export const deTranslations: ITranslations = {
     buttons: {
       assignPlayer: 'Spieler zuteilen',
       generateProposal: 'Kader generieren',
-      confirmProposal: 'Kader bestätigen'
+      confirmProposal: 'Kader bestätigen',
+      copyToClipboard: 'Kader kopieren'
     },
     enums: {
       status: {
@@ -94,7 +95,8 @@ export const deTranslations: ITranslations = {
     messages: {
       fieldRequired: 'Eingabe ist zwingend',
       noDataAvailable: 'Keine Daten verfügbar',
-      errorReadingData: 'Fehler beim Lesen der Daten'
+      errorReadingData: 'Fehler beim Lesen der Daten',
+      copySuccessfully: 'Daten erfolgreich in die Zwischenablage kopiert'
     }
   }
 }
