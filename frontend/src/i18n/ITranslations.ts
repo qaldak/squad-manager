@@ -59,6 +59,7 @@ export type ITranslations = {
       assignPlayer: string
       generateProposal: string
       confirmProposal: string
+      copyToClipboard: string
     }
     enums: {
       status: {
@@ -93,6 +94,7 @@ export type ITranslations = {
       fieldRequired: string
       noDataAvailable: string
       errorReadingData: string
+      copySuccessfully: string
     }
   }
 }

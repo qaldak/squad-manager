@@ -60,7 +60,8 @@ export const enTranslations: ITranslations = {
     buttons: {
       assignPlayer: 'assign',
       generateProposal: 'generate squad',
-      confirmProposal: 'confirm squad'
+      confirmProposal: 'confirm squad',
+      copyToClipboard: 'copy squad to clipboard'
     },
     enums: {
       status: {
@@ -94,7 +95,8 @@ export const enTranslations: ITranslations = {
     messages: {
       fieldRequired: 'field is required',
       noDataAvailable: 'no data available',
-      errorReadingData: 'error reading data'
+      errorReadingData: 'error reading data',
+      copySuccessfully: 'data successfully copied to clipboard!'
     }
   }
 }
