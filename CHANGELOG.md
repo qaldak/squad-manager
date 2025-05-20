@@ -1,3 +1,9 @@
+## [0.7.0](https://github.com/qaldak/squad-manager/compare/v0.6.0...v0.7.0) (2025-05-20)
+
+### Features
+
+* copy player squad to clipboard (firstnames, coma seperated) ([41609ca](https://github.com/qaldak/squad-manager/commit/41609ca7be1b1853a075a2bb92c160182de08d52))
+
 ## [0.6.0](https://github.com/qaldak/squad-manager/compare/v0.5.0...v0.6.0) (2025-05-20)
 
 ### Features
