@@ -60,7 +60,21 @@
     >{{ t('playerEngagement.buttons.confirmProposal') }}
   </v-btn>
 
+  <v-text-field
+    v-model="search"
+    density="compact"
+    label="Search"
+    prepend-inner-icon="mdi-magnify"
+    variant="solo-filled"
+    clearable
+    flat
+    hide-details
+    single-line
+  >
+  </v-text-field>
   <v-data-table-virtual
+    v-model:search="search"
+    :filter-keys="['playerFirstname', 'playerName', 'status']"
     class="scrollable-table"
     :headers="engagementHeaders"
     :items="playerEngagements"
@@ -114,6 +128,7 @@ const props = defineProps<{
   contextType: 'player' | 'schedule'
   contextId: string
 }>()
+const search = ref('')
 
 const allPlayers = ref<Player[]>([])
 const autocompleteKey = ref(0)

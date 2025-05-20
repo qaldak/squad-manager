@@ -9,7 +9,21 @@
       </v-btn>
     </v-row>
 
+    <v-text-field
+      v-model="search"
+      density="compact"
+      label="Search"
+      prepend-inner-icon="mdi-magnify"
+      variant="solo-filled"
+      clearable
+      flat
+      hide-details
+      single-line
+    >
+    </v-text-field>
     <v-data-table-virtual
+      v-model:search="search"
+      :filter-keys="['firstname', 'name', 'birthYear']"
       :headers="headers"
       :items="players"
       :loading="playerStore.loading"
@@ -74,7 +88,6 @@ import log from 'loglevel'
 import type { PlayerEngagementSummary } from '@/types/playerEngagement.type.ts'
 import { getPlayerEngagementSummary } from '@/services/playerEngagement.service.ts'
 import { MatchType } from '@/types/schedule.type.ts'
-import PlayerEngagementParticipationTooltip from '@/components/playerEngagements/PlayerEngagementParticipationTooltip.vue'
 
 const { t } = useI18n()
 const playerStore = usePlayerStore()
@@ -88,6 +101,7 @@ const newPlayer = ref<Player>({
   birthYear: undefined,
   position: undefined
 })
+const search = ref('')
 
 const engagementSummaries = ref<{ [key: string]: PlayerEngagementSummary }>({})
 
