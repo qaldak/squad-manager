@@ -42,7 +42,7 @@
             <v-tooltip location="top">
               <template v-slot:activator="{ props }">
                 <span v-bind="props">
-                  {{ engagementSummaries[item.playerId]?.totalParticipation }}
+                  {{ item.totalParticipation }}
                 </span>
               </template>
               <span
@@ -58,7 +58,7 @@
               </span>
             </v-tooltip>
           </td>
-          <td class="text-center">{{ engagementSummaries[item.playerId]?.totalCancellation }}</td>
+          <td class="text-center">{{ item.totalCancellation }}</td>
           <td>
             <v-btn small @click.stop="openDialog(false, item)">
               <font-awesome-icon icon="fa-solid fa-pencil" />
@@ -81,7 +81,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { usePlayerStore } from '@/stores/player.store'
-import { type Player } from '@/types/player.type'
+import { type Player, type PlayerWithEngagement } from '@/types/player.type'
 import PlayerDetail from '@/components/players/PlayerDetail.vue'
 import { useI18n } from 'vue-i18n'
 import log from 'loglevel'
@@ -91,7 +91,7 @@ import { MatchType } from '@/types/schedule.type.ts'
 
 const { t } = useI18n()
 const playerStore = usePlayerStore()
-const players = ref<Player[]>([])
+const players = ref<PlayerWithEngagement[]>([])
 const dialog = ref(false)
 const isNew = ref(true)
 const newPlayer = ref<Player>({
@@ -104,18 +104,6 @@ const newPlayer = ref<Player>({
 const search = ref('')
 
 const engagementSummaries = ref<{ [key: string]: PlayerEngagementSummary }>({})
-
-const formatPlayers = () => {
-  return playerStore.players
-    .sort((a, b) => a.name.localeCompare(b.name))
-    .map((player) => ({
-      playerId: player.playerId,
-      name: player.name,
-      firstname: player.firstname,
-      position: player.position,
-      birthYear: player.birthYear
-    }))
-}
 
 const openDialog = (createNew: boolean, player?: Player) => {
   isNew.value = createNew
@@ -137,12 +125,24 @@ const updateDialog = (value: boolean) => {
   dialog.value = value
 }
 
+const formatPlayers = (): PlayerWithEngagement[] => {
+  return playerStore.players
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((player) => ({
+      ...player,
+      totalParticipation: (engagementSummaries.value as { [key: string]: PlayerEngagementSummary })[
+        player.playerId
+      ]?.totalParticipation,
+      totalCancellation: (engagementSummaries.value as { [key: string]: PlayerEngagementSummary })[
+        player.playerId
+      ]?.totalCancellation
+    }))
+}
+
 const reloadPlayers = async () => {
   await playerStore.loadPlayers()
+  await Promise.all(playerStore.players.map((player) => getEngagementSummary(player.playerId)))
   players.value = formatPlayers()
-  players.value.forEach((player) => {
-    getEngagementSummary(player.playerId)
-  })
 }
 
 const getEngagementSummary = async (playerId: string) => {
@@ -152,7 +152,7 @@ const getEngagementSummary = async (playerId: string) => {
     if (summary) {
       const matchTypeOrder = [MatchType.LEAGUE, MatchType.CUP, MatchType.INDOOR, MatchType.FRIENDLY]
 
-      engagementSummaries.value[playerId] = {
+      engagementSummaries.value[playerId as keyof typeof engagementSummaries.value] = {
         totalParticipation: summary.totalParticipation,
         totalCancellation: summary.totalCancellation,
         matchTypeSummaries: summary.matchTypeSummaries
@@ -168,7 +168,7 @@ const getEngagementSummary = async (playerId: string) => {
     }
   } catch (error) {
     log.error('Error fetching engagement summary: ', error.message)
-    engagementSummaries.value[playerId] = {
+    engagementSummaries.value[playerId as keyof typeof engagementSummaries.value] = {
       totalParticipation: -99,
       totalCancellation: -99,
       matchTypeSummaries: []
@@ -191,8 +191,8 @@ const headers = [
   { title: t('player.name'), key: 'name', sortable: true },
   { title: t('player.position'), key: 'position' },
   { title: t('player.yearOfBirth'), key: 'birthYear' },
-  { title: t('playerEngagement.totalParticipation'), key: 'participation', sortable: false },
-  { title: t('playerEngagement.totalCancellation'), key: 'cancellation', sortable: false },
+  { title: t('playerEngagement.totalParticipation'), key: 'totalParticipation', sortable: true },
+  { title: t('playerEngagement.totalCancellation'), key: 'totalCancellation', sortable: true },
   { title: '', key: 'edit', sortable: false }
 ]
 </script>

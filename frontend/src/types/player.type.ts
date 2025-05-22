@@ -6,6 +6,11 @@ export interface Player {
   position?: Position
 }
 
+export interface PlayerWithEngagement extends Player {
+  totalParticipation: number
+  totalCancellation: number
+}
+
 export enum Position {
   GOALKEEPER = 'goalkeeper',
   DEFENDER = 'defender',
