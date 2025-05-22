@@ -1,3 +1,9 @@
+## [0.8.0](https://github.com/qaldak/squad-manager/compare/v0.7.0...v0.8.0) (2025-05-22)
+
+### Features
+
+* sort player list by total participation and total cancellation ([03e90d7](https://github.com/qaldak/squad-manager/commit/03e90d7d24257428a4cd104ce3e61f4f66689b93))
+
 ## [0.7.0](https://github.com/qaldak/squad-manager/compare/v0.6.0...v0.7.0) (2025-05-20)
 
 ### Features
