@@ -46,7 +46,7 @@ export const usePlayerStore = defineStore('player', {
         *
         * */
       } catch (error) {
-        logger.error(error)
+        log.error(error)
       } finally {
         this.loading = false
       }
