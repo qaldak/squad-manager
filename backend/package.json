@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@dotenvx/dotenvx": "^1.44.2",
+    "@dotenvx/dotenvx": "^1.45.1",
     "@supabase/supabase-js": "^2.50.0",
     "@types/express": "^5.0.3",
     "@types/uuid": "^10.0.0",
