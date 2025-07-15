@@ -12,7 +12,7 @@
     {
       "type": "chore",
       "scope": "npm",
-      "release": true
+      "release": "patch"
     }
   ],
   "plugins": [
