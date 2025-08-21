@@ -1,3 +1,5 @@
+## [0.8.8](https://github.com/qaldak/squad-manager/compare/v0.8.7...v0.8.8) (2025-08-21)
+
 ## [0.8.7](https://github.com/qaldak/squad-manager/compare/v0.8.6...v0.8.7) (2025-08-19)
 
 ## [0.8.6](https://github.com/qaldak/squad-manager/compare/v0.8.5...v0.8.6) (2025-08-12)
