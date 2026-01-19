@@ -1,3 +1,9 @@
+## [0.8.44](https://github.com/qaldak/squad-manager/compare/v0.8.43...v0.8.44) (2026-01-19)
+
+### Bug Fixes
+
+* resolve dependency vulnerabilities and improve security posture ([6d2b54c](https://github.com/qaldak/squad-manager/commit/6d2b54c72b6b10f4e95256b4386999ea06536aeb))
+
 ## [0.8.43](https://github.com/qaldak/squad-manager/compare/v0.8.42...v0.8.43) (2026-01-13)
 
 ## [0.8.42](https://github.com/qaldak/squad-manager/compare/v0.8.41...v0.8.42) (2026-01-13)
