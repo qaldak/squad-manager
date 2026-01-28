@@ -19,7 +19,8 @@
     "@semantic-release/release-notes-generator": "^14.1.0",
     "concurrently": "^9.2.1",
     "conventional-changelog-conventionalcommits": "^9.1.0",
-    "semantic-release": "^25.0.2"
+    "semantic-release": "^25.0.2",
+    "tar": "^7.5.4"
   },
   "workspaces": [
     "backend",
@@ -31,7 +32,7 @@
   },
   "overrides": {
     "diff": "^8.0.3",
-    "tar": "^7.5.3",
+    "tar": "^7.5.4",
     "undici": "^6.23.0"
   }
 }
