@@ -1,3 +1,9 @@
+## [0.8.49](https://github.com/qaldak/squad-manager/compare/v0.8.48...v0.8.49) (2026-01-28)
+
+### Bug Fixes
+
+* insert tar as devDependency according security issue in lower versions ([c1b4f42](https://github.com/qaldak/squad-manager/commit/c1b4f42a78cb5a981cd9fb04fc91b1794857581b))
+
 ## [0.8.48](https://github.com/qaldak/squad-manager/compare/v0.8.47...v0.8.48) (2026-01-27)
 
 ## [0.8.47](https://github.com/qaldak/squad-manager/compare/v0.8.46...v0.8.47) (2026-01-27)
