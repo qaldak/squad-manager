@@ -1,3 +1,10 @@
+## [0.8.50](https://github.com/qaldak/squad-manager/compare/v0.8.49...v0.8.50) (2026-01-29)
+
+### Bug Fixes
+
+* clean package-lock.json ([aa9c6a7](https://github.com/qaldak/squad-manager/commit/aa9c6a751dc593cc5cc02ffe1365d274ad50b327))
+* insert tar as devDependency according security issue in lower versions ([fb92773](https://github.com/qaldak/squad-manager/commit/fb92773f1c848145ac274256131318130869efb5))
+
 ## [0.8.49](https://github.com/qaldak/squad-manager/compare/v0.8.48...v0.8.49) (2026-01-28)
 
 ### Bug Fixes
