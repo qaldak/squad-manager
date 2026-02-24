@@ -1,3 +1,9 @@
+## [0.8.58](https://github.com/qaldak/squad-manager/compare/v0.8.57...v0.8.58) (2026-02-24)
+
+### Bug Fixes
+
+* update tar to 7.5.9 ([6633d5b](https://github.com/qaldak/squad-manager/commit/6633d5b11fb4b528ae788bffbfeec20aca51b457))
+
 ## [0.8.57](https://github.com/qaldak/squad-manager/compare/v0.8.56...v0.8.57) (2026-02-24)
 
 ## [0.8.56](https://github.com/qaldak/squad-manager/compare/v0.8.55...v0.8.56) (2026-02-22)
