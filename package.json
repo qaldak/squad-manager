@@ -20,7 +20,7 @@
     "concurrently": "^9.2.1",
     "conventional-changelog-conventionalcommits": "^9.1.0",
     "semantic-release": "^25.0.3",
-    "tar": "^7.5.7"
+    "tar": "^7.5.9"
   },
   "workspaces": [
     "backend",
@@ -32,7 +32,7 @@
   },
   "overrides": {
     "diff": "^8.0.3",
-    "tar": "^7.5.7",
+    "tar": "^7.5.9",
     "undici": "^6.23.0"
   }
 }
