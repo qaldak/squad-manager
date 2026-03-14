@@ -1,3 +1,9 @@
+## [0.8.63](https://github.com/qaldak/squad-manager/compare/v0.8.62...v0.8.63) (2026-03-14)
+
+### Bug Fixes
+
+* tar version conflicts in package.json ([de12774](https://github.com/qaldak/squad-manager/commit/de127743d604f4290a2efbd9cd4e97cdebe5009b))
+
 ## [0.8.62](https://github.com/qaldak/squad-manager/compare/v0.8.61...v0.8.62) (2026-03-14)
 
 ## [0.8.61](https://github.com/qaldak/squad-manager/compare/v0.8.60...v0.8.61) (2026-03-10)
