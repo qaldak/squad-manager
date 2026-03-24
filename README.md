@@ -1,3 +1,8 @@
+> [!NOTE] 
+> **This repository is archived and no longer actively maintained.**  
+> It remains available for reference, but no further updates or support will be provided.
+
+
 # Squad Manager
 
 Squad Manager is a tool designed to generate balanced player lineups for upcoming matches. It ensures that all players
